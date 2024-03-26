@@ -29,6 +29,7 @@ def resize_image_keep_ratio(img, output_size=(224, 224), fill_color=(0, 0, 0)):
     return new_img
 
 # 랜드마크 모델 및 폴더 경로 설정
+# https://github.com/italojs/facial-landmarks-recognition/blob/master/shape_predictor_68_face_landmarks.dat 에서 download
 predictor_path = "C:\\Crawling\\shape_predictor_68_face_landmarks.dat" # predictor dir
 folder_path = "C:\\Crawling\\preprocessing\\test\\meme" # 처리해야 하는 이미지의 dir
 save_path = "C:\\Crawling\\preprocessing\\test\\crop" # 처리 후 저장할 dir
