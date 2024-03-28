@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="camera" type="id" />
+    <item name="guide" type="id" />
+    <item name="layout_frame" type="id" />
+    <item name="homeFragment" type="id" />
+    <item name="resultFragment" type="id" />
+    <item name="myPageFragment" type="id" />
+    <item name="main" type="id" />
+    <item name="button" type="id" />
+    <item name="button2" type="id" />
+    <item name="editTextText" type="id" />
+    <item name="editTextTextPassword" type="id" />
+</resources>
