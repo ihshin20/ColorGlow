@@ -1,5 +1,6 @@
 package com.example.mycolor.signup
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -11,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
+import com.example.mycolor.activity.NaviActivity
+import com.example.mycolor.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.FirebaseAuthLegacyRegistrar
@@ -34,33 +37,35 @@ class SignUpActivity : AppCompatActivity() {
             val password = findViewById<EditText>(R.id.editTextTextPassword)
 
             if (email.text.toString().isEmpty() || password.text.toString().isEmpty()) {
-                Toast.makeText(this, "정보를 모두 입력하세요", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "정보를 모두 입력하세요.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
-            Log.d("MAIN", email.text.toString())
-            Log.d("MAIN", password.text.toString())
+//            Log.d("MAIN", email.text.toString())
+//            Log.d("MAIN", password.text.toString())
 
             auth.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())
                 .addOnCompleteListener(this) { task ->
+
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Toast.makeText(this, "성공", Toast.LENGTH_LONG).show()
+                        val intent = Intent(this, LoginActivity::class.java)
+                        startActivity(intent)
+                        finish()
+
                     } else {
-                        // If sign in fails, display a message to the user.
+                        // 아이디 중복될 경우
                         if (task.exception is FirebaseAuthUserCollisionException) {
-                            Toast.makeText(this, "사용가능한 아이디입니다", Toast.LENGTH_LONG).show()
+                            Toast.makeText(this, "이미 등록된 아이디입니다.", Toast.LENGTH_LONG).show()
                         } else {
-                            Toast.makeText(this, "실패", Toast.LENGTH_LONG).show()
+                            // 양식(이메일 아이디, 6자리 이상의 비밀번호) 미충족 시
+                            Toast.makeText(this, "아이디와 비밀번호 양식을 확인하세요.", Toast.LENGTH_LONG).show()
+                            Log.d("MAIN", task.exception.toString())
                         }
                     }
                 }
         }
 
-        val logoutBtn = findViewById<Button>(R.id.button)
-        logoutBtn.setOnClickListener{
-            Firebase.auth.signOut()
-            Toast.makeText(this,"로그인 완료", Toast.LENGTH_LONG).show()
-        }
     }
 }
