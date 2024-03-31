@@ -11,4 +11,5 @@
     <item name="button2" type="id" />
     <item name="editTextText" type="id" />
     <item name="editTextTextPassword" type="id" />
+    <item name="fab_camera" type="id" />
 </resources>
