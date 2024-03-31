@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val DURATION: Long = 3000 // 3초 후 LoginActivity로 이동
+        private const val DURATION: Long = 2000 // 3초 후 LoginActivity로 이동
     }
 
     override fun onBackPressed() {

@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
 import com.example.mycolor.activity.NaviActivity
+import com.example.mycolor.signup.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -74,18 +75,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun createAccount(email: String, password: String) {
-        if (email.isNotEmpty() && password.isNotEmpty()) {
-            auth?.createUserWithEmailAndPassword(email, password)
-                ?.addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        Toast.makeText(this, "계정 생성 완료.", Toast.LENGTH_SHORT).show()
-
-
-                    } else {
-                        Toast.makeText(this, "계정 생성 실패", Toast.LENGTH_SHORT).show()
-                    }
-                }
-        }
+        val intent = Intent(this, SignUpActivity::class.java)
+        startActivity(intent)
     }
 
 }
