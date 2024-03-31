@@ -1,6 +1,9 @@
 package com.example.mycolor.activity
 
+import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -19,10 +22,15 @@ class NaviActivity : AppCompatActivity() {
 
     private lateinit var binding : ActivityNaviBinding
 
+    private var backPressedTime: Long = 0
+    private lateinit var backToast: Toast
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNaviBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
 
         setFragment(TAG_HOME, HomeFragment())
@@ -35,7 +43,27 @@ class NaviActivity : AppCompatActivity() {
             }
             true
         }
+
+        // 백버튼 두 번 누르면 종료
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    backToast.cancel()
+                    finish() // 앱 종료
+                } else {
+                    backToast = Toast.makeText(baseContext, "뒤로 가기 버튼을 한 번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT)
+                    backToast.show()
+                }
+                backPressedTime = System.currentTimeMillis()
+            }
+        }
+
+        onBackPressedDispatcher.addCallback(this, callback)
+
+
     }
+
+
 
     private fun setFragment(tag: String, fragment: Fragment) {
         val manager: FragmentManager = supportFragmentManager
@@ -81,3 +109,5 @@ class NaviActivity : AppCompatActivity() {
         fragTransaction.commitAllowingStateLoss()
     }
 }
+
+
