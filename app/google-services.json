@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "1059093781180",
-    "firebase_url": "https://mycolor-c5451-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "mycolor-c5451",
-    "storage_bucket": "mycolor-c5451.appspot.com"
+    "project_number": "9694556724",
+    "project_id": "colorglow-9e76e",
+    "storage_bucket": "colorglow-9e76e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1059093781180:android:6e6665430f4b23512c4eb9",
+        "mobilesdk_app_id": "1:9694556724:android:fd88d660f35be1eb459061",
         "android_client_info": {
           "package_name": "com.example.mycolor"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB4qxfiT40BvcHZRbhuTpK0jrA2tNFfDQQ"
+          "current_key": "AIzaSyCPAcD3stPxjC42_u6lzTzeT4VhUbhIaIg"
         }
       ],
       "services": {
