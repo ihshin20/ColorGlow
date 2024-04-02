@@ -12,4 +12,12 @@
     <item name="editTextText" type="id" />
     <item name="editTextTextPassword" type="id" />
     <item name="fab_camera" type="id" />
+    <item name="imageView" type="id" />
+    <item name="Baseimage" type="id" />
+    <item name="action_mainFragment_to_boxFragment" type="id" />
+    <item name="btn_storage" type="id" />
+    <item name="mainFragment" type="id" />
+    <item name="action_global_homeFragment" type="id" />
+    <item name="action_global_resultFragment" type="id" />
+    <item name="action_global_myPageFragment" type="id" />
 </resources>

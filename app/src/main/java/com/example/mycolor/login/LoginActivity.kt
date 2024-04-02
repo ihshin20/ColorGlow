@@ -3,10 +3,8 @@ package com.example.mycolor.login
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
@@ -14,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
-import com.example.mycolor.activity.NaviActivity
+import com.example.mycolor.activity.MainActivity
 import com.example.mycolor.signup.SignUpActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -83,7 +81,7 @@ class LoginActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // 로그인 성공
                         Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
-                        val intent = Intent(this, NaviActivity::class.java)
+                        val intent = Intent(this, MainActivity::class.java)
                         startActivity(intent)
 
                         finish()

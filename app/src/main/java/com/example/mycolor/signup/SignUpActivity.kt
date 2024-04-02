@@ -5,18 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
-import com.example.mycolor.activity.NaviActivity
 import com.example.mycolor.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import com.google.firebase.auth.ktx.FirebaseAuthLegacyRegistrar
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
