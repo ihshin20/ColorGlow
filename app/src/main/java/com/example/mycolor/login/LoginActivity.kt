@@ -74,6 +74,8 @@ class LoginActivity : AppCompatActivity() {
         }
 
         onBackPressedDispatcher.addCallback(this, callback)
+
+        print("test")
     }
 
     private fun signIn(email: String, password: String) {
