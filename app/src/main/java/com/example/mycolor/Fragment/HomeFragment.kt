@@ -169,7 +169,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                     val imageBitmap = data?.extras?.get("data") as? Bitmap
                     imageBitmap?.let {
                         imageView.setImageBitmap(it)
-                        uploadImageAndText(it, "안녕")
+                        uploadImageAndText(it, "유저아이디") // auth UID로 변경해야 함
                     }
                 }
                 REQUEST_GALLERY_ACCESS -> {
@@ -179,7 +179,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                         imageView.setImageURI(it)
                         context?.contentResolver?.openInputStream(it)?.let { inputStream ->
                             val imageBitmap = BitmapFactory.decodeStream(inputStream)
-                            uploadImageAndText(imageBitmap, "안녕")
+                            uploadImageAndText(imageBitmap, "유저아이디") // auth UID로 변경해야 함
                         }
                     }
                 }
@@ -205,11 +205,14 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                         Toast.LENGTH_SHORT
                     ).show()
 
-                    // 서버 응답에 포함된 추가 데이터 사용
+                    // 서버 응답 출력
                     Log.d(
                         "ServerResponse",
                         "Text Data: ${serverResponse?.textData}, Python Result: ${serverResponse?.pythonResult}"
                     )
+                    // 즉, serverResponse?.textData -> UID, serverResponse?.pythonResult -> 진단결과 톤(ex. Bright_Sprint)
+
+
                 }else {
                     // 서버 응답 오류 처리
                     Toast.makeText(context, "Upload failed: ${response.message()}", Toast.LENGTH_SHORT).show()
