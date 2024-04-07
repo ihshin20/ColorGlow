@@ -7,7 +7,7 @@
         android:icon="@drawable/ic_home"/>
 
     <item
-        android:id="@+id/ResultActivity"
+        android:id="@+id/ResultFragment"
         android:title="결과"
         android:icon="@drawable/ic_result"/>
 

@@ -17,7 +17,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [ResultFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class ResultFragment : Fragment() {
+class ResultFragment : Fragment(R.id.resultFragment) {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null

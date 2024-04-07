@@ -17,7 +17,7 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MyPageFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class MyPageFragment : Fragment() {
+class MyPageFragment : Fragment(R.id.myPageFragment) {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
