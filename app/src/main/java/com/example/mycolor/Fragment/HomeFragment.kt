@@ -14,9 +14,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+
+
 import com.example.mycolor.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import okhttp3.*
@@ -57,6 +60,7 @@ data class ServerResponse(
 class HomeFragment : Fragment(R.id.homeFragment) {
 
     private lateinit var imageView: ImageView
+    private lateinit var resultText: TextView
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 100
@@ -109,6 +113,8 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         apiService = retrofit.create(ApiService::class.java)
 
         imageView = view.findViewById(R.id.imageView)
+        resultText = view.findViewById(R.id.testResult)
+        resultText.text = "진단 ㄱㄱ"
 
         view.findViewById<FloatingActionButton>(R.id.fab_camera).setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -184,7 +190,11 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                     }
                 }
             }
+
+            resultText.text = "진단 중"
         }
+
+
     }
 
     private fun uploadImageAndText(bitmap: Bitmap, text: String) {
@@ -199,11 +209,31 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                 if (response.isSuccessful) {
                     // 서버 응답 성공 처리
                     val serverResponse = response.body()
-                    Toast.makeText(
-                        context,
-                        "Upload successful: ${serverResponse?.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+
+                    if(serverResponse?.pythonResult == "1face"){
+                        Toast.makeText(
+                            context,
+                            "한 사람의 얼굴만 잘 나오는 사진으로 다시 진행해주세요.",
+                            Toast.LENGTH_SHORT
+
+                        ).show()
+                    }else if(serverResponse?.pythonResult == "error"){
+                        Toast.makeText(
+                            context,
+                            "네트워크 에러입니다. 나중에 다시 시도해주세요.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }else{
+                        Toast.makeText(
+                            context,
+                            "진단 완료! 결과페이지에서 확인해주세요.",
+                            Toast.LENGTH_SHORT
+                        ).show()
+
+
+                    }
+
 
                     // 서버 응답 출력
                     Log.d(
@@ -212,6 +242,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                     )
                     // 즉, serverResponse?.textData -> UID, serverResponse?.pythonResult -> 진단결과 톤(ex. Bright_Sprint)
 
+                    resultText.text = serverResponse?.pythonResult
 
                 }else {
                     // 서버 응답 오류 처리
