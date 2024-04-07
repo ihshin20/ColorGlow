@@ -33,15 +33,9 @@ import retrofit2.http.POST
 import retrofit2.http.Part
 import java.io.ByteArrayOutputStream
 
+import java.util.concurrent.TimeUnit
 
-//interface ApiService {
-//    @Multipart
-//    @POST("upload")
-//    fun uploadImageAndText(
-//        @Part image: MultipartBody.Part,
-//        @Part("text") text: RequestBody
-//    ): Call<ResponseBody>
-//}
+
 
 // API Interface
 interface ApiService {
@@ -70,7 +64,9 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         private const val REQUEST_GALLERY_ACCESS = 102
 
         // server IP 맞춰서 수정해야 함
-        private const val BASE_URL = "http://223.194.135.216:3330/"
+        private const val BASE_URL = "http://13.125.218.109:3000/"
+        // http://192.168.0.73:3330/
+        // http://13.125.218.109:3330/
         private lateinit var apiService: ApiService
 
     }
@@ -93,10 +89,26 @@ class HomeFragment : Fragment(R.id.homeFragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // OkHttpClient 인스턴스를 생성하고 타임아웃을 설정합니다.
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃
+            .readTimeout(120, TimeUnit.SECONDS) // 읽기 타임아웃
+            .writeTimeout(120, TimeUnit.SECONDS) // 쓰기 타임아웃
+            .build()
+
+        // Retrofit 인스턴스를 생성할 때 위에서 설정한 OkHttpClient 인스턴스를 사용합니다.
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient) // OkHttpClient 설정
             .build()
+
+        apiService = retrofit.create(ApiService::class.java)
+
+//        val retrofit = Retrofit.Builder()
+//            .baseUrl(BASE_URL)
+//            .addConverterFactory(GsonConverterFactory.create())
+//            .build()
 
         apiService = retrofit.create(ApiService::class.java)
 
@@ -128,13 +140,6 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         }
     }
 
-//    private fun openGallery() {
-//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-//            type = "image/*"
-//        }
-//        startActivityForResult(intent, REQUEST_GALLERY_ACCESS)
-//    }
-
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -157,26 +162,6 @@ class HomeFragment : Fragment(R.id.homeFragment) {
             }
         }
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            val imageBitmap = data?.extras?.get("data") as? Bitmap
-//            imageBitmap?.let {
-//                // ImageView에 비트맵 이미지 설정
-//                imageView.setImageBitmap(it)
-//            }
-//
-//            // Handle the captured image
-//        } else if (requestCode == REQUEST_GALLERY_ACCESS && resultCode == RESULT_OK) {
-//            val selectedImageUri: Uri? = data?.data
-//            selectedImageUri?.let {
-//                // ImageView에 이미지 URI 설정
-//                imageView.setImageURI(it)
-//            }
-//            // Handle the selected image URI
-//        }
-//    }
 
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -243,26 +228,4 @@ class HomeFragment : Fragment(R.id.homeFragment) {
             }
         })
     }
-
-//    private fun uploadImageAndText(bitmap: Bitmap, text: String) {
-//        val baos = ByteArrayOutputStream()
-//        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-//        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), baos.toByteArray())
-//        val part = MultipartBody.Part.createFormData("image", "image.jpg", requestBody)
-//        val textPart = RequestBody.create("text/plain".toMediaTypeOrNull(), text)
-//
-//        apiService.uploadImageAndText(part, textPart).enqueue(object : Callback<ResponseBody> {
-//            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-//                Toast.makeText(context, "Upload successful", Toast.LENGTH_SHORT).show()
-//            }
-//
-//            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-//                Toast.makeText(context, "Upload failed: ${t.message}", Toast.LENGTH_SHORT).show()
-//
-//                Log.d("UploadError", t.message ?: "Error message is null")
-//
-//            }
-//        })
-//    }
-
 }
