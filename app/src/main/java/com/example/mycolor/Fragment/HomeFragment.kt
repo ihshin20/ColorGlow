@@ -65,8 +65,6 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
         // server IP 맞춰서 수정해야 함
         private const val BASE_URL = "http://13.125.218.109:3000/"
-        // http://192.168.0.73:3330/
-        // http://13.125.218.109:3330/
         private lateinit var apiService: ApiService
 
     }
@@ -89,14 +87,12 @@ class HomeFragment : Fragment(R.id.homeFragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // OkHttpClient 인스턴스를 생성하고 타임아웃을 설정합니다.
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃
             .readTimeout(120, TimeUnit.SECONDS) // 읽기 타임아웃
             .writeTimeout(120, TimeUnit.SECONDS) // 쓰기 타임아웃
             .build()
 
-        // Retrofit 인스턴스를 생성할 때 위에서 설정한 OkHttpClient 인스턴스를 사용합니다.
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
