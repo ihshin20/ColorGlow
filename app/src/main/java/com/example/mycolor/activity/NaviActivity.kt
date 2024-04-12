@@ -38,4 +38,6 @@ class NaviActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, callback)
     }
+
 }
+

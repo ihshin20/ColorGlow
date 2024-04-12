@@ -259,3 +259,4 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         })
     }
 }
+

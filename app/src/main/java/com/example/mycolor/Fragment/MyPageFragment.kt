@@ -1,4 +1,3 @@
-
 package com.example.mycolor.Fragment
 
 import android.os.Bundle
