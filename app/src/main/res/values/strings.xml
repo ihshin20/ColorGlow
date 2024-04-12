@@ -19,4 +19,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="take_photo">Take photo</string>
+    <string name="home" />
+    <string name="results" />
+    <string name="my_page" />
 </resources>

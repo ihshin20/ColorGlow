@@ -35,7 +35,7 @@ class ResultFragment : Fragment(R.id.resultFragment) {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_result_activity, container, false)
+        return inflater.inflate(R.layout.fragment_result, container, false)
     }
 
     companion object {
