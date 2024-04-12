@@ -139,14 +139,14 @@
             <TextView
                 android:id="@+id/textView10"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="94dp"
                 android:layout_marginBottom="16dp"
+                android:fontFamily="@font/kcchanbit"
                 android:gravity="center"
                 android:lineSpacingExtra="7dp"
                 android:text="똑같은 잔디라도 햇빛을 받은 초록색과, 그늘진 곳에 있는 초록색이 다른 색으로 관찰되는 모습을 보면\n따뜻한 계열의 웜톤과 차가운 계열의 쿨톤에 대한 이해를\n쉽게 할 수 있습니다."
                 android:textColor="#FF07194B"
-                android:textSize="14dp"
-                android:fontFamily="@font/kcchanbit" />
+                android:textSize="14dp" />
 
             <ImageView
                 android:id="@+id/shoppingimageView"
