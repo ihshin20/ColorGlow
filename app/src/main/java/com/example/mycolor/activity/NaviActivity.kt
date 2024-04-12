@@ -1,3 +1,4 @@
+
 package com.example.mycolor.activity
 
 import android.os.Bundle
@@ -124,5 +125,3 @@ class NaviActivity : AppCompatActivity() {
 //        fragTransaction.commitAllowingStateLoss()
 //    }
 }
-
-
