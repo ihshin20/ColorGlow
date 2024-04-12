@@ -8,4 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Gold">#FFFFD700</color>
+    <color name="Hotpink">#FFFE2D83</color>
+    <color name="lightblue">#B3C3FC</color>
+
 </resources>

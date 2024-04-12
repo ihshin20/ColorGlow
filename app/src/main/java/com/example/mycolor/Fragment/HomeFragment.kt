@@ -1,15 +1,16 @@
 package com.example.mycolor.Fragment
 
 import android.Manifest
-import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.net.Uri
+
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,37 +19,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-
-
 import com.example.mycolor.R
+
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import okhttp3.*
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import java.io.ByteArrayOutputStream
-
-import java.util.concurrent.TimeUnit
-
-
-
-// API Interface
-interface ApiService {
-    @Multipart
-    @POST("upload")
-    fun uploadImageAndText(
-        @Part image: MultipartBody.Part,
-        @Part("text") text: RequestBody
-    ): Call<ServerResponse>
-}
 
 // 서버 응답 받는 양식
 data class ServerResponse(
@@ -66,11 +40,6 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         private const val REQUEST_CAMERA_PERMISSION = 100
         private const val REQUEST_IMAGE_CAPTURE = 101
         private const val REQUEST_GALLERY_ACCESS = 102
-
-        // server IP 맞춰서 수정해야 함
-        private const val BASE_URL = "http://13.125.218.109:3000/"
-        private lateinit var apiService: ApiService
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,30 +60,20 @@ class HomeFragment : Fragment(R.id.homeFragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃
-            .readTimeout(120, TimeUnit.SECONDS) // 읽기 타임아웃
-            .writeTimeout(120, TimeUnit.SECONDS) // 쓰기 타임아웃
-            .build()
+        // ImageView에 대한 참조
+        val imageView2 = view.findViewById<ImageView>(R.id.imageView2)
+        imageView2.setImageResource(R.drawable.logoimage)
+        val pccsimageView = view.findViewById<ImageView>(R.id.pccsimageView)
+        pccsimageView.setImageResource(R.drawable.pccs)
+        val twofaceimageView = view.findViewById<ImageView>(R.id.twofaceimageView)
+        twofaceimageView.setImageResource(R.drawable.twofaceimage)
+        val grassimageView = view.findViewById<ImageView>(R.id.grassimageView)
+        grassimageView.setImageResource(R.drawable.grassimage)
+        val shoppingimageView = view.findViewById<ImageView>(R.id.shoppingimageView)
+        shoppingimageView.setImageResource(R.drawable.shoppingimage)
+        val imageView = view.findViewById<ImageView>(R.id.imageView)
+        imageView.setImageResource(R.drawable.logoimage)
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient) // OkHttpClient 설정
-            .build()
-
-        apiService = retrofit.create(ApiService::class.java)
-
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl(BASE_URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-
-        apiService = retrofit.create(ApiService::class.java)
-
-        imageView = view.findViewById(R.id.imageView)
-        resultText = view.findViewById(R.id.testResult)
-        resultText.text = "진단 ㄱㄱ"
 
         view.findViewById<FloatingActionButton>(R.id.fab_camera).setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -123,11 +82,56 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                 requestCameraPermission()
             }
         }
-
         view.findViewById<FloatingActionButton>(R.id.fab_gallery).setOnClickListener {
             openGallery()
         }
+        //텍스트뷰 부분 글자크기,글자색상 편집 편집
+        val textView6 = view.findViewById<TextView>(R.id.textView6)
+        applySpannableStringToTextView(textView6, "배색", 1.5f)
+
+        val textView4 = view.findViewById<TextView>(R.id.textView4)
+        applyColorSpanToTextView(textView4, "조화로운가", R.color.Hotpink)
+
+        val textView11 = view.findViewById<TextView>(R.id.textView11)
+        applySpannableStringToTextView(textView11, "배색 효과", 1.7f)
+
+        val textView8 = view.findViewById<TextView>(R.id.textView8)
+        applySpannableStringToTextView(textView8, "봄, 여름, 가을, 겨울", 1.5f)
+
+
+        val textView = view.findViewById<TextView>(R.id.textView5)
+        applyColorSpanToTextView(textView, "퍼스널 컬러",R.color.Hotpink)
+
+
     }
+    private fun applySpannableStringToTextView(textView: TextView, keyword: String, sizeMultiplier: Float) {
+        val fullText = textView.text.toString()
+        val spannableString = SpannableString(fullText)
+        var startIndex = fullText.indexOf(keyword)
+        while (startIndex >= 0) {
+            val endIndex = startIndex + keyword.length
+            spannableString.setSpan(RelativeSizeSpan(sizeMultiplier), startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            startIndex = fullText.indexOf(keyword, endIndex)
+        }
+        textView.text = spannableString
+    }
+
+    private fun applyColorSpanToTextView(textView: TextView, keyword: String, colorResId: Int) {
+        val fullText = textView.text.toString()
+        val spannableString = SpannableString(fullText)
+        var startIndex = fullText.indexOf(keyword)
+        while (startIndex >= 0) {
+            val endIndex = startIndex + keyword.length
+            val color = ContextCompat.getColor(requireContext(), colorResId)
+            spannableString.setSpan(ForegroundColorSpan(color), startIndex, endIndex, Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+            startIndex = fullText.indexOf(keyword, endIndex)
+        }
+        textView.text = spannableString
+    }
+
+
+
+
 
     private fun requestCameraPermission() {
         requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
@@ -165,97 +169,4 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         }
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == RESULT_OK) {
-            when (requestCode) {
-                REQUEST_IMAGE_CAPTURE -> {
-                    // Camera
-                    val imageBitmap = data?.extras?.get("data") as? Bitmap
-                    imageBitmap?.let {
-                        imageView.setImageBitmap(it)
-                        uploadImageAndText(it, "유저아이디") // auth UID로 변경해야 함
-                    }
-                }
-                REQUEST_GALLERY_ACCESS -> {
-                    // Gallery
-                    val selectedImageUri: Uri? = data?.data
-                    selectedImageUri?.let {
-                        imageView.setImageURI(it)
-                        context?.contentResolver?.openInputStream(it)?.let { inputStream ->
-                            val imageBitmap = BitmapFactory.decodeStream(inputStream)
-                            uploadImageAndText(imageBitmap, "유저아이디") // auth UID로 변경해야 함
-                        }
-                    }
-                }
-            }
-
-            resultText.text = "진단 중"
-        }
-
-
-    }
-
-    private fun uploadImageAndText(bitmap: Bitmap, text: String) {
-        val baos = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), baos.toByteArray())
-        val part = MultipartBody.Part.createFormData("image", "image.jpg", requestBody)
-        val textPart = RequestBody.create("text/plain".toMediaTypeOrNull(), text)
-
-        apiService.uploadImageAndText(part, textPart).enqueue(object : Callback<ServerResponse> {
-            override fun onResponse(call: Call<ServerResponse>, response: Response<ServerResponse>) {
-                if (response.isSuccessful) {
-                    // 서버 응답 성공 처리
-                    val serverResponse = response.body()
-
-
-                    if(serverResponse?.pythonResult == "1face"){
-                        Toast.makeText(
-                            context,
-                            "한 사람의 얼굴만 잘 나오는 사진으로 다시 진행해주세요.",
-                            Toast.LENGTH_SHORT
-
-                        ).show()
-                    }else if(serverResponse?.pythonResult == "error"){
-                        Toast.makeText(
-                            context,
-                            "네트워크 에러입니다. 나중에 다시 시도해주세요.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }else{
-                        Toast.makeText(
-                            context,
-                            "진단 완료! 결과페이지에서 확인해주세요.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-
-
-                    }
-
-
-                    // 서버 응답 출력
-                    Log.d(
-                        "ServerResponse",
-                        "Text Data: ${serverResponse?.textData}, Python Result: ${serverResponse?.pythonResult}"
-                    )
-                    // 즉, serverResponse?.textData -> UID, serverResponse?.pythonResult -> 진단결과 톤(ex. Bright_Sprint)
-
-                    resultText.text = serverResponse?.pythonResult
-
-                }else {
-                    // 서버 응답 오류 처리
-                    Toast.makeText(context, "Upload failed: ${response.message()}", Toast.LENGTH_SHORT).show()
-                }
-            }
-
-            override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
-                Toast.makeText(context, "Upload failed: ${t.message}", Toast.LENGTH_SHORT).show()
-
-                Log.d("UploadError", t.message ?: "Error message is null")
-
-            }
-        })
-    }
 }
