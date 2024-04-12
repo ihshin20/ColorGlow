@@ -33,7 +33,7 @@
                 tools:src="@drawable/logoimage" />
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/itis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
@@ -168,7 +168,7 @@
                 android:fontFamily="@font/kcchanbit"/>
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/lipimageView"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:src="@drawable/logoimage" />

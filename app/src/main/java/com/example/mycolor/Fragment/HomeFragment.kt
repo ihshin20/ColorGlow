@@ -71,7 +71,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         grassimageView.setImageResource(R.drawable.grassimage)
         val shoppingimageView = view.findViewById<ImageView>(R.id.shoppingimageView)
         shoppingimageView.setImageResource(R.drawable.shoppingimage)
-        val imageView = view.findViewById<ImageView>(R.id.imageView)
+        val imageView = view.findViewById<ImageView>(R.id.lipimageView)
         imageView.setImageResource(R.drawable.logoimage)
 
 
@@ -99,7 +99,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         applySpannableStringToTextView(textView8, "봄, 여름, 가을, 겨울", 1.5f)
 
 
-        val textView = view.findViewById<TextView>(R.id.textView5)
+        val textView = view.findViewById<TextView>(R.id.itis)
         applyColorSpanToTextView(textView, "퍼스널 컬러",R.color.Hotpink)
 
 

@@ -10,5 +10,6 @@
     <color name="Gold">#FFFFD700</color>
     <color name="Hotpink">#FFFE2D83</color>
     <color name="lightblue">#BBCBFB</color>
+    <color name="lightgray">#DDDDDD</color>
 
 </resources>
