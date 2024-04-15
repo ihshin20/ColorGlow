@@ -13,7 +13,9 @@
         android:layout_height="731dp"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigationView"

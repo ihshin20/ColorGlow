@@ -34,6 +34,7 @@ class MyPageFragment : Fragment() {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://clubclio.co.kr/shop/goodsView/0000002419"))
             startActivity(intent)
         }
-
+        val eyeimageView = view.findViewById<ImageView>(R.id.eyeimageView)
+        eyeimageView.setImageResource(R.drawable.proeyepalette)
     }
 }

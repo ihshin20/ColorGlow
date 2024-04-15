@@ -8,209 +8,327 @@
     android:background="#FDE4F7"
     tools:context=".Fragment.MyPageFragment">
 
-    <ImageView
-        android:id="@+id/logoimageView"
-        android:layout_width="409dp"
-        android:layout_height="66dp"
-        android:src="@drawable/logoimage"
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
-    <TextView
-        android:id="@+id/Mypage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:fontFamily="@font/kcchanbit"
-        android:text="MY PAGE"
-        android:textColor="#FF07194B"
-        android:textSize="34sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/customerName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/kcchanbit"
-        android:text="이름"
-        android:textColor="#FF07194B"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toStartOf="@+id/yourcoloris"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Mypage" />
+            <ImageView
+                android:id="@+id/logoimageView"
+                android:layout_width="410dp"
+                android:layout_height="73dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:src="@drawable/logoimage" />
 
-    <TextView
-        android:id="@+id/yourcoloris"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/kcchanbit"
-        android:textColor="#FF07194B"
-        android:text="님의 퍼스널 컬러는"
-        android:textSize="20sp"
-        app:layout_constraintStart_toEndOf="@+id/customerName"
-        app:layout_constraintTop_toTopOf="@+id/customerName" />
+            <TextView
+                android:id="@+id/Mypage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/kcchanbit"
+                android:text="MY PAGE"
+                android:textColor="#FF07194B"
+                android:textSize="34sp"
+                android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/PersonalColorName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/kcchanbit"
-        android:text="가을 딥"
-        android:textColor="#FF07194B"
-        android:textSize="34sp"
-        app:layout_constraintStart_toStartOf="@+id/customerName"
-        app:layout_constraintTop_toBottomOf="@+id/customerName" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/itis"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:fontFamily="@font/kcchanbit"
-        android:textColor="#FF07194B"
-        android:text="입니다."
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/PersonalColorName"
-        app:layout_constraintStart_toEndOf="@+id/PersonalColorName" />
+                <TextView
+                    android:id="@+id/customerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="이름"
+                    android:textColor="#FF07194B"
+                    android:textSize="16sp" />
 
-    <TextView
-        android:id="@+id/recommendBase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/kcchanbit"
-        android:text="추천 베이스"
-        android:textColor="#FF07194B"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PersonalColorName" />
+                <TextView
+                    android:id="@+id/yourcoloris"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="님의 퍼스널 컬러는"
+                    android:textColor="#FF07194B"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-    <ImageView
-        android:id="@+id/baseimageView"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/killcover"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendBase" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="67dp"
+                android:layout_gravity="left"
+                android:layout_marginStart="16dp"
+                android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/recommendLip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:fontFamily="@font/kcchanbit"
-        android:textColor="#FF07194B"
-        android:text="추천 립"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendBase" />
+                <TextView
+                    android:id="@+id/PersonalColorName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="가을 딥"
+                    android:textColor="#FF07194B"
+                    android:textSize="34sp" />
 
-    <ImageView
-        android:id="@+id/lipimageView"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/inkthevelvet"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendLip" />
+                <TextView
+                    android:id="@+id/itis"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="입니다."
+                    android:textColor="#FF07194B"
+                    android:textSize="16sp" />
+            </LinearLayout>
 
-    <TextView
-        android:id="@+id/recommendEye"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
-        android:fontFamily="@font/kcchanbit"
-        android:textColor="#FF07194B"
-        android:text="추천 아이"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendLip" />
+            <TextView
+                android:id="@+id/recommendBase"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/kcchanbit"
+                android:text="추천 베이스"
+                android:textColor="#FF07194B"
+                android:textSize="16sp" />
 
-    <ImageView
-        android:id="@+id/eyeimageView"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/proeyepalette"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recommendEye" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/baseimageView"
-        app:layout_constraintEnd_toStartOf="@+id/baseimageView"
-        tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/killcover" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/baseimageView"
-        app:layout_constraintStart_toEndOf="@+id/baseimageView"
-        tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/baseimageView"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/killcover" />
 
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/lipimageView"
-        app:layout_constraintEnd_toStartOf="@+id/lipimageView"
-        tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/killcover" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/lipimageView"
-        app:layout_constraintStart_toEndOf="@+id/lipimageView"
-        tools:src="@tools:sample/avatars" />
+            </LinearLayout>
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/eyeimageView"
-        app:layout_constraintEnd_toStartOf="@+id/eyeimageView"
-        tools:src="@tools:sample/avatars" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal">
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="90dp"
-        android:layout_height="90dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintBottom_toBottomOf="@+id/eyeimageView"
-        app:layout_constraintStart_toEndOf="@+id/eyeimageView"
-        tools:src="@tools:sample/avatars" />
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="CLIO\n킬커버 스킨픽서쿠션 미니 5g\n16,000원" />
 
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="108dp"
-        android:layout_height="37dp"
-        android:layout_marginTop="15dp"
-        android:fontFamily="@font/kcchanbit"
-        android:text="로그아웃"
-        android:textColor="#DDDDDD"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/eyeimageView" />
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="CLIO\n킬커버 스킨픽서쿠션 미니 5g\n16,000원" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="CLIO\n킬커버 스킨픽서쿠션 미니 5g\n16,000원" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/recommendLip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/kcchanbit"
+                android:text="추천 립"
+                android:textColor="#FF07194B"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/inkthevelvet" />
+
+                <ImageView
+                    android:id="@+id/lipimageView"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/inkthevelvet" />
+
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/inkthevelvet" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="페리페라\n잉크 더 벨벳\n10,000원" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="페리페라\n잉크 더 벨벳\n10,000원" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="페리페라\n잉크 더 벨벳\n10,000원" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/recommendEye"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"
+                android:fontFamily="@font/kcchanbit"
+                android:text="추천 아이"
+                android:textColor="#FF07194B"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/proeyepalette" />
+
+                <ImageView
+                    android:id="@+id/eyeimageView"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/proeyepalette" />
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/proeyepalette" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="CLIO\n프로 아이 팔레트\n34,000원" />
+
+                <TextView
+                    android:id="@+id/textView21"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:text="CLIO\n프로 아이 팔레트\n34,000원" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="CLIO\n프로 아이 팔레트\n34,000원" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="20dp"
+                android:fontFamily="@font/kcchanbit"
+                android:text="로그아웃"
+                android:textColor="#DDDDDD" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
