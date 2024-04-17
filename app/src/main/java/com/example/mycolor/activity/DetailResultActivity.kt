@@ -36,7 +36,7 @@ class DetailResultActivity : AppCompatActivity() {
         val uid = intent.getStringExtra("uid")
         val flag = intent.getIntExtra("flag", 0)
 
-        resultTextView.text = result
+        //resultTextView.text = result
         uidTextView.text = uid
 
         if(flag == 1){
