@@ -68,7 +68,8 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         private const val REQUEST_GALLERY_ACCESS = 102
 
         // server IP 맞춰서 수정해야 함
-        private const val BASE_URL = "http://13.125.218.109:3000/"
+        private const val BASE_URL = "http://34.22.71.204:3000/"
+        //"http://13.125.218.109:3000/"
         private lateinit var apiService: ApiService
 
     }
