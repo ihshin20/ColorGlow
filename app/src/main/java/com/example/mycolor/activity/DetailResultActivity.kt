@@ -1,7 +1,9 @@
 package com.example.mycolor.activity
 
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -10,8 +12,17 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.*
+
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+
+
 
 class DetailResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,10 +43,81 @@ class DetailResultActivity : AppCompatActivity() {
         val similarTextView = findViewById<TextView>(R.id.similarTextView)
         val productTextview = findViewById<TextView>(R.id.productTextView)
 
+        val imageViewBest = findViewById<ImageView>(R.id.imageViewBest)
+        val imageViewWorst = findViewById<ImageView>(R.id.imageViewWorst)
+
         val result = intent.getStringExtra("result")
         val uid = intent.getStringExtra("uid")
         val flag = intent.getIntExtra("flag", 0)
 
+        val storage = FirebaseStorage.getInstance("gs://colorglow-9e76e.appspot.com") // 스토리지 주소 설정
+        val storageRef = storage.reference
+
+        // 파일 경로 수정 (결과 이름을 기반으로 동적으로 생성)
+        val resultLower = result?.toLowerCase(Locale.ROOT) ?: "default_value" // 결과 이름을 소문자로 변환
+        val bestImagePath = "${resultLower}_best.jpg"
+        val worstImagePath = "${resultLower}_worst.jpg"
+
+        val bestImageRef = storageRef.child(bestImagePath)
+        val worstImageRef = storageRef.child(worstImagePath)
+
+        bestImageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this)
+                .load(uri)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.e("GlideError", "Error loading image", e)
+                        return false // false를 반환하면 Glide는 에러 플레이스홀더나 에러 이미지를 처리하지 않습니다.
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+                })
+                .into(imageViewBest)
+        }.addOnFailureListener { exception ->
+            Log.w("Storage", "Failed to load best image", exception)
+        }
+
+        worstImageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(this)
+                .load(uri)
+                .listener(object : RequestListener<Drawable> {
+                    override fun onLoadFailed(
+                        e: GlideException?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        Log.e("GlideError", "Error loading image", e)
+                        return false // false를 반환하면 Glide는 에러 플레이스홀더나 에러 이미지를 처리하지 않습니다.
+                    }
+
+                    override fun onResourceReady(
+                        resource: Drawable?,
+                        model: Any?,
+                        target: Target<Drawable>?,
+                        dataSource: DataSource?,
+                        isFirstResource: Boolean
+                    ): Boolean {
+                        return false
+                    }
+                })
+                .into(imageViewWorst)
+        }.addOnFailureListener { exception ->
+            Log.w("Storage", "Failed to load worst image", exception)
+        }
         //resultTextView.text = result
         uidTextView.text = uid
 

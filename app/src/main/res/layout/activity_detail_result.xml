@@ -11,7 +11,7 @@
         android:id="@+id/detailUidTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="100dp"
         android:text="TextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -113,5 +113,31 @@
         android:text="TextView"
         app:layout_constraintStart_toStartOf="@+id/similarTextView"
         app:layout_constraintTop_toTopOf="@+id/textView24" />
+
+    <TextView
+        android:id="@+id/textView17"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:text="이미지"
+        app:layout_constraintStart_toStartOf="@+id/textView24"
+        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+
+    <ImageView
+        android:id="@+id/imageViewBest"
+        android:layout_width="194dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="50dp"
+        android:contentDescription="@+string/best_image"
+        app:layout_constraintStart_toEndOf="@+id/textView17"
+        app:layout_constraintTop_toBottomOf="@+id/productTextView" />
+
+    <ImageView
+        android:id="@+id/imageViewWorst"
+        android:layout_width="195dp"
+        android:layout_height="95dp"
+        android:contentDescription="@+string/worst_image"
+        app:layout_constraintStart_toStartOf="@+id/imageViewBest"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewBest" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
