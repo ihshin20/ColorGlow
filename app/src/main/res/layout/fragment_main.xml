@@ -22,10 +22,11 @@
                 android:layout_height="wrap_content"
                 android:background="#FDE4F7"
                 android:orientation="vertical"
-                android:padding="40dp">
+                android:padding="40dp"
+                android:gravity="center">
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/logoimageView1"
                     android:layout_width="411dp"
                     android:layout_height="92dp"
                     android:layout_gravity="center"
@@ -168,10 +169,33 @@
                     android:fontFamily="@font/kcchanbit"/>
 
                 <ImageView
-                    android:id="@+id/imageView"
+                    android:id="@+id/logotextimage"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:src="@drawable/logoimage" />
+                    android:layout_height="50dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/logotextimage" />
+
+                <ImageButton
+                    android:id="@+id/Callbutton"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@null"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/logobutton"
+                    android:layout_marginBottom="10dp" />
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="7dp"
+                    android:text="검사하기!"
+                    android:textColor="#FF07194B"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/kcchanbit"/>
+
             </LinearLayout>
         </ScrollView>
 

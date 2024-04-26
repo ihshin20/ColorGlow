@@ -9,6 +9,7 @@ import android.text.style.RelativeSizeSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -16,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.mycolor.R
+import com.google.android.material.bottomsheet.BottomSheetDialog
 
 
 class MainFragment : Fragment() {
@@ -33,8 +35,8 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)
 
-        val imageView2 = view.findViewById<ImageView>(R.id.imageView2)
-        imageView2.setImageResource(R.drawable.logoimage)
+        val logoimageView1 = view.findViewById<ImageView>(R.id.logoimageView1)
+        logoimageView1.setImageResource(R.drawable.logoimage)
         val pccsimageView = view.findViewById<ImageView>(R.id.pccsimageView)
         pccsimageView.setImageResource(R.drawable.pccs)
         val twofaceimageView = view.findViewById<ImageView>(R.id.twofaceimageView)
@@ -43,8 +45,8 @@ class MainFragment : Fragment() {
         grassimageView.setImageResource(R.drawable.grassimage)
         val shoppingimageView = view.findViewById<ImageView>(R.id.shoppingimageView)
         shoppingimageView.setImageResource(R.drawable.shoppingimage)
-        val imageView = view.findViewById<ImageView>(R.id.imageView)
-        imageView.setImageResource(R.drawable.logoimage)
+        val logotextimage = view.findViewById<ImageView>(R.id.logotextimage)
+        logotextimage.setImageResource(R.drawable.logotextimage)
 
 
         val textView6 = view.findViewById<TextView>(R.id.textView6)
@@ -61,6 +63,13 @@ class MainFragment : Fragment() {
 
         val textView = view.findViewById<TextView>(R.id.textView5)
         applyColorSpanToTextView(textView, "퍼스널 컬러", R.color.Hotpink)
+
+        // "검사하기" 버튼 클릭 이벤트 설정
+        val checkButton = view.findViewById<ImageButton>(R.id.Callbutton)
+        checkButton.setOnClickListener {
+            // Bottom Sheet Dialog 보여주기
+            showBottomSheetDialog()
+        }
     }
 
     private fun applySpannableStringToTextView(textView: TextView, keyword: String, sizeMultiplier: Float) {
@@ -97,4 +106,14 @@ class MainFragment : Fragment() {
         }
         textView.text = spannableString
     }
+
+    private fun showBottomSheetDialog() {
+        val bottomSheetDialog = BottomSheetDialog(requireContext())
+        with(bottomSheetDialog) {
+            setContentView(R.layout.bottom_sheet_dialog)
+            setCanceledOnTouchOutside(true) // 바깥 영역 터치시 다이얼로그 닫기 활성화
+            show()
+        }
+    }
+
 }
