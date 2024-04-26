@@ -21,7 +21,9 @@ import androidx.fragment.app.Fragment
 
 
 import com.example.mycolor.R
+import com.example.mycolor.activity.DetailResultActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import okhttp3.*
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 
@@ -37,7 +39,8 @@ import retrofit2.http.Part
 import java.io.ByteArrayOutputStream
 
 import java.util.concurrent.TimeUnit
-
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Date
 
 
 // API Interface
@@ -61,6 +64,8 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
     private lateinit var imageView: ImageView
     private lateinit var resultText: TextView
+    private lateinit var uid:String
+    private var nowFlag = 0
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 100
@@ -68,7 +73,8 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         private const val REQUEST_GALLERY_ACCESS = 102
 
         // server IP 맞춰서 수정해야 함
-        private const val BASE_URL = "http://13.125.218.109:3000/"
+        private const val BASE_URL = "http://34.22.71.204:3000/"
+        //"http://13.125.218.109:3000/"
         private lateinit var apiService: ApiService
 
     }
@@ -103,6 +109,20 @@ class HomeFragment : Fragment(R.id.homeFragment) {
             .client(okHttpClient) // OkHttpClient 설정
             .build()
 
+        // Firebase 인증 객체 생성
+        val auth = FirebaseAuth.getInstance()
+
+        // 현재 로그인한 사용자 정보 가져오기
+        val user = auth.currentUser
+        if (user != null) {
+            // 사용자 UID 출력
+            uid = user.uid
+            Log.d("FirebaseAuth", "User UID: $uid")
+            // 여기서 uid를 사용할 수 있습니다.
+        } else {
+            Log.d("FirebaseAuth", "No user is currently signed in.")
+        }
+
         apiService = retrofit.create(ApiService::class.java)
 
 //        val retrofit = Retrofit.Builder()
@@ -115,6 +135,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         imageView = view.findViewById(R.id.imageView)
         resultText = view.findViewById(R.id.testResult)
         resultText.text = "진단 ㄱㄱ"
+
 
         view.findViewById<FloatingActionButton>(R.id.fab_camera).setOnClickListener {
             if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
@@ -168,14 +189,19 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
+
+
+
         if (resultCode == RESULT_OK) {
+
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
                     // Camera
                     val imageBitmap = data?.extras?.get("data") as? Bitmap
                     imageBitmap?.let {
                         imageView.setImageBitmap(it)
-                        uploadImageAndText(it, "유저아이디") // auth UID로 변경해야 함
+                        uploadImageAndText(it, uid) // auth UID로 변경해야 함
                     }
                 }
                 REQUEST_GALLERY_ACCESS -> {
@@ -185,7 +211,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                         imageView.setImageURI(it)
                         context?.contentResolver?.openInputStream(it)?.let { inputStream ->
                             val imageBitmap = BitmapFactory.decodeStream(inputStream)
-                            uploadImageAndText(imageBitmap, "유저아이디") // auth UID로 변경해야 함
+                            uploadImageAndText(imageBitmap, uid) // auth UID로 변경해야 함
                         }
                     }
                 }
@@ -229,8 +255,11 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                             context,
                             "진단 완료! 결과페이지에서 확인해주세요.",
                             Toast.LENGTH_SHORT
+
+
                         ).show()
 
+                        addResult(uid, serverResponse?.pythonResult)
 
                     }
 
@@ -257,5 +286,34 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
             }
         })
+    }
+
+    fun addResult(uid: String, result: String?) {
+        val db = FirebaseFirestore.getInstance()
+        val userResults = db.collection("User").document(uid).collection("results")
+
+        val date = Date()
+
+        val diagnosticData = hashMapOf(
+            "date" to date,
+            "result" to result
+        )
+
+        userResults.add(diagnosticData)
+            .addOnSuccessListener { documentReference ->
+                Log.d("Firestore", "DocumentSnapshot written with ID: ${documentReference.id}")
+
+                val intent = Intent(context, DetailResultActivity::class.java)
+                intent.putExtra("result", result)
+                intent.putExtra("uid", uid)
+
+                nowFlag = 1
+                intent.putExtra("flag", nowFlag)
+
+                startActivity(intent)
+            }
+            .addOnFailureListener { e ->
+                Log.w("Firestore", "Error adding document", e)
+            }
     }
 }

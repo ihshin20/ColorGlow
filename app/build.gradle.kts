@@ -12,8 +12,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.mycolor"
-        minSdk = 34
-        targetSdk = 34
+        minSdk = 33
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
 
@@ -55,6 +55,8 @@ android {
 
 dependencies {
 
+    implementation ("com.google.firebase:firebase-firestore:24.11.1")
+
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.11.0")
@@ -88,6 +90,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.inappmessaging)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
