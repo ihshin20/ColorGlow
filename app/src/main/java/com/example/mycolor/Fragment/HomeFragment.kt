@@ -62,9 +62,9 @@ data class ServerResponse(
 
 class HomeFragment : Fragment(R.id.homeFragment) {
 
-    private lateinit var imageView: ImageView
+    private lateinit var imageViewTest: ImageView
     private lateinit var resultText: TextView
-    private lateinit var uid:String
+    private lateinit var uid: String
     private var nowFlag = 0
 
     companion object {
@@ -132,7 +132,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
         apiService = retrofit.create(ApiService::class.java)
 
-        imageView = view.findViewById(R.id.imageView)
+        imageViewTest = view.findViewById(R.id.imageViewTest)
         resultText = view.findViewById(R.id.testResult)
         resultText.text = "진단 ㄱㄱ"
 
@@ -200,7 +200,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                     // Camera
                     val imageBitmap = data?.extras?.get("data") as? Bitmap
                     imageBitmap?.let {
-                        imageView.setImageBitmap(it)
+                        imageViewTest.setImageBitmap(it)
                         uploadImageAndText(it, uid) // auth UID로 변경해야 함
                     }
                 }
@@ -208,7 +208,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                     // Gallery
                     val selectedImageUri: Uri? = data?.data
                     selectedImageUri?.let {
-                        imageView.setImageURI(it)
+                        imageViewTest.setImageURI(it)
                         context?.contentResolver?.openInputStream(it)?.let { inputStream ->
                             val imageBitmap = BitmapFactory.decodeStream(inputStream)
                             uploadImageAndText(imageBitmap, uid) // auth UID로 변경해야 함
