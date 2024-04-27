@@ -150,7 +150,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
         apiService = retrofit.create(ApiService::class.java)
 
-        imageView = view.findViewById(R.id.imageView)
+        imageView = view.findViewById(R.id.imageViewTest)
         resultText = view.findViewById(R.id.testResult)
         resultText.text = "진단 ㄱㄱ"
 
