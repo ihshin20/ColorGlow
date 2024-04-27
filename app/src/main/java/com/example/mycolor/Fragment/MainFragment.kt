@@ -376,7 +376,7 @@ class MainFragment : Fragment() {
                     }else{
                         Toast.makeText(
                             context,
-                            "진단 완료! 결과페이지에서 확인해주세요.",
+                            "진단 완료! 상세 진단 결과 페이지로 이동합니다.",
                             Toast.LENGTH_SHORT
 
 
