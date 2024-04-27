@@ -1,6 +1,7 @@
 package com.example.mycolor.Fragment
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Context
 import android.content.Intent
@@ -72,6 +73,7 @@ data class ServerResponse(
     val pythonResult: String
 )
 
+@SuppressLint("ResourceType")
 class HomeFragment : Fragment(R.id.homeFragment) {
 
     private lateinit var imageView: ImageView
