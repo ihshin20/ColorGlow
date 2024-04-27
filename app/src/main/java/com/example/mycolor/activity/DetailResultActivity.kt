@@ -1,5 +1,7 @@
 package com.example.mycolor.activity
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +23,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
-
+import java.io.ByteArrayOutputStream
 
 
 class DetailResultActivity : AppCompatActivity() {
@@ -46,15 +48,27 @@ class DetailResultActivity : AppCompatActivity() {
         val imageViewBest = findViewById<ImageView>(R.id.imageViewBest)
         val imageViewWorst = findViewById<ImageView>(R.id.imageViewWorst)
 
+        val myImg: ImageView = findViewById(R.id.myImg)
+
+
         val result = intent.getStringExtra("result")
         val uid = intent.getStringExtra("uid")
         val flag = intent.getIntExtra("flag", 0)
+
+//        val imageBitmap = intent.extras?.getParcelable("imgPath") as Bitmap?
+//        imageBitmap?.let {
+//            myImg.setImageBitmap(it)
+//        }
+
+        val imagePath = intent.getStringExtra("imgPath")
+        val imageBitmap = BitmapFactory.decodeFile(imagePath)
+        myImg.setImageBitmap(imageBitmap)
 
         val storage = FirebaseStorage.getInstance("gs://colorglow-9e76e.appspot.com") // 스토리지 주소 설정
         val storageRef = storage.reference
 
         // 파일 경로 수정 (결과 이름을 기반으로 동적으로 생성)
-        val resultLower = result?.toLowerCase(Locale.ROOT) ?: "default_value" // 결과 이름을 소문자로 변환
+        val resultLower = result?.lowercase(Locale.ROOT) ?: "default_value" // 결과 이름을 소문자로 변환
         val bestImagePath = "${resultLower}_best.jpg"
         val worstImagePath = "${resultLower}_worst.jpg"
 
@@ -122,7 +136,7 @@ class DetailResultActivity : AppCompatActivity() {
         uidTextView.text = uid
 
         if(flag == 1){
-            fetchNowResult(uid, result, dateTextView, resultTextView, infoTextView, similarTextView, productTextview)
+            fetchNowResult(uid, result, dateTextView, resultTextView, infoTextView, similarTextView, productTextview, imageBitmap!!)
         }
         // else{} -> 방금 진단한거 아닌거 (result fragment에서 내 과거 진단 조회 시 실행할 부분 작성해야 함
 
@@ -131,7 +145,7 @@ class DetailResultActivity : AppCompatActivity() {
     }
 
     fun fetchNowResult(uid: String?, result: String?, dateTextView: TextView, resultTextView: TextView,
-                       infoTextView: TextView, similarTextView: TextView, productTextView: TextView) {
+                       infoTextView: TextView, similarTextView: TextView, productTextView: TextView, myImg: Bitmap) {
         if (uid == null || result == null) {
             Log.w("Firestore", "UID or Result is null")
             return
@@ -140,6 +154,8 @@ class DetailResultActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
+
+
 
         // 최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
@@ -153,6 +169,8 @@ class DetailResultActivity : AppCompatActivity() {
                         val formattedDate = date?.let {
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(it)
                         } ?: "No date available"
+
+                        //uploadImageToFirestore(myImg, date.toString(), uid)
 
                         // TextView 업데이트
                         dateTextView.text = formattedDate
@@ -186,5 +204,40 @@ class DetailResultActivity : AppCompatActivity() {
                 Log.w("Firestore", "Error getting Tone document: ", exception)
             }
     }
+
+
+
+    private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
+        // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
+        val baos = ByteArrayOutputStream()
+        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+
+        // Firebase Storage에 먼저 이미지를 업로드하고 URL을 받아 Firestore에 저장
+        val storageRef = FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
+        val uploadTask = storageRef.putBytes(data)
+        uploadTask.addOnSuccessListener {
+            storageRef.downloadUrl.addOnSuccessListener { uri ->
+                val imageUrl = uri.toString()
+                saveImageUrlToFirestore(imageUrl)
+            }
+        }.addOnFailureListener {
+            // 처리할 오류 로직 추가
+        }
+    }
+
+    private fun saveImageUrlToFirestore(imageUrl: String) {
+        val db = FirebaseFirestore.getInstance()
+        val imageInfo = hashMapOf("url" to imageUrl)
+
+        db.collection("images").add(imageInfo)
+            .addOnSuccessListener { documentReference ->
+                // 데이터 저장 성공 시 처리
+            }
+            .addOnFailureListener { e ->
+                // 데이터 저장 실패 시 처리
+            }
+    }
+
 
 }

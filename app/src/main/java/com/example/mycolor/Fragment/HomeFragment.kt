@@ -2,12 +2,14 @@ package com.example.mycolor.Fragment
 
 import android.Manifest
 import android.app.Activity.RESULT_OK
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 
 
@@ -40,7 +43,16 @@ import java.io.ByteArrayOutputStream
 
 import java.util.concurrent.TimeUnit
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+
+import android.graphics.Matrix
+import androidx.exifinterface.media.ExifInterface
 
 
 // API Interface
@@ -66,6 +78,8 @@ class HomeFragment : Fragment(R.id.homeFragment) {
     private lateinit var resultText: TextView
     private lateinit var uid:String
     private var nowFlag = 0
+
+    private lateinit var imageBitmap: Bitmap
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 100
@@ -96,6 +110,8 @@ class HomeFragment : Fragment(R.id.homeFragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
 
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃
@@ -154,14 +170,58 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         requestPermissions(arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
     }
 
+//    private fun launchCamera() {
+//        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        try {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+//        } catch (e: Exception) {
+//            Toast.makeText(context, "Error opening camera", Toast.LENGTH_SHORT).show()
+//        }
+//    }
+
     private fun launchCamera() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-        } catch (e: Exception) {
-            Toast.makeText(context, "Error opening camera", Toast.LENGTH_SHORT).show()
+        if (takePictureIntent.resolveActivity(requireActivity().packageManager) != null) {
+            val photoFile: File? = try {
+                createImageFile()
+            } catch (ex: IOException) {
+                Toast.makeText(context, "Photo file could not be created, please try again", Toast.LENGTH_SHORT).show()
+                null
+            }
+
+            photoFile?.also {
+                val photoURI: Uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "com.example.mycolor.fileprovider",
+                    it
+                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            }
+        } else {
+            Toast.makeText(context, "No camera app available", Toast.LENGTH_SHORT).show()
         }
     }
+
+
+
+
+    private lateinit var currentPhotoPath: String
+
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).also {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = it.absolutePath
+        }
+    }
+
 
     private fun openGallery() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -190,18 +250,18 @@ class HomeFragment : Fragment(R.id.homeFragment) {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-
-
-
         if (resultCode == RESULT_OK) {
 
             when (requestCode) {
                 REQUEST_IMAGE_CAPTURE -> {
-                    // Camera
-                    val imageBitmap = data?.extras?.get("data") as? Bitmap
-                    imageBitmap?.let {
-                        imageView.setImageBitmap(it)
-                        uploadImageAndText(it, uid) // auth UID로 변경해야 함
+                    val imageFile = File(currentPhotoPath)
+                    if (imageFile.exists()) {
+                        imageBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
+
+                        imageBitmap = rotateImageIfNeeded(currentPhotoPath, imageBitmap) // 회전 추가
+
+                        imageView.setImageBitmap(imageBitmap)
+                        uploadImageAndText(imageBitmap, uid)
                     }
                 }
                 REQUEST_GALLERY_ACCESS -> {
@@ -210,7 +270,7 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                     selectedImageUri?.let {
                         imageView.setImageURI(it)
                         context?.contentResolver?.openInputStream(it)?.let { inputStream ->
-                            val imageBitmap = BitmapFactory.decodeStream(inputStream)
+                            imageBitmap = BitmapFactory.decodeStream(inputStream)
                             uploadImageAndText(imageBitmap, uid) // auth UID로 변경해야 함
                         }
                     }
@@ -221,6 +281,26 @@ class HomeFragment : Fragment(R.id.homeFragment) {
         }
 
 
+    }
+
+
+    private fun rotateImageIfNeeded(photoPath: String, bitmap: Bitmap): Bitmap {
+        val exif = try {
+            ExifInterface(photoPath)
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return bitmap
+        }
+        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+        val matrix = Matrix()
+        when (orientation) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> matrix.postRotate(90f)
+            ExifInterface.ORIENTATION_ROTATE_180 -> matrix.postRotate(180f)
+            ExifInterface.ORIENTATION_ROTATE_270 -> matrix.postRotate(270f)
+        }
+
+        return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     private fun uploadImageAndText(bitmap: Bitmap, text: String) {
@@ -307,6 +387,11 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                 intent.putExtra("result", result)
                 intent.putExtra("uid", uid)
 
+                val imagePath = saveImageToFile(requireContext(), imageBitmap, "temp.png")
+
+                //val scaledBitmap = Bitmap.createScaledBitmap(imageBitmap, 200, 200, true)
+                intent.putExtra("imgPath", imagePath)
+
                 nowFlag = 1
                 intent.putExtra("flag", nowFlag)
 
@@ -316,4 +401,18 @@ class HomeFragment : Fragment(R.id.homeFragment) {
                 Log.w("Firestore", "Error adding document", e)
             }
     }
+
+    private fun saveImageToFile(context: Context, imageBitmap: Bitmap, filename: String): String? {
+        val file = File(context.filesDir, filename)
+        return try {
+            FileOutputStream(file).use { out ->
+                imageBitmap.compress(Bitmap.CompressFormat.PNG, 100, out) // PNG 형식으로 압축 없이 저장
+            }
+            file.absolutePath
+        } catch (e: IOException) {
+            e.printStackTrace()
+            null
+        }
+    }
+
 }
