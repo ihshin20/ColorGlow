@@ -170,7 +170,7 @@ class DetailResultActivity : AppCompatActivity() {
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(it)
                         } ?: "No date available"
 
-                        //uploadImageToFirestore(myImg, date.toString(), uid)
+                        uploadImageToFirestore(myImg, date.toString(), uid)
 
                         // TextView 업데이트
                         dateTextView.text = formattedDate
