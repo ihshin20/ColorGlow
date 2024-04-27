@@ -9,11 +9,11 @@
 
     <!-- 첫 번째 버튼 -->
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/cameraBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="버튼 1" />
+        android:text="카메라" />
 
     <!-- 가운데 마진을 위한 Space 뷰 -->
     <Space
@@ -23,10 +23,10 @@
 
     <!-- 두 번째 버튼 -->
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/galleryBtn"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="버튼 2" />
+        android:text="갤러리" />
 
 </LinearLayout>

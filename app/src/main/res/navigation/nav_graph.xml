@@ -9,11 +9,7 @@
         android:id="@+id/mainFragment"
         android:name="com.example.mycolor.Fragment.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
-        <action
-            android:id="@+id/action_mainFragment_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
-    </fragment>
+        tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/homeFragment2"
         android:name="com.example.mycolor.Fragment.HomeFragment"
@@ -25,8 +21,8 @@
         android:label="fragment_result"
         tools:layout="@layout/fragment_result" >
         <action
-            android:id="@+id/action_resultFragment2_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
+            android:id="@+id/action_resultFragment2_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
     <fragment
         android:id="@+id/myPageFragment2"
@@ -34,7 +30,7 @@
         android:label="fragment_my_page"
         tools:layout="@layout/fragment_my_page" >
         <action
-            android:id="@+id/action_myPageFragment2_to_homeFragment2"
-            app:destination="@id/homeFragment2" />
+            android:id="@+id/action_myPageFragment2_to_mainFragment"
+            app:destination="@id/mainFragment" />
     </fragment>
 </navigation>

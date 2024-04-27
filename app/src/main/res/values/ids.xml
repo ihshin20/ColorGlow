@@ -8,7 +8,7 @@
     <item name="myPageFragment" type="id" />
     <item name="main" type="id" />
     <item name="button" type="id" />
-    <item name="button2" type="id" />
+    <item name="galleryBtn" type="id" />
     <item name="editTextText" type="id" />
     <item name="editTextTextPassword" type="id" />
     <item name="fab_camera" type="id" />

@@ -47,7 +47,7 @@ class LoginActivity : AppCompatActivity() {
         auth = Firebase.auth
 
         val button = findViewById<Button>(R.id.button) // 로그인 버튼
-        val button2 = findViewById<Button>(R.id.button2) // 회원가입 버튼
+        val button2 = findViewById<Button>(R.id.galleryBtn) // 회원가입 버튼
         val editTextEmail = findViewById<EditText>(R.id.editTextText)
         val editTextPassword = findViewById<EditText>(R.id.editTextTextPassword)
 
