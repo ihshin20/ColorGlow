@@ -12,4 +12,13 @@
     <item name="editTextText" type="id" />
     <item name="editTextTextPassword" type="id" />
     <item name="fab_camera" type="id" />
+    <item name="myImg" type="id" />
+    <item name="textView30" type="id" />
+    <item name="descriptionTextView" type="id" />
+    <item name="resultImageView" type="id" />
+    <item name="loadingTextView" type="id" />
+    <item name="fragment_container" type="id" />
+    <item name="someViewId" type="id" />
+    <item name="textView25" type="id" />
+    <item name="resultTextView" type="id" />
 </resources>
