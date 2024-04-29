@@ -31,7 +31,7 @@
                     android:layout_height="92dp"
                     android:layout_gravity="center"
                     android:layout_marginBottom="16dp"
-                    tools:src="@drawable/logoimage" />
+                    android:src="@drawable/logoimage" />
 
                 <TextView
                     android:id="@+id/textView5"
@@ -175,26 +175,30 @@
                     android:layout_marginBottom="10dp"
                     android:src="@drawable/logotextimage" />
 
-                <ImageButton
-                    android:id="@+id/Callbutton"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@null"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/logobutton"
-                    android:layout_marginBottom="10dp" />
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="match_parent"
+                <RelativeLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="7dp"
-                    android:text="검사하기!"
-                    android:textColor="#FF07194B"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/kcchanbit"/>
+                    android:layout_marginBottom="10dp">
+
+                    <ImageButton
+                        android:id="@+id/Callbutton"
+                        android:layout_width="170dp"
+                        android:layout_height="170dp"
+                        android:background="@null"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/confirm_btn" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="검사하기"
+                        android:layout_centerInParent="true"
+                        android:textSize="17sp"
+                        android:textColor="#FF07194B"
+                        android:fontFamily="@font/kcchanbit"/>
+                </RelativeLayout>
+
+
 
             </LinearLayout>
         </ScrollView>

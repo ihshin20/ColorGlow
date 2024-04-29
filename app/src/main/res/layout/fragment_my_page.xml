@@ -25,17 +25,18 @@
 
             <ImageView
                 android:id="@+id/logoimageView"
-                android:layout_width="410dp"
-                android:layout_height="73dp"
+                android:layout_width="411dp"
+                android:layout_height="92dp"
                 android:layout_gravity="center"
-                android:layout_marginBottom="16dp"
-                android:src="@drawable/logoimage" />
+                android:layout_marginTop="40dp"
+                tools:src="@drawable/logoimage" />
 
             <TextView
                 android:id="@+id/Mypage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/kcchanbit"
                 android:text="MY PAGE"

@@ -7,147 +7,174 @@
     android:layout_height="match_parent"
     tools:context=".activity.DetailResultActivity">
 
-    <TextView
-        android:id="@+id/detailUidTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/detailResultTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detailUidTextView" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FDE4F7"
+            android:orientation="vertical"
+            android:gravity="center">
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="uid"
-        app:layout_constraintEnd_toStartOf="@+id/detailUidTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/detailUidTextView" />
+            <ImageView
+                android:id="@+id/logoimageView1"
+                android:layout_width="411dp"
+                android:layout_height="92dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                tools:src="@drawable/logoimage" />
 
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="진단결과"
-        app:layout_constraintEnd_toStartOf="@+id/detailResultTextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/detailResultTextView" />
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="uid"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
 
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="비슷한 애들"
-        app:layout_constraintStart_toStartOf="@+id/textView18"
-        app:layout_constraintTop_toTopOf="@+id/similarTextView" />
+            <TextView
+                android:id="@+id/detailUidTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="TextView"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B" />
 
-    <TextView
-        android:id="@+id/infoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/dateTextView"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+            <TextView
+                android:id="@+id/textView22"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="진단 날짜"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
 
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="설명"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toTopOf="@+id/infoTextView" />
+            <TextView
+                android:id="@+id/dateTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="TextView"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
 
-    <TextView
-        android:id="@+id/similarTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/infoTextView"
-        app:layout_constraintTop_toBottomOf="@+id/infoTextView" />
+            <ImageView
+                android:id="@+id/myImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:srcCompat="@tools:sample/avatars"
+                android:layout_marginBottom="10dp" />
 
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="진단 날짜"
-        app:layout_constraintStart_toStartOf="@+id/textView15"
-        app:layout_constraintTop_toBottomOf="@+id/textView15" />
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="진단결과"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
 
-    <TextView
-        android:id="@+id/dateTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/detailResultTextView"
-        app:layout_constraintTop_toBottomOf="@+id/detailResultTextView" />
+            <TextView
+                android:id="@+id/detailResultTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center"
+                android:text="TextView"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"
+                android:textSize="16dp"
+                android:lineSpacingMultiplier="1.2"
+                android:lineSpacingExtra="4dp"/>
 
-    <TextView
-        android:id="@+id/textView24"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="제품"
-        app:layout_constraintStart_toStartOf="@+id/textView16"
-        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
-    <TextView
-        android:id="@+id/productTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintStart_toStartOf="@+id/similarTextView"
-        app:layout_constraintTop_toTopOf="@+id/textView24" />
+            <TextView
+                android:id="@+id/infoTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="50dp"
+                android:text="설명들어오는텍스트뷰"
+                android:gravity="center_horizontal"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"
+                android:textSize="16dp" />
 
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="이미지"
-        app:layout_constraintStart_toStartOf="@+id/textView24"
-        app:layout_constraintTop_toBottomOf="@+id/textView24" />
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="같은 퍼스널 컬러의 연예인"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
 
-    <ImageView
-        android:id="@+id/imageViewBest"
-        android:layout_width="194dp"
-        android:layout_height="96dp"
-        android:layout_marginStart="50dp"
-        android:contentDescription="@+string/best_image"
-        app:layout_constraintStart_toEndOf="@+id/textView17"
-        app:layout_constraintTop_toBottomOf="@+id/productTextView" />
+            <TextView
+                android:id="@+id/similarTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="TextView"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"
+                android:textSize="20dp"/>
 
-    <ImageView
-        android:id="@+id/imageViewWorst"
-        android:layout_width="195dp"
-        android:layout_height="95dp"
-        android:contentDescription="@+string/worst_image"
-        app:layout_constraintStart_toStartOf="@+id/imageViewBest"
-        app:layout_constraintTop_toBottomOf="@+id/imageViewBest" />
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Best Color"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
 
-    <ImageView
-        android:id="@+id/myImg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageViewWorst"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView17"
-        tools:srcCompat="@tools:sample/avatars" />
+            <ImageView
+                android:id="@+id/imageViewBest"
+                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:layout_marginBottom="50dp"
+                android:contentDescription="@+string/best_image"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/textViewW"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Worst Color"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
+
+            <ImageView
+                android:id="@+id/imageViewWorst"
+                android:layout_width="wrap_content"
+                android:layout_height="400dp"
+                android:layout_marginBottom="50dp"
+                android:contentDescription="@+string/worst_image"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="제품"
+                android:textSize="16dp"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
+
+            <TextView
+                android:id="@+id/productTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="TextView"
+                android:textSize="16dp"
+                android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"/>
+
+        </LinearLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

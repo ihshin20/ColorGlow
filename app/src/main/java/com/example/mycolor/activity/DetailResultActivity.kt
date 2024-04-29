@@ -37,11 +37,13 @@ class DetailResultActivity : AppCompatActivity() {
             insets
         }
 
-
+        val imageView = findViewById<ImageView>(R.id.logoimageView1)
+        imageView.setImageResource(R.drawable.logoimage)
         val uidTextView = findViewById<TextView>(R.id.detailUidTextView)
         val resultTextView = findViewById<TextView>(R.id.detailResultTextView)
         val dateTextView = findViewById<TextView>(R.id.dateTextView)
         val infoTextView = findViewById<TextView>(R.id.infoTextView)
+
         val similarTextView = findViewById<TextView>(R.id.similarTextView)
         val productTextview = findViewById<TextView>(R.id.productTextView)
 
@@ -156,7 +158,6 @@ class DetailResultActivity : AppCompatActivity() {
         val toneRef = db.collection("Tone").document(result)
 
 
-
         // 최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
             .get()
@@ -187,13 +188,38 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val description = document.getString("설명") ?: "Description not available"
+
+                    val words = description.split(" ")
+                    val maxLineLength = 40  // 최대 줄 길이 설정
+                    val stringBuilder = StringBuilder()
+                    var currentLineLength = 0
+
+                    for (word in words) {
+                        // 단어 추가 전, 현재 줄의 길이와 단어 길이를 합쳐서 최대 길이를 초과하는지 확인
+                        if (currentLineLength + word.length + 1 > maxLineLength) { // +1 for space
+                            stringBuilder.append("\n")
+                            currentLineLength = 0  // 줄 길이 리셋
+                        }
+
+                        stringBuilder.append(word).append(" ")
+                        currentLineLength += word.length + 1
+
+                        // 마침표 뒤에 줄바꿈 추가 (단어 처리 후에 적용)
+                        if (word.endsWith(".")) {
+                            stringBuilder.append("\n")
+                            currentLineLength = 0
+                        }
+                    }
+
+                    val processedText = stringBuilder.toString()
+
                     val celebrities = document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
                     val celebrityText = celebrities.joinToString(", ")
                     val products = document.get("제품설명") as? List<String> ?: listOf("No products")
                     val productText = products.joinToString("\n")
 
                     // TextView 업데이트
-                    infoTextView.text = description
+                    infoTextView.text = processedText.trim()
                     similarTextView.text = celebrityText
                     productTextView.text = productText
                 } else {
