@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
-
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -40,11 +39,30 @@ class DetailResultActivity : AppCompatActivity() {
             insets
         }
 
+        val imageView = findViewById<ImageView>(R.id.logoimageView1)
+        imageView.setImageResource(R.drawable.logoimage)
         val resultTextView = findViewById<TextView>(R.id.detailResultTextView)
         val dateTextView = findViewById<TextView>(R.id.dateTextView)
         val infoTextView = findViewById<TextView>(R.id.infoTextView)
         val similarTextView = findViewById<TextView>(R.id.similarTextView)
-        val productTextView = findViewById<TextView>(R.id.productTextView)
+
+        val baseProductTextViews = listOf(
+            findViewById<TextView>(R.id.baseproductTextView_1),
+            findViewById<TextView>(R.id.baseproductTextView_2),
+            findViewById<TextView>(R.id.baseproductTextView_3)
+        )
+        val lipProductTextViews = listOf(
+            findViewById<TextView>(R.id.lipproductTextView_1),
+            findViewById<TextView>(R.id.lipproductTextView_2),
+            findViewById<TextView>(R.id.lipproductTextView_3)
+        )
+        val eyeProductTextViews = listOf(
+            findViewById<TextView>(R.id.eyeproductTextView_1),
+            findViewById<TextView>(R.id.eyeproductTextView_2),
+            findViewById<TextView>(R.id.eyeproductTextView_3)
+        )
+
+
         val imageViewBest = findViewById<ImageView>(R.id.imageViewBest)
         val imageViewWorst = findViewById<ImageView>(R.id.imageViewWorst)
         val myImg: ImageView = findViewById(R.id.myImg)
@@ -93,14 +111,8 @@ class DetailResultActivity : AppCompatActivity() {
             myImg.setImageBitmap(imageBitmap)
 
             fetchNowResult(
-                uid,
-                result,
-                dateTextView,
-                resultTextView,
-                infoTextView,
-                similarTextView,
-                productTextView,
-                imageBitmap!!
+                uid, result, dateTextView, resultTextView, infoTextView, similarTextView,
+                baseProductTextViews, lipProductTextViews, eyeProductTextViews, imageBitmap!!
             )
         } else {
             val dateFromIntent = intent.getStringExtra("date")
@@ -137,8 +149,8 @@ class DetailResultActivity : AppCompatActivity() {
                         dateTextView,
                         resultTextView,
                         infoTextView,
-                        similarTextView,
-                        productTextView
+                        similarTextView//,
+                        //productTextView
                     )
                 }
             } else {
@@ -146,10 +158,19 @@ class DetailResultActivity : AppCompatActivity() {
             }
         }
     }
-}
 
-    fun fetchNowResult(uid: String?, result: String?, dateTextView: TextView, resultTextView: TextView,
-                       infoTextView: TextView, similarTextView: TextView, productTextView: TextView, myImg: Bitmap) {
+    fun fetchNowResult(
+        uid: String?,
+        result: String?,
+        dateTextView: TextView,
+        resultTextView: TextView,
+        infoTextView: TextView,
+        similarTextView: TextView,
+        baseProductTextViews: List<TextView>,
+        lipProductTextViews: List<TextView>,
+        eyeProductTextViews: List<TextView>,
+        myImg: Bitmap
+    ) {
         if (uid == null || result == null) {
             Log.w("Firestore", "UID or Result is null")
             return
@@ -158,6 +179,8 @@ class DetailResultActivity : AppCompatActivity() {
         val db = FirebaseFirestore.getInstance()
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
+
+
 
         // 최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
@@ -168,7 +191,7 @@ class DetailResultActivity : AppCompatActivity() {
                 } else {
                     for (document in documents) {
                         val date = document.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
-                            val formattedDate = date?.let {
+                        val formattedDate = date?.let {
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(it)
                         } ?: "No date available"
 
@@ -190,14 +213,68 @@ class DetailResultActivity : AppCompatActivity() {
                 if (document.exists()) {
                     val description = document.getString("설명") ?: "Description not available"
                     val celebrities = document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
-                    val celebrityText = celebrities.joinToString(", ")
-                    val products = document.get("제품설명") as? List<String> ?: listOf("No products")
-                    val productText = products.joinToString("\n")
 
-                    // TextView 업데이트
+                    // '제품설명' 배열에서 데이터 추출
+                    val productDescriptions = document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
+
+                    // '베이스' 카테고리의 데이터를 찾습니다.
+                    val baseMap = productDescriptions.find { it.containsKey("베이스") }?.get("베이스") as? Map<String, Any> ?: mapOf()
+
+                    // '베이스' 카테고리의 각 제품 정보를 TextView에 표시
+                    baseMap.let { products ->
+                        baseProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "베이스제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+
+                            // 각 TextView에 설정할 텍스트를 생성합니다.
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    // '립' 카테고리의 데이터를 찾습니다.
+                    val lipMap = productDescriptions.find { it.containsKey("립") }?.get("립") as? Map<String, Any> ?: mapOf()
+
+                    // '립' 카테고리의 각 제품 정보를 TextView에 표시
+                    lipMap.let { products ->
+                        lipProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "립제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+
+                            // 각 TextView에 설정할 텍스트를 생성합니다.
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    // '아이' 카테고리의 데이터를 찾습니다.
+                    val eyeMap = productDescriptions.find { it.containsKey("아이") }?.get("아이") as? Map<String, Any> ?: mapOf()
+
+                    // '아이' 카테고리의 각 제품 정보를 TextView에 표시
+                    eyeMap.let { products ->
+                        eyeProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "아이제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+
+                            // 각 TextView에 설정할 텍스트를 생성합니다.
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    // UI에 데이터를 표시합니다.
                     infoTextView.text = description
-                    similarTextView.text = celebrityText
-                    productTextView.text = productText
+                    similarTextView.text = celebrities.joinToString(", ")
+
                 } else {
                     Log.d("Firestore", "No Tone document found")
                 }
@@ -209,7 +286,7 @@ class DetailResultActivity : AppCompatActivity() {
 
 
 fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
-                      infoTextView: TextView, similarTextView: TextView, productTextView: TextView) {
+                      infoTextView: TextView, similarTextView: TextView) {
     if (uid == null || date == null) {
         Log.w("Firestore", "UID or Date is null")
         dateTextView.text = "UID or Date is missing"
@@ -255,7 +332,7 @@ fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView,
                 // TextView 업데이트
                 infoTextView.text = description
                 similarTextView.text = celebrityText
-                productTextView.text = productText
+                //productTextView.text = productText
             } else {
                 Log.d("Firestore", "No Tone document found")
             }
@@ -302,4 +379,4 @@ private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:Strin
     }
 
 
-
+}
