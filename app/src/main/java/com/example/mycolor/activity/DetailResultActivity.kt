@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
+
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -23,6 +24,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
+import com.google.firebase.Timestamp
 import java.io.ByteArrayOutputStream
 
 
@@ -37,68 +39,35 @@ class DetailResultActivity : AppCompatActivity() {
             insets
         }
 
-
         val uidTextView = findViewById<TextView>(R.id.detailUidTextView)
         val resultTextView = findViewById<TextView>(R.id.detailResultTextView)
         val dateTextView = findViewById<TextView>(R.id.dateTextView)
         val infoTextView = findViewById<TextView>(R.id.infoTextView)
         val similarTextView = findViewById<TextView>(R.id.similarTextView)
-        val productTextview = findViewById<TextView>(R.id.productTextView)
-
+        val productTextView = findViewById<TextView>(R.id.productTextView)
         val imageViewBest = findViewById<ImageView>(R.id.imageViewBest)
         val imageViewWorst = findViewById<ImageView>(R.id.imageViewWorst)
-
         val myImg: ImageView = findViewById(R.id.myImg)
-
 
         val result = intent.getStringExtra("result")
         val uid = intent.getStringExtra("uid")
         val flag = intent.getIntExtra("flag", 0)
-
-//        val imageBitmap = intent.extras?.getParcelable("imgPath") as Bitmap?
-//        imageBitmap?.let {
-//            myImg.setImageBitmap(it)
-//        }
-
         val imagePath = intent.getStringExtra("imgPath")
         val imageBitmap = BitmapFactory.decodeFile(imagePath)
         myImg.setImageBitmap(imageBitmap)
 
-        val storage = FirebaseStorage.getInstance("gs://colorglow-9e76e.appspot.com") // 스토리지 주소 설정
+        val storage = FirebaseStorage.getInstance("gs://colorglow-9e76e.appspot.com")
         val storageRef = storage.reference
 
-        // 파일 경로 수정 (결과 이름을 기반으로 동적으로 생성)
-        val resultLower = result?.lowercase(Locale.ROOT) ?: "default_value" // 결과 이름을 소문자로 변환
+        val resultLower = result?.lowercase(Locale.ROOT) ?: "default_value"
         val bestImagePath = "${resultLower}_best.jpg"
         val worstImagePath = "${resultLower}_worst.jpg"
-
         val bestImageRef = storageRef.child(bestImagePath)
         val worstImageRef = storageRef.child(worstImagePath)
 
         bestImageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(this)
                 .load(uri)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        Log.e("GlideError", "Error loading image", e)
-                        return false // false를 반환하면 Glide는 에러 플레이스홀더나 에러 이미지를 처리하지 않습니다.
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        return false
-                    }
-                })
                 .into(imageViewBest)
         }.addOnFailureListener { exception ->
             Log.w("Storage", "Failed to load best image", exception)
@@ -107,42 +76,43 @@ class DetailResultActivity : AppCompatActivity() {
         worstImageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(this)
                 .load(uri)
-                .listener(object : RequestListener<Drawable> {
-                    override fun onLoadFailed(
-                        e: GlideException?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        Log.e("GlideError", "Error loading image", e)
-                        return false // false를 반환하면 Glide는 에러 플레이스홀더나 에러 이미지를 처리하지 않습니다.
-                    }
-
-                    override fun onResourceReady(
-                        resource: Drawable?,
-                        model: Any?,
-                        target: Target<Drawable>?,
-                        dataSource: DataSource?,
-                        isFirstResource: Boolean
-                    ): Boolean {
-                        return false
-                    }
-                })
                 .into(imageViewWorst)
         }.addOnFailureListener { exception ->
             Log.w("Storage", "Failed to load worst image", exception)
         }
-        //resultTextView.text = result
+
         uidTextView.text = uid
 
-        if(flag == 1){
-            fetchNowResult(uid, result, dateTextView, resultTextView, infoTextView, similarTextView, productTextview, imageBitmap!!)
+        if (flag == 1) {
+            fetchNowResult(
+                uid,
+                result,
+                dateTextView,
+                resultTextView,
+                infoTextView,
+                similarTextView,
+                productTextView,
+                imageBitmap!!
+            )
+        } else {
+            val dateFromIntent = intent.getStringExtra("date")
+            if (dateFromIntent != null) {
+                fetchRecentResult(
+                    uid,
+                    dateFromIntent,
+                    dateTextView,
+                    resultTextView,
+                    infoTextView,
+                    similarTextView,
+                    productTextView
+                )
+            } else {
+                Log.w("IntentError", "Date information is missing in the intent")
+                // 필요한 경우 사용자에게 날짜 정보가 누락되었다는 것을 알리는 UI 업데이트를 수행
+            }
         }
-        // else{} -> 방금 진단한거 아닌거 (result fragment에서 내 과거 진단 조회 시 실행할 부분 작성해야 함
-
-        //fetchRecentResult(uid, dateTextView, resultTextView, infoTextView, similarTextView)
-
     }
+}
 
     fun fetchNowResult(uid: String?, result: String?, dateTextView: TextView, resultTextView: TextView,
                        infoTextView: TextView, similarTextView: TextView, productTextView: TextView, myImg: Bitmap) {
@@ -206,8 +176,84 @@ class DetailResultActivity : AppCompatActivity() {
     }
 
 
+fun fetchRecentResult(uid: String?, date: String?, dateTextView: TextView, resultTextView: TextView,
+                      infoTextView: TextView, similarTextView: TextView, productTextView: TextView) {
+    if (uid == null || date == null) {
+        Log.w("Firestore", "UID or Date is null")
+        dateTextView.text = "UID or Date is missing"
+        return
+    }
 
-    private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
+    val db = FirebaseFirestore.getInstance()
+    val diagnosticRef = db.collection("User").document(uid).collection("results")
+
+    // 날짜 형식 파싱
+    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+    sdf.timeZone = TimeZone.getTimeZone("UTC")
+    val targetDate = sdf.parse(date)?.let {
+        Timestamp(Date(it.time / 1000 * 1000)) // 밀리초 단위의 오차를 제거하기 위해 초 단위로 변환 후 다시 밀리초로 변환
+    }
+
+    diagnosticRef.whereEqualTo("date", targetDate).get()
+        .addOnSuccessListener { documents ->
+            if (documents.isEmpty) {
+                Log.d("Firestore", "No documents found for the specified date")
+                dateTextView.text = "No results found for $date"
+                resultTextView.text = "No results found"
+                // 다른 TextView들도 업데이트
+                infoTextView.text = ""
+                similarTextView.text = ""
+                productTextView.text = ""
+            } else {
+                // 여러 결과 중 첫 번째 결과만 표시
+                val document = documents.documents.first() // 날짜가 같은 첫 번째 문서 가져오기
+                val actualDate = document.getTimestamp("date")?.toDate()
+                val formattedDate = actualDate?.let { sdf.format(it) } ?: "No date available"
+
+                val result = document.getString("result") ?: "No result available"
+
+                // TextView 업데이트
+                dateTextView.text = formattedDate
+                resultTextView.text = result
+
+                // Tone 정보 가져오기
+                val toneRef = db.collection("Tone").document(result)
+                toneRef.get()
+                    .addOnSuccessListener { toneDocument ->
+                        if (toneDocument.exists()) {
+                            val description = toneDocument.getString("description") ?: "Description not available"
+                            val celebrities = toneDocument.get("similarCelebrities") as? List<String> ?: listOf("No celebrities available")
+                            val celebrityText = celebrities.joinToString(", ")
+                            val products = toneDocument.get("productDescription") as? List<String> ?: listOf("No products available")
+                            val productText = products.joinToString("\n")
+
+                            // TextView 업데이트
+                            infoTextView.text = description
+                            similarTextView.text = celebrityText
+                            productTextView.text = productText
+                        } else {
+                            Log.d("Firestore", "No Tone document found")
+                            infoTextView.text = "No description available"
+                            similarTextView.text = ""
+                            productTextView.text = ""
+                        }
+                    }
+                    .addOnFailureListener { toneException ->
+                        Log.w("Firestore", "Error getting Tone document: ", toneException)
+                        infoTextView.text = "Failed to fetch description"
+                    }
+            }
+        }
+        .addOnFailureListener { diagnosticException ->
+            Log.w("Firestore", "Error getting diagnostic results: ", diagnosticException)
+            dateTextView.text = "Failed to fetch results"
+            resultTextView.text = "Failed to fetch results"
+        }
+}
+
+
+
+private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
         // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
         val baos = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
@@ -240,4 +286,4 @@ class DetailResultActivity : AppCompatActivity() {
     }
 
 
-}
+
