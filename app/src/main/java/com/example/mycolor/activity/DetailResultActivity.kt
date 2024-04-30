@@ -25,6 +25,7 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.google.firebase.Timestamp
+import com.google.firebase.auth.FirebaseAuth
 import java.io.ByteArrayOutputStream
 
 
@@ -39,7 +40,6 @@ class DetailResultActivity : AppCompatActivity() {
             insets
         }
 
-        val uidTextView = findViewById<TextView>(R.id.detailUidTextView)
         val resultTextView = findViewById<TextView>(R.id.detailResultTextView)
         val dateTextView = findViewById<TextView>(R.id.dateTextView)
         val infoTextView = findViewById<TextView>(R.id.infoTextView)
@@ -50,11 +50,17 @@ class DetailResultActivity : AppCompatActivity() {
         val myImg: ImageView = findViewById(R.id.myImg)
 
         val result = intent.getStringExtra("result")
-        val uid = intent.getStringExtra("uid")
+        var uid = intent.getStringExtra("uid")
         val flag = intent.getIntExtra("flag", 0)
         val imagePath = intent.getStringExtra("imgPath")
+
+        // Intent에서 타임스탬프 값 가져오기
+        val defaultTime = -1L // 기본값 설정
+        val timestamp = intent.getLongExtra("timestamp", defaultTime)
+        val receivedDate = Date(timestamp)
+
         val imageBitmap = BitmapFactory.decodeFile(imagePath)
-        myImg.setImageBitmap(imageBitmap)
+
 
         val storage = FirebaseStorage.getInstance("gs://colorglow-9e76e.appspot.com")
         val storageRef = storage.reference
@@ -81,9 +87,11 @@ class DetailResultActivity : AppCompatActivity() {
             Log.w("Storage", "Failed to load worst image", exception)
         }
 
-        uidTextView.text = uid
 
         if (flag == 1) {
+
+            myImg.setImageBitmap(imageBitmap)
+
             fetchNowResult(
                 uid,
                 result,
@@ -96,19 +104,45 @@ class DetailResultActivity : AppCompatActivity() {
             )
         } else {
             val dateFromIntent = intent.getStringExtra("date")
+            val user = FirebaseAuth.getInstance().currentUser
+            uid = user?.uid
+
+            val date2String = receivedDate.toString()
+            val storagePath = "UserImages/$uid/${date2String}.jpg"
+
+            // Glide를 사용하여 ImageView에 이미지 로드
+            FirebaseStorage.getInstance().reference.child(storagePath).downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(this)
+                    .load(uri)
+                    .into(myImg)
+
+                Log.d("FirebaseStorage", "Download URL: $uri")
+
+            }.addOnFailureListener { exception ->
+                // 이미지 로드 실패 처리
+
+                Log.e("FirebaseStorage", "Error loading image", exception)
+                myImg.setImageResource(R.drawable.joy_redvelvet) // 예를 들어 default_image
+            }
+
+
+
             if (dateFromIntent != null) {
-                fetchRecentResult(
-                    uid,
-                    dateFromIntent,
-                    dateTextView,
-                    resultTextView,
-                    infoTextView,
-                    similarTextView,
-                    productTextView
-                )
+                if (result != null) {
+                    fetchRecentResult(
+                        uid,
+                        receivedDate,
+                        result,
+                        myImg,
+                        dateTextView,
+                        resultTextView,
+                        infoTextView,
+                        similarTextView,
+                        productTextView
+                    )
+                }
             } else {
                 Log.w("IntentError", "Date information is missing in the intent")
-                // 필요한 경우 사용자에게 날짜 정보가 누락되었다는 것을 알리는 UI 업데이트를 수행
             }
         }
     }
@@ -125,8 +159,6 @@ class DetailResultActivity : AppCompatActivity() {
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
 
-
-
         // 최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
             .get()
@@ -136,7 +168,7 @@ class DetailResultActivity : AppCompatActivity() {
                 } else {
                     for (document in documents) {
                         val date = document.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
-                        val formattedDate = date?.let {
+                            val formattedDate = date?.let {
                             SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(it)
                         } ?: "No date available"
 
@@ -176,7 +208,7 @@ class DetailResultActivity : AppCompatActivity() {
     }
 
 
-fun fetchRecentResult(uid: String?, date: String?, dateTextView: TextView, resultTextView: TextView,
+fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
                       infoTextView: TextView, similarTextView: TextView, productTextView: TextView) {
     if (uid == null || date == null) {
         Log.w("Firestore", "UID or Date is null")
@@ -186,70 +218,54 @@ fun fetchRecentResult(uid: String?, date: String?, dateTextView: TextView, resul
 
     val db = FirebaseFirestore.getInstance()
     val diagnosticRef = db.collection("User").document(uid).collection("results")
+    val toneRef = db.collection("Tone").document(result)
 
-    // 날짜 형식 파싱
-    val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-    sdf.timeZone = TimeZone.getTimeZone("UTC")
-    val targetDate = sdf.parse(date)?.let {
-        Timestamp(Date(it.time / 1000 * 1000)) // 밀리초 단위의 오차를 제거하기 위해 초 단위로 변환 후 다시 밀리초로 변환
-    }
-
-    diagnosticRef.whereEqualTo("date", targetDate).get()
+    diagnosticRef.whereEqualTo("date", date)
+        .get()
         .addOnSuccessListener { documents ->
             if (documents.isEmpty) {
-                Log.d("Firestore", "No documents found for the specified date")
-                dateTextView.text = "No results found for $date"
-                resultTextView.text = "No results found"
-                // 다른 TextView들도 업데이트
-                infoTextView.text = ""
-                similarTextView.text = ""
-                productTextView.text = ""
+                println("No documents found with the specified timestamp")
             } else {
-                // 여러 결과 중 첫 번째 결과만 표시
-                val document = documents.documents.first() // 날짜가 같은 첫 번째 문서 가져오기
-                val actualDate = document.getTimestamp("date")?.toDate()
-                val formattedDate = actualDate?.let { sdf.format(it) } ?: "No date available"
+                for (document in documents) {
+                    val result = document.getString("result") ?: "No result available"
+                    resultTextView.text = result
 
-                val result = document.getString("result") ?: "No result available"
+                    val formattedDate = date.let {
+                        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(it)
+                    } ?: "No date available"
+                    dateTextView.text = formattedDate
 
-                // TextView 업데이트
-                dateTextView.text = formattedDate
-                resultTextView.text = result
-
-                // Tone 정보 가져오기
-                val toneRef = db.collection("Tone").document(result)
-                toneRef.get()
-                    .addOnSuccessListener { toneDocument ->
-                        if (toneDocument.exists()) {
-                            val description = toneDocument.getString("description") ?: "Description not available"
-                            val celebrities = toneDocument.get("similarCelebrities") as? List<String> ?: listOf("No celebrities available")
-                            val celebrityText = celebrities.joinToString(", ")
-                            val products = toneDocument.get("productDescription") as? List<String> ?: listOf("No products available")
-                            val productText = products.joinToString("\n")
-
-                            // TextView 업데이트
-                            infoTextView.text = description
-                            similarTextView.text = celebrityText
-                            productTextView.text = productText
-                        } else {
-                            Log.d("Firestore", "No Tone document found")
-                            infoTextView.text = "No description available"
-                            similarTextView.text = ""
-                            productTextView.text = ""
-                        }
-                    }
-                    .addOnFailureListener { toneException ->
-                        Log.w("Firestore", "Error getting Tone document: ", toneException)
-                        infoTextView.text = "Failed to fetch description"
-                    }
+                }
             }
         }
-        .addOnFailureListener { diagnosticException ->
-            Log.w("Firestore", "Error getting diagnostic results: ", diagnosticException)
-            dateTextView.text = "Failed to fetch results"
-            resultTextView.text = "Failed to fetch results"
+        .addOnFailureListener { exception ->
+            println("Error getting documents: $exception")
         }
+
+    toneRef.get()
+        .addOnSuccessListener { document ->
+            if (document.exists()) {
+                val description = document.getString("설명") ?: "Description not available"
+                val celebrities =
+                    document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
+                val celebrityText = celebrities.joinToString(", ")
+                val products = document.get("제품설명") as? List<String> ?: listOf("No products")
+                val productText = products.joinToString("\n")
+
+                // TextView 업데이트
+                infoTextView.text = description
+                similarTextView.text = celebrityText
+                productTextView.text = productText
+            } else {
+                Log.d("Firestore", "No Tone document found")
+            }
+        }
+        .addOnFailureListener { exception ->
+            Log.w("Firestore", "Error getting Tone document: ", exception)
+        }
+
 }
+
 
 
 

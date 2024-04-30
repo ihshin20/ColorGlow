@@ -54,6 +54,8 @@ class ResultFragment : Fragment() {
                 val intent = Intent(context, DetailResultActivity::class.java).apply {
                     putExtra("result", result.description)
                     putExtra("date", result.date)
+                    val timestamp = result.timestamp.time // Date 객체에서 밀리초로 시간 가져오기
+                    putExtra("timestamp", timestamp)
                 }
                 startActivity(intent)
             }
@@ -66,7 +68,9 @@ class ResultFragment : Fragment() {
     fun fetchAllDiagnosticResults() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
-            Toast.makeText(context, "User not logged in.", Toast.LENGTH_SHORT).show()
+            context?.let {
+                Toast.makeText(it, "User not logged in.", Toast.LENGTH_SHORT).show()
+            }
             return
         }
 

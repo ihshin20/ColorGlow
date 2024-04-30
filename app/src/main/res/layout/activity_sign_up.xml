@@ -42,10 +42,10 @@
         android:textColor="#DDDDDD"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextText" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextPassword" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/editTextText"
         android:layout_width="230dp"
         android:layout_height="50dp"
         android:layout_marginStart="100dp"
@@ -60,14 +60,14 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/editTextTextPassword"
         android:layout_width="230dp"
         android:layout_height="50dp"
         android:layout_marginStart="100dp"
         android:ems="10"
         android:fontFamily="@font/kcchanbit"
-        android:inputType="textPassword"
         android:hint="6자리 이상"
+        android:inputType="textPassword"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
