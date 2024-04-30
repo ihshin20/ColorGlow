@@ -27,24 +27,6 @@
                 tools:src="@drawable/logoimage" />
 
             <TextView
-                android:id="@+id/textView14"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="uid"
-                android:fontFamily="@font/kcchanbit"
-                android:textColor="#FF07194B"/>
-
-            <TextView
-                android:id="@+id/detailUidTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:text="TextView"
-                android:fontFamily="@font/kcchanbit"
-                android:textColor="#FF07194B" />
-
-            <TextView
                 android:id="@+id/textView22"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
