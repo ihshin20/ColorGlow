@@ -1,24 +1,35 @@
 package com.example.mycolor.Fragment
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.mycolor.R
+import com.example.mycolor.activity.DetailResultActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.*
 
 class ResultFragment : Fragment() {
     private lateinit var resultsRecyclerView: RecyclerView
     private lateinit var resultsAdapter: ResultsAdapter
+
+    interface OnItemClickListener {
+        fun onItemClick(result: DiagnosticResult)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +48,16 @@ class ResultFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        resultsAdapter = ResultsAdapter()
+        //resultsAdapter = ResultsAdapter()
+        resultsAdapter = ResultsAdapter(object : OnItemClickListener {
+            override fun onItemClick(result: DiagnosticResult) {
+                val intent = Intent(context, DetailResultActivity::class.java).apply {
+                    putExtra("result", result.description)
+                    putExtra("date", result.date)
+                }
+                startActivity(intent)
+            }
+        })
         resultsRecyclerView.layoutManager = LinearLayoutManager(context)
         resultsRecyclerView.adapter = resultsAdapter
     }
@@ -90,7 +110,7 @@ class ResultFragment : Fragment() {
             }
     }
 
-    inner class ResultsAdapter : RecyclerView.Adapter<ResultsAdapter.ResultViewHolder>() {
+    inner class ResultsAdapter(private val listener: OnItemClickListener) : RecyclerView.Adapter<ResultsAdapter.ResultViewHolder>() {
         private var resultsList: MutableList<DiagnosticResult> = mutableListOf()
 
         fun updateResults(results: List<DiagnosticResult>) {
@@ -113,10 +133,23 @@ class ResultFragment : Fragment() {
         inner class ResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             private val dateTextView: TextView = itemView.findViewById(R.id.dateTextView) ?: throw IllegalStateException("Date TextView must not be null")
             private val resultTextView: TextView = itemView.findViewById(R.id.resultTextView) ?: throw IllegalStateException("Result TextView must not be null")
+            private val resultImage: ImageView = itemView.findViewById(R.id.resultImage)
+            init {
+                itemView.setOnClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(resultsList[position])
+                    }
+                }
+            }
+
 
             fun bind(result: DiagnosticResult) {
                 dateTextView.text = result.date
                 resultTextView.text = result.description
+
+                loadImage(result.timestamp, resultImage, itemView.context)
+
             }
         }
     }
@@ -127,4 +160,25 @@ class ResultFragment : Fragment() {
         val description: String,
         val timestamp: Date // This is now guaranteed to be non-null
     )
+
+    fun loadImage(date: Date, imageView: ImageView, context: Context) {
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        val imagePath = "UserImages/$userId/$date.jpg"
+        val storageRef = FirebaseStorage.getInstance().reference.child(imagePath)
+
+        // Glide를 사용하여 ImageView에 이미지 로드
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            Glide.with(context)
+                .load(uri)
+                .into(imageView)
+        }.addOnFailureListener { exception ->
+            // 이미지 로드 실패 처리
+            Log.e("FirebaseStorage", "Error loading image", exception)
+            //imageView.setImageResource(R.drawable.joy_redvelvet) // 예를 들어 default_image
+        }
+    }
+
 }
+
+
