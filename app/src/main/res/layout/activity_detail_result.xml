@@ -140,4 +140,14 @@
         app:layout_constraintStart_toStartOf="@+id/imageViewBest"
         app:layout_constraintTop_toBottomOf="@+id/imageViewBest" />
 
+    <ImageView
+        android:id="@+id/myImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/imageViewWorst"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView17"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

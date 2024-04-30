@@ -36,8 +36,6 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        auth = Firebase.auth
         setContentView(R.layout.activity_login)
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
@@ -46,8 +44,10 @@ class LoginActivity : AppCompatActivity() {
             insets
         }
 
+        auth = Firebase.auth
+
         val button = findViewById<Button>(R.id.button) // 로그인 버튼
-        val button2 = findViewById<Button>(R.id.button2) // 회원가입 버튼
+        val button2 = findViewById<Button>(R.id.galleryBtn) // 회원가입 버튼
         val editTextEmail = findViewById<EditText>(R.id.editTextText)
         val editTextPassword = findViewById<EditText>(R.id.editTextTextPassword)
 
