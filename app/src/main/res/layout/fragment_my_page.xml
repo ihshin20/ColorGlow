@@ -147,7 +147,7 @@
                 android:gravity="center_horizontal">
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/textView12CLIO"
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -310,7 +310,7 @@
                     android:text="CLIO\n프로 아이 팔레트\n34,000원" />
 
                 <TextView
-                    android:id="@+id/textView15"
+                    android:id="@+id/eye_productTextView"
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"

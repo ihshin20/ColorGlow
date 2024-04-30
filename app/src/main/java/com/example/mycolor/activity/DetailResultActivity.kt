@@ -45,7 +45,23 @@ class DetailResultActivity : AppCompatActivity() {
         val infoTextView = findViewById<TextView>(R.id.infoTextView)
 
         val similarTextView = findViewById<TextView>(R.id.similarTextView)
-        val productTextview = findViewById<TextView>(R.id.productTextView)
+
+        val baseProductTextViews = listOf(
+            findViewById<TextView>(R.id.baseproductTextView_1),
+            findViewById<TextView>(R.id.baseproductTextView_2),
+            findViewById<TextView>(R.id.baseproductTextView_3)
+        )
+        val lipProductTextViews = listOf(
+            findViewById<TextView>(R.id.lipproductTextView_1),
+            findViewById<TextView>(R.id.lipproductTextView_2),
+            findViewById<TextView>(R.id.lipproductTextView_3)
+        )
+        val eyeProductTextViews = listOf(
+            findViewById<TextView>(R.id.eyeproductTextView_1),
+            findViewById<TextView>(R.id.eyeproductTextView_2),
+            findViewById<TextView>(R.id.eyeproductTextView_3)
+        )
+
 
         val imageViewBest = findViewById<ImageView>(R.id.imageViewBest)
         val imageViewWorst = findViewById<ImageView>(R.id.imageViewWorst)
@@ -137,8 +153,11 @@ class DetailResultActivity : AppCompatActivity() {
         //resultTextView.text = result
         uidTextView.text = uid
 
-        if(flag == 1){
-            fetchNowResult(uid, result, dateTextView, resultTextView, infoTextView, similarTextView, productTextview, imageBitmap!!)
+        if (flag == 1) {
+            fetchNowResult(
+                uid, result, dateTextView, resultTextView, infoTextView, similarTextView,
+                baseProductTextViews, lipProductTextViews, eyeProductTextViews, imageBitmap!!
+            )
         }
         // else{} -> 방금 진단한거 아닌거 (result fragment에서 내 과거 진단 조회 시 실행할 부분 작성해야 함
 
@@ -146,8 +165,18 @@ class DetailResultActivity : AppCompatActivity() {
 
     }
 
-    fun fetchNowResult(uid: String?, result: String?, dateTextView: TextView, resultTextView: TextView,
-                       infoTextView: TextView, similarTextView: TextView, productTextView: TextView, myImg: Bitmap) {
+    fun fetchNowResult(
+        uid: String?,
+        result: String?,
+        dateTextView: TextView,
+        resultTextView: TextView,
+        infoTextView: TextView,
+        similarTextView: TextView,
+        baseProductTextViews: List<TextView>,
+        lipProductTextViews: List<TextView>,
+        eyeProductTextViews: List<TextView>,
+        myImg: Bitmap
+    ) {
         if (uid == null || result == null) {
             Log.w("Firestore", "UID or Result is null")
             return
@@ -188,40 +217,69 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val description = document.getString("설명") ?: "Description not available"
+                    val celebrities = document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
 
-                    val words = description.split(" ")
-                    val maxLineLength = 40  // 최대 줄 길이 설정
-                    val stringBuilder = StringBuilder()
-                    var currentLineLength = 0
+                    // '제품설명' 배열에서 데이터 추출
+                    val productDescriptions = document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
 
-                    for (word in words) {
-                        // 단어 추가 전, 현재 줄의 길이와 단어 길이를 합쳐서 최대 길이를 초과하는지 확인
-                        if (currentLineLength + word.length + 1 > maxLineLength) { // +1 for space
-                            stringBuilder.append("\n")
-                            currentLineLength = 0  // 줄 길이 리셋
-                        }
+                    // '베이스' 카테고리의 데이터를 찾습니다.
+                    val baseMap = productDescriptions.find { it.containsKey("베이스") }?.get("베이스") as? Map<String, Any> ?: mapOf()
 
-                        stringBuilder.append(word).append(" ")
-                        currentLineLength += word.length + 1
+                    // '베이스' 카테고리의 각 제품 정보를 TextView에 표시
+                    baseMap.let { products ->
+                        baseProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "베이스제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
 
-                        // 마침표 뒤에 줄바꿈 추가 (단어 처리 후에 적용)
-                        if (word.endsWith(".")) {
-                            stringBuilder.append("\n")
-                            currentLineLength = 0
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+
+                            // 각 TextView에 설정할 텍스트를 생성합니다.
+                            textView.text = "$productName\n$productBrand\n$productPrice"
                         }
                     }
 
-                    val processedText = stringBuilder.toString()
+                    // '립' 카테고리의 데이터를 찾습니다.
+                    val lipMap = productDescriptions.find { it.containsKey("립") }?.get("립") as? Map<String, Any> ?: mapOf()
 
-                    val celebrities = document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
-                    val celebrityText = celebrities.joinToString(", ")
-                    val products = document.get("제품설명") as? List<String> ?: listOf("No products")
-                    val productText = products.joinToString("\n")
+                    // '립' 카테고리의 각 제품 정보를 TextView에 표시
+                    lipMap.let { products ->
+                        lipProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "립제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
 
-                    // TextView 업데이트
-                    infoTextView.text = processedText.trim()
-                    similarTextView.text = celebrityText
-                    productTextView.text = productText
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+
+                            // 각 TextView에 설정할 텍스트를 생성합니다.
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    // '아이' 카테고리의 데이터를 찾습니다.
+                    val eyeMap = productDescriptions.find { it.containsKey("아이") }?.get("아이") as? Map<String, Any> ?: mapOf()
+
+                    // '아이' 카테고리의 각 제품 정보를 TextView에 표시
+                    eyeMap.let { products ->
+                        eyeProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "아이제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+
+                            // 각 TextView에 설정할 텍스트를 생성합니다.
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    // UI에 데이터를 표시합니다.
+                    infoTextView.text = description
+                    similarTextView.text = celebrities.joinToString(", ")
+
                 } else {
                     Log.d("Firestore", "No Tone document found")
                 }
@@ -231,16 +289,15 @@ class DetailResultActivity : AppCompatActivity() {
             }
     }
 
-
-
-    private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
+    private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid: String) {
         // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
         val baos = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
 
         // Firebase Storage에 먼저 이미지를 업로드하고 URL을 받아 Firestore에 저장
-        val storageRef = FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
+        val storageRef =
+            FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
         val uploadTask = storageRef.putBytes(data)
         uploadTask.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
@@ -264,6 +321,4 @@ class DetailResultActivity : AppCompatActivity() {
                 // 데이터 저장 실패 시 처리
             }
     }
-
-
 }

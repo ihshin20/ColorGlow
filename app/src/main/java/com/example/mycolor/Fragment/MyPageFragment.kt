@@ -8,7 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
 import com.example.mycolor.R
 
 class MyPageFragment : Fragment() {
@@ -36,5 +38,21 @@ class MyPageFragment : Fragment() {
         }
         val eyeimageView = view.findViewById<ImageView>(R.id.eyeimageView)
         eyeimageView.setImageResource(R.drawable.proeyepalette)
+
+        // 로그아웃 버튼에 대한 참조 및 클릭 리스너 설정
+        val logoutButton = view.findViewById<Button>(R.id.button3)
+        logoutButton.setOnClickListener {
+            // 여기에서 로그아웃 처리 로직을 추가하세요.
+
+            // 예를 들어, 사용자 데이터를 지우거나 서버에 로그아웃 요청을 보낼 수 있습니다.
+
+            // 앱을 종료합니다 메시지 표시
+            Toast.makeText(activity, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
+
+            // Toast 메시지 표시 후 약간의 딜레이를 주고 앱 종료
+            logoutButton.postDelayed({
+                activity?.finish()
+            }, 1000)
+        }
     }
 }
