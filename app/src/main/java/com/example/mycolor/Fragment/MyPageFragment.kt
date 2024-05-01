@@ -10,8 +10,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import com.example.mycolor.R
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.util.Locale
 
 class MyPageFragment : Fragment() {
 
@@ -25,34 +29,74 @@ class MyPageFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // ImageView 로컬 변수에 할당
+        // 기존 코드
         val logoimageView = view.findViewById<ImageView>(R.id.logoimageView)
         logoimageView.setImageResource(R.drawable.logoimage)
         val baseimageView = view.findViewById<ImageView>(R.id.baseimageView)
         baseimageView.setImageResource(R.drawable.killcover)
         val lipimageView = view.findViewById<ImageView>(R.id.lipimageView)
-        // 립 제품 이미지 뷰에 클릭 리스너를 설정
         lipimageView.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://clubclio.co.kr/shop/goodsView/0000002419"))
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://clubclio.co.kr/shop/goodsView/0000002419")
+            )
             startActivity(intent)
         }
         val eyeimageView = view.findViewById<ImageView>(R.id.eyeimageView)
         eyeimageView.setImageResource(R.drawable.proeyepalette)
-
-        // 로그아웃 버튼에 대한 참조 및 클릭 리스너 설정
         val logoutButton = view.findViewById<Button>(R.id.button3)
         logoutButton.setOnClickListener {
-            // 여기에서 로그아웃 처리 로직을 추가하세요.
-
-            // 예를 들어, 사용자 데이터를 지우거나 서버에 로그아웃 요청을 보낼 수 있습니다.
-
-            // 앱을 종료합니다 메시지 표시
             Toast.makeText(activity, "앱을 종료합니다.", Toast.LENGTH_SHORT).show()
-
-            // Toast 메시지 표시 후 약간의 딜레이를 주고 앱 종료
             logoutButton.postDelayed({
                 activity?.finish()
             }, 1000)
+        }
+
+        val result = activity?.intent?.getStringExtra("result") ?: "Default Result"
+        val resultLower = result.lowercase(Locale.ROOT)  // 소문자로 변환
+
+        // 제품 정보 불러오기 함수 호출, resultLower 인자 전달
+        fetchProductInfo(resultLower)
+    }
+
+    private fun fetchProductInfo(resultLower: String) {
+        // Firebase Firestore 인스턴스 생성
+        val db = FirebaseFirestore.getInstance()
+        // 해당 result를 사용하여 Tone 컬렉션의 문서 참조
+        val productRef = db.collection("Tone").document(resultLower)
+
+
+// 베이스 제품 정보 가져오기 예시
+        productRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val productName = document.getString("name") ?: "제품명 정보 없음"
+                val productBrand = document.getString("brand") ?: "브랜드 정보 없음"
+                val productPrice = document.getString("price") ?: "가격 정보 없음"
+                view?.findViewById<TextView>(R.id.baseproductTextView_1)?.text = "$productName\n$productBrand\n$productPrice"
+            }
+        }
+
+
+        // 립 제품 정보 가져오기
+        productRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val productName = document.getString("name") ?: "제품명 정보 없음"
+                val productBrand = document.getString("brand") ?: "브랜드 정보 없음"
+                val productPrice = document.getString("price") ?: "가격 정보 없음"
+                view?.findViewById<TextView>(R.id.lipproductTextView_1)?.text =
+                    "$productName\n$productBrand\n$productPrice"
+            }
+        }
+
+        // 아이 제품 정보 가져오기
+        productRef.get().addOnSuccessListener { document ->
+            if (document.exists()) {
+                val productName = document.getString("name") ?: "제품명 정보 없음"
+                val productBrand = document.getString("brand") ?: "브랜드 정보 없음"
+                val productPrice = document.getString("price") ?: "가격 정보 없음"
+                view?.findViewById<TextView>(R.id.eyeproductTextView_1)?.text =
+                    "$productName\n$productBrand\n$productPrice"
+            }
         }
     }
 }
