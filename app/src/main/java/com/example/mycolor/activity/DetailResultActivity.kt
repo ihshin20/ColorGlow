@@ -25,6 +25,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
 
 
@@ -83,12 +84,13 @@ class DetailResultActivity : AppCompatActivity() {
         val storage = FirebaseStorage.getInstance("gs://colorglow-9e76e.appspot.com")
         val storageRef = storage.reference
 
-        val resultLower = result?.lowercase(Locale.ROOT) ?: "default_value"
+        val resultLower = result?.lowercase(Locale.ROOT)    ?: "default_value"
         val bestImagePath = "${resultLower}_best.jpg"
         val worstImagePath = "${resultLower}_worst.jpg"
         val bestImageRef = storageRef.child(bestImagePath)
         val worstImageRef = storageRef.child(worstImagePath)
 
+        //베스트 팔레트,워스트 팔레트 이미지 불러오기
         bestImageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(this)
                 .load(uri)
@@ -180,6 +182,8 @@ class DetailResultActivity : AppCompatActivity() {
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
 
+
+
         // 최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
             .get()
@@ -205,74 +209,49 @@ class DetailResultActivity : AppCompatActivity() {
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
 
+        fun updateProductInfo(productsMap: Map<String, Any>, productTextViews: List<TextView>) {
+            productsMap.entries.forEachIndexed { index, entry ->
+                val productInfo = entry.value as? Map<String, Any> ?: mapOf()
+                val productName = productInfo["제품이름"] as? String ?: "제품명 정보 없음"
+                val productBrand = productInfo["브랜드"] as? String ?: "브랜드 정보 없음"
+                val productPrice = productInfo["가격"] as? String ?: "가격 정보 없음"
+
+                if (index < productTextViews.size) {
+                    productTextViews[index].text = "$productName\n$productBrand\n$productPrice"
+                }
+            }
+        }
+
+        fun getCategoryData(productDescriptions: List<Map<String, Any>>, category: String) =
+            productDescriptions.find { it.containsKey(category) }
+                ?.get(category) as? Map<String, Any> ?: mapOf()
+
+
         // Tone 정보 가져오기
         toneRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val description = document.getString("설명") ?: "Description not available"
-                    val celebrities = document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
+                    val celebrities = document.get("비슷한 연예인") as? List<String>
+                        ?: listOf("No celebrities available")
+                    val productDescriptions =
+                        document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
 
-                    // '제품설명' 배열에서 데이터 추출
-                    val productDescriptions = document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
+                    updateProductInfo(
+                        getCategoryData(productDescriptions, "베이스"),
+                        baseProductTextViews
+                    )
+                    updateProductInfo(
+                        getCategoryData(productDescriptions, "립"),
+                        lipProductTextViews
+                    )
+                    updateProductInfo(
+                        getCategoryData(productDescriptions, "아이"),
+                        eyeProductTextViews
+                    )
 
-                    // '베이스' 카테고리의 데이터를 찾습니다.
-                    val baseMap = productDescriptions.find { it.containsKey("베이스") }?.get("베이스") as? Map<String, Any> ?: mapOf()
-
-                    // '베이스' 카테고리의 각 제품 정보를 TextView에 표시
-                    baseMap.let { products ->
-                        baseProductTextViews.forEachIndexed { index, textView ->
-                            val productKey = "베이스제품${index + 1}"
-                            val productInfo = products[productKey] as? Map<String, Any>
-
-                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
-                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
-                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-
-                            // 각 TextView에 설정할 텍스트를 생성합니다.
-                            textView.text = "$productName\n$productBrand\n$productPrice"
-                        }
-                    }
-
-                    // '립' 카테고리의 데이터를 찾습니다.
-                    val lipMap = productDescriptions.find { it.containsKey("립") }?.get("립") as? Map<String, Any> ?: mapOf()
-
-                    // '립' 카테고리의 각 제품 정보를 TextView에 표시
-                    lipMap.let { products ->
-                        lipProductTextViews.forEachIndexed { index, textView ->
-                            val productKey = "립제품${index + 1}"
-                            val productInfo = products[productKey] as? Map<String, Any>
-
-                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
-                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
-                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-
-                            // 각 TextView에 설정할 텍스트를 생성합니다.
-                            textView.text = "$productName\n$productBrand\n$productPrice"
-                        }
-                    }
-
-                    // '아이' 카테고리의 데이터를 찾습니다.
-                    val eyeMap = productDescriptions.find { it.containsKey("아이") }?.get("아이") as? Map<String, Any> ?: mapOf()
-
-                    // '아이' 카테고리의 각 제품 정보를 TextView에 표시
-                    eyeMap.let { products ->
-                        eyeProductTextViews.forEachIndexed { index, textView ->
-                            val productKey = "아이제품${index + 1}"
-                            val productInfo = products[productKey] as? Map<String, Any>
-
-                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
-                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
-                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-
-                            // 각 TextView에 설정할 텍스트를 생성합니다.
-                            textView.text = "$productName\n$productBrand\n$productPrice"
-                        }
-                    }
-
-                    // UI에 데이터를 표시합니다.
                     infoTextView.text = description
                     similarTextView.text = celebrities.joinToString(", ")
-
                 } else {
                     Log.d("Firestore", "No Tone document found")
                 }
@@ -280,7 +259,49 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Error getting Tone document: ", exception)
             }
+
+        // Firebase Storage 초기화 및 참조 설정
+        val storageRef = FirebaseStorage.getInstance().reference
+
+        // 인텐트에서 result 값을 받아와서 소문자로 변환
+        val resultLower = intent.getStringExtra("result")?.lowercase(Locale.ROOT) ?: "default_value"
+
+        // 각 카테고리별 이미지뷰 배열
+        val baseImageViews = listOf(
+            findViewById<ImageView>(R.id.baseimageView_1),
+            findViewById<ImageView>(R.id.baseimageView_2),
+            findViewById<ImageView>(R.id.baseimageView_3)
+        )
+        val lipImageViews = listOf(
+            findViewById<ImageView>(R.id.lipimageView_1),
+            findViewById<ImageView>(R.id.lipimageView_2),
+            findViewById<ImageView>(R.id.lipimageView_3)
+        )
+        val eyeImageViews = listOf(
+            findViewById<ImageView>(R.id.eyeimageView_1),
+            findViewById<ImageView>(R.id.eyeimageView_2),
+            findViewById<ImageView>(R.id.eyeimageView_3)
+        )
+
+        // 이미지 로드
+        loadImages(storageRef, resultLower, "base", baseImageViews)
+        loadImages(storageRef, resultLower, "lip", lipImageViews)
+        loadImages(storageRef, resultLower, "eye", eyeImageViews)
     }
+
+    // 카테고리별 이미지 불러오기
+    private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>) {
+        imageViews.forEachIndexed { index, imageView ->
+            val imagePath = "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
+            val imageRef = storageRef.child(imagePath)
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(this).load(uri).into(imageView)
+            }.addOnFailureListener { exception ->
+                Log.e("Storage", "Error loading image: $imagePath", exception)
+            }
+        }
+    }
+}
 
 
 fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
@@ -293,6 +314,7 @@ fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView,
 
     val db = FirebaseFirestore.getInstance()
     val diagnosticRef = db.collection("User").document(uid).collection("results")
+    val toneRef = db.collection("Tone").document(result)
 
     diagnosticRef.whereEqualTo("date", date)
         .get()
@@ -315,65 +337,39 @@ fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView,
         .addOnFailureListener { exception ->
             println("Error getting documents: $exception")
         }
-
-    toneRef.get()
-        .addOnSuccessListener { document ->
-            if (document.exists()) {
-                val description = document.getString("설명") ?: "Description not available"
-                val celebrities =
-                    document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
-                val celebrityText = celebrities.joinToString(", ")
-                val products = document.get("제품설명") as? List<String> ?: listOf("No products")
-                val productText = products.joinToString("\n")
-
-                // TextView 업데이트
-                infoTextView.text = description
-                similarTextView.text = celebrityText
-                //productTextView.text = productText
-            } else {
-                Log.d("Firestore", "No Tone document found")
-            }
-        }
-        .addOnFailureListener { exception ->
-            Log.w("Firestore", "Error getting Tone document: ", exception)
-        }
-
 }
 
 
 
 
 private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
-        // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
-        val baos = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
+    // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
+    val baos = ByteArrayOutputStream()
+    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
 
-        // Firebase Storage에 먼저 이미지를 업로드하고 URL을 받아 Firestore에 저장
-        val storageRef = FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
-        val uploadTask = storageRef.putBytes(data)
-        uploadTask.addOnSuccessListener {
-            storageRef.downloadUrl.addOnSuccessListener { uri ->
-                val imageUrl = uri.toString()
-                saveImageUrlToFirestore(imageUrl)
-            }
-        }.addOnFailureListener {
-            // 처리할 오류 로직 추가
+    // Firebase Storage에 먼저 이미지를 업로드하고 URL을 받아 Firestore에 저장
+    val storageRef = FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
+    val uploadTask = storageRef.putBytes(data)
+    uploadTask.addOnSuccessListener {
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            val imageUrl = uri.toString()
+            saveImageUrlToFirestore(imageUrl)
         }
+    }.addOnFailureListener {
+        // 처리할 오류 로직 추가
     }
+}
 
-    private fun saveImageUrlToFirestore(imageUrl: String) {
-        val db = FirebaseFirestore.getInstance()
-        val imageInfo = hashMapOf("url" to imageUrl)
+private fun saveImageUrlToFirestore(imageUrl: String) {
+    val db = FirebaseFirestore.getInstance()
+    val imageInfo = hashMapOf("url" to imageUrl)
 
-        db.collection("images").add(imageInfo)
-            .addOnSuccessListener { documentReference ->
-                // 데이터 저장 성공 시 처리
-            }
-            .addOnFailureListener { e ->
-                // 데이터 저장 실패 시 처리
-            }
-    }
-
-
+    db.collection("images").add(imageInfo)
+        .addOnSuccessListener { documentReference ->
+            // 데이터 저장 성공 시 처리
+        }
+        .addOnFailureListener { e ->
+            // 데이터 저장 실패 시 처리
+        }
 }

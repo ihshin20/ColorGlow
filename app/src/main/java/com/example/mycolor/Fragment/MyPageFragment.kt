@@ -16,7 +16,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import retrofit2.http.Query
 import java.util.Locale
 
 class MyPageFragment : Fragment() {
@@ -58,7 +57,6 @@ class MyPageFragment : Fragment() {
 
         // Firestore에서 사용자 정보 및 최근 결과 가져오기
         firestore.collection("User").document(uid).collection("results")
-            .orderBy("date", Query.Direction.DESCENDING).limit(1)  // 'date' 필드명 확인 필요
             .get()
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {  // 여기 수정됨
