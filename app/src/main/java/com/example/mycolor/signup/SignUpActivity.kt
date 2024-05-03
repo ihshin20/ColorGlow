@@ -21,11 +21,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.ktx.FirebaseAuthLegacyRegistrar
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,13 +35,15 @@ class SignUpActivity : AppCompatActivity() {
         setContentView(R.layout.activity_sign_up)
 
         auth = Firebase.auth
+        db = FirebaseFirestore.getInstance()
 
         val joinBtn = findViewById<Button>(R.id.button) // 가입 버튼 ID 수정
         joinBtn.setOnClickListener {
             val email = findViewById<EditText>(R.id.editTextText) // EditText로 변경하고 ID 수정
             val password = findViewById<EditText>(R.id.editTextTextPassword)
+            val nameText = findViewById<EditText>(R.id.nameEditText)
 
-            if (email.text.toString().isEmpty() || password.text.toString().isEmpty()) {
+            if (email.text.toString().isEmpty() || password.text.toString().isEmpty() || nameText.text.toString().isEmpty()) {
                 Toast.makeText(this, "정보를 모두 입력하세요.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
@@ -53,6 +57,19 @@ class SignUpActivity : AppCompatActivity() {
                     if (task.isSuccessful) {
                         // Sign in success, update UI with the signed-in user's information
                         Toast.makeText(this, "성공", Toast.LENGTH_LONG).show()
+
+                        val user = auth.currentUser
+                        if (user != null) {
+                            val userData = hashMapOf("name" to nameText.text.toString())
+                            db.collection("User").document(user.uid).set(userData)
+                                .addOnSuccessListener {
+                                    Log.d("Firestore", "DocumentSnapshot successfully written!")
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.w("Firestore", "Error writing document", e)
+                                }
+                        }
+
                         val intent = Intent(this, LoginActivity::class.java)
                         startActivity(intent)
                         finish()
