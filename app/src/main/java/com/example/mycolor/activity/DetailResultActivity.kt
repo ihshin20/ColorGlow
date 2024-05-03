@@ -39,6 +39,8 @@ class DetailResultActivity : AppCompatActivity() {
             insets
         }
 
+
+
         val imageView = findViewById<ImageView>(R.id.logoimageView1)
         imageView.setImageResource(R.drawable.logoimage)
         val resultTextView = findViewById<TextView>(R.id.detailResultTextView)
@@ -285,68 +287,68 @@ class DetailResultActivity : AppCompatActivity() {
     }
 
 
-fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
-                      infoTextView: TextView, similarTextView: TextView) {
-    if (uid == null || date == null) {
-        Log.w("Firestore", "UID or Date is null")
-        dateTextView.text = "UID or Date is missing"
-        return
-    }
+    fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
+                          infoTextView: TextView, similarTextView: TextView) {
+        if (uid == null || date == null) {
+            Log.w("Firestore", "UID or Date is null")
+            dateTextView.text = "UID or Date is missing"
+            return
+        }
 
-    val db = FirebaseFirestore.getInstance()
-    val diagnosticRef = db.collection("User").document(uid).collection("results")
-    val toneRef = db.collection("Tone").document(result)
+        val db = FirebaseFirestore.getInstance()
+        val diagnosticRef = db.collection("User").document(uid).collection("results")
+        val toneRef = db.collection("Tone").document(result)
 
-    diagnosticRef.whereEqualTo("date", date)
-        .get()
-        .addOnSuccessListener { documents ->
-            if (documents.isEmpty) {
-                println("No documents found with the specified timestamp")
-            } else {
-                for (document in documents) {
-                    val result = document.getString("result") ?: "No result available"
-                    resultTextView.text = result
+        diagnosticRef.whereEqualTo("date", date)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    println("No documents found with the specified timestamp")
+                } else {
+                    for (document in documents) {
+                        val result = document.getString("result") ?: "No result available"
+                        resultTextView.text = result
 
-                    val formattedDate = date.let {
-                        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(it)
-                    } ?: "No date available"
-                    dateTextView.text = formattedDate
+                        val formattedDate = date.let {
+                            SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(it)
+                        } ?: "No date available"
+                        dateTextView.text = formattedDate
 
+                    }
                 }
             }
-        }
-        .addOnFailureListener { exception ->
-            println("Error getting documents: $exception")
-        }
-
-    toneRef.get()
-        .addOnSuccessListener { document ->
-            if (document.exists()) {
-                val description = document.getString("설명") ?: "Description not available"
-                val celebrities =
-                    document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
-                val celebrityText = celebrities.joinToString(", ")
-                val products = document.get("제품설명") as? List<String> ?: listOf("No products")
-                val productText = products.joinToString("\n")
-
-                // TextView 업데이트
-                infoTextView.text = description
-                similarTextView.text = celebrityText
-                //productTextView.text = productText
-            } else {
-                Log.d("Firestore", "No Tone document found")
+            .addOnFailureListener { exception ->
+                println("Error getting documents: $exception")
             }
-        }
-        .addOnFailureListener { exception ->
-            Log.w("Firestore", "Error getting Tone document: ", exception)
-        }
 
-}
+        toneRef.get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val description = document.getString("설명") ?: "Description not available"
+                    val celebrities =
+                        document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
+                    val celebrityText = celebrities.joinToString(", ")
+                    val products = document.get("제품설명") as? List<String> ?: listOf("No products")
+                    val productText = products.joinToString("\n")
+
+                    // TextView 업데이트
+                    infoTextView.text = description
+                    similarTextView.text = celebrityText
+                    //productTextView.text = productText
+                } else {
+                    Log.d("Firestore", "No Tone document found")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.w("Firestore", "Error getting Tone document: ", exception)
+            }
+
+    }
 
 
 
 
-private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
+    private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
         // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
         val baos = ByteArrayOutputStream()
         imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
