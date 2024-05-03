@@ -154,25 +154,25 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView6"
+                    android:id="@+id/baseimageView_1"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    android:src="@drawable/killcover" />
+                    android:contentDescription="@+string/base" />
 
                 <ImageView
-                    android:id="@+id/baseimageView"
+                    android:id="@+id/baseimageView_2"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/killcover" />
+                    android:contentDescription="@+string/base" />
 
                 <ImageView
-                    android:id="@+id/imageView7"
+                    android:id="@+id/baseimageView_3"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    android:src="@drawable/killcover" />
+                    android:contentDescription="@+string/base" />
 
             </LinearLayout>
 
@@ -190,6 +190,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="CLIO\n킬커버 스킨픽서쿠션 미니 5g\n16,000원" />
 
                 <TextView
@@ -198,6 +199,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="CLIO\n킬커버 스킨픽서쿠션 미니 5g\n16,000원" />
 
                 <TextView
@@ -207,6 +209,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="CLIO\n킬커버 스킨픽서쿠션 미니 5g\n16,000원" />
 
             </LinearLayout>
@@ -229,25 +232,25 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView8"
+                    android:id="@+id/lipimageView_1"
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/inkthevelvet" />
+                    android:contentDescription="@+string/lip" />
 
                 <ImageView
-                    android:id="@+id/lipimageView"
+                    android:id="@+id/lipimageView_2"
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@drawable/inkthevelvet" />
+                    android:contentDescription="@+string/lip" />
 
                 <ImageView
-                    android:id="@+id/imageView9"
+                    android:id="@+id/lipimageView_3"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    android:src="@drawable/inkthevelvet" />
+                    android:contentDescription="@+string/lip" />
             </LinearLayout>
 
             <LinearLayout
@@ -264,6 +267,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="페리페라\n잉크 더 벨벳\n10,000원" />
 
                 <TextView
@@ -272,6 +276,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="페리페라\n잉크 더 벨벳\n10,000원" />
 
                 <TextView
@@ -281,6 +286,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="페리페라\n잉크 더 벨벳\n10,000원" />
             </LinearLayout>
 
@@ -301,25 +307,25 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/imageView10"
+                    android:id="@+id/eyeimageView_1"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    android:src="@drawable/proeyepalette" />
+                    android:contentDescription="@+string/eye" />
 
                 <ImageView
-                    android:id="@+id/eyeimageView"
+                    android:id="@+id/eyeimageView_2"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/proeyepalette" />
+                    android:contentDescription="@+string/eye" />
 
                 <ImageView
-                    android:id="@+id/imageView11"
+                    android:id="@+id/eyeimageView_3"
                     android:layout_width="130dp"
                     android:layout_height="130dp"
                     android:layout_weight="1"
-                    android:src="@drawable/proeyepalette" />
+                    android:contentDescription="@+string/eye" />
             </LinearLayout>
 
             <LinearLayout
@@ -336,6 +342,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="CLIO\n프로 아이 팔레트\n34,000원" />
 
                 <TextView
@@ -344,6 +351,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="CLIO\n프로 아이 팔레트\n34,000원" />
 
                 <TextView
@@ -353,6 +361,7 @@
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/kcchanbit"
                     android:text="CLIO\n프로 아이 팔레트\n34,000원" />
 
 
