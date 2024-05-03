@@ -180,8 +180,6 @@ class DetailResultActivity : AppCompatActivity() {
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
 
-
-
         // 최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
             .get()
@@ -295,7 +293,6 @@ fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView,
 
     val db = FirebaseFirestore.getInstance()
     val diagnosticRef = db.collection("User").document(uid).collection("results")
-    val toneRef = db.collection("Tone").document(result)
 
     diagnosticRef.whereEqualTo("date", date)
         .get()
