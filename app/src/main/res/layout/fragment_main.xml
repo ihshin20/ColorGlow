@@ -184,7 +184,6 @@
                     android:textColor="#FF07194B"
                     android:fontFamily="@font/kcchanbit"/>
 
-
                 <ImageButton
                     android:id="@+id/Callbutton"
                     android:layout_width="150dp"
