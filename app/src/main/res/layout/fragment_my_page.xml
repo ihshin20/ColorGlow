@@ -57,7 +57,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/kcchanbit"
-                    android:text="이름"
                     android:textColor="#FF07194B"
                     android:textSize="16sp" />
 

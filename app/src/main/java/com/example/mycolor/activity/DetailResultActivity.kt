@@ -25,6 +25,7 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
 
 
@@ -38,8 +39,6 @@ class DetailResultActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-
 
         val imageView = findViewById<ImageView>(R.id.logoimageView1)
         imageView.setImageResource(R.drawable.logoimage)
@@ -91,6 +90,7 @@ class DetailResultActivity : AppCompatActivity() {
         val bestImageRef = storageRef.child(bestImagePath)
         val worstImageRef = storageRef.child(worstImagePath)
 
+        //베스트 팔레트,워스트 팔레트 이미지 불러오기
         bestImageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(this)
                 .load(uri)
@@ -209,6 +209,24 @@ class DetailResultActivity : AppCompatActivity() {
                 Log.w("Firestore", "Error getting documents: ", exception)
             }
 
+        fun updateProductInfo(productsMap: Map<String, Any>, productTextViews: List<TextView>) {
+            productsMap.entries.forEachIndexed { index, entry ->
+                val productInfo = entry.value as? Map<String, Any> ?: mapOf()
+                val productName = productInfo["제품이름"] as? String ?: "제품명 정보 없음"
+                val productBrand = productInfo["브랜드"] as? String ?: "브랜드 정보 없음"
+                val productPrice = productInfo["가격"] as? String ?: "가격 정보 없음"
+
+                if (index < productTextViews.size) {
+                    productTextViews[index].text = "$productName\n$productBrand\n$productPrice"
+                }
+            }
+        }
+
+        fun getCategoryData(productDescriptions: List<Map<String, Any>>, category: String) =
+            productDescriptions.find { it.containsKey(category) }
+                ?.get(category) as? Map<String, Any> ?: mapOf()
+
+
         // Tone 정보 가져오기
         toneRef.get()
             .addOnSuccessListener { document ->
@@ -286,99 +304,87 @@ class DetailResultActivity : AppCompatActivity() {
             }
     }
 
-
-    fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
-                          infoTextView: TextView, similarTextView: TextView) {
-        if (uid == null || date == null) {
-            Log.w("Firestore", "UID or Date is null")
-            dateTextView.text = "UID or Date is missing"
-            return
-        }
-
-        val db = FirebaseFirestore.getInstance()
-        val diagnosticRef = db.collection("User").document(uid).collection("results")
-        val toneRef = db.collection("Tone").document(result)
-
-        diagnosticRef.whereEqualTo("date", date)
-            .get()
-            .addOnSuccessListener { documents ->
-                if (documents.isEmpty) {
-                    println("No documents found with the specified timestamp")
-                } else {
-                    for (document in documents) {
-                        val result = document.getString("result") ?: "No result available"
-                        resultTextView.text = result
-
-                        val formattedDate = date.let {
-                            SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(it)
-                        } ?: "No date available"
-                        dateTextView.text = formattedDate
-
-                    }
-                }
+    // 카테고리별 이미지 불러오기
+    private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>) {
+        imageViews.forEachIndexed { index, imageView ->
+            val imagePath = "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
+            val imageRef = storageRef.child(imagePath)
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(this).load(uri).into(imageView)
+            }.addOnFailureListener { exception ->
+                Log.e("Storage", "Error loading image: $imagePath", exception)
             }
-            .addOnFailureListener { exception ->
-                println("Error getting documents: $exception")
-            }
-
-        toneRef.get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val description = document.getString("설명") ?: "Description not available"
-                    val celebrities =
-                        document.get("비슷한 연예인") as? List<String> ?: listOf("No celebrities available")
-                    val celebrityText = celebrities.joinToString(", ")
-                    val products = document.get("제품설명") as? List<String> ?: listOf("No products")
-                    val productText = products.joinToString("\n")
-
-                    // TextView 업데이트
-                    infoTextView.text = description
-                    similarTextView.text = celebrityText
-                    //productTextView.text = productText
-                } else {
-                    Log.d("Firestore", "No Tone document found")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error getting Tone document: ", exception)
-            }
-
-    }
-
-
-
-
-    private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
-        // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
-        val baos = ByteArrayOutputStream()
-        imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val data = baos.toByteArray()
-
-        // Firebase Storage에 먼저 이미지를 업로드하고 URL을 받아 Firestore에 저장
-        val storageRef = FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
-        val uploadTask = storageRef.putBytes(data)
-        uploadTask.addOnSuccessListener {
-            storageRef.downloadUrl.addOnSuccessListener { uri ->
-                val imageUrl = uri.toString()
-                saveImageUrlToFirestore(imageUrl)
-            }
-        }.addOnFailureListener {
-            // 처리할 오류 로직 추가
         }
     }
+}
 
-    private fun saveImageUrlToFirestore(imageUrl: String) {
-        val db = FirebaseFirestore.getInstance()
-        val imageInfo = hashMapOf("url" to imageUrl)
 
-        db.collection("images").add(imageInfo)
-            .addOnSuccessListener { documentReference ->
-                // 데이터 저장 성공 시 처리
-            }
-            .addOnFailureListener { e ->
-                // 데이터 저장 실패 시 처리
-            }
+fun fetchRecentResult(uid: String?, date: Date, result:String, myImg: ImageView, dateTextView: TextView, resultTextView: TextView,
+                      infoTextView: TextView, similarTextView: TextView) {
+    if (uid == null || date == null) {
+        Log.w("Firestore", "UID or Date is null")
+        dateTextView.text = "UID or Date is missing"
+        return
     }
 
+    val db = FirebaseFirestore.getInstance()
+    val diagnosticRef = db.collection("User").document(uid).collection("results")
+    val toneRef = db.collection("Tone").document(result)
 
+    diagnosticRef.whereEqualTo("date", date)
+        .get()
+        .addOnSuccessListener { documents ->
+            if (documents.isEmpty) {
+                println("No documents found with the specified timestamp")
+            } else {
+                for (document in documents) {
+                    val result = document.getString("result") ?: "No result available"
+                    resultTextView.text = result
+
+                    val formattedDate = date.let {
+                        SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(it)
+                    } ?: "No date available"
+                    dateTextView.text = formattedDate
+
+                }
+            }
+        }
+        .addOnFailureListener { exception ->
+            println("Error getting documents: $exception")
+        }
+}
+
+
+
+
+private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid:String) {
+    // Firestore에 이미지를 저장하기 위해 ByteArrayOutputStream 사용
+    val baos = ByteArrayOutputStream()
+    imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+    val data = baos.toByteArray()
+
+    // Firebase Storage에 먼저 이미지를 업로드하고 URL을 받아 Firestore에 저장
+    val storageRef = FirebaseStorage.getInstance().reference.child("UserImages/${uid}/${uDate}.jpg")
+    val uploadTask = storageRef.putBytes(data)
+    uploadTask.addOnSuccessListener {
+        storageRef.downloadUrl.addOnSuccessListener { uri ->
+            val imageUrl = uri.toString()
+            saveImageUrlToFirestore(imageUrl)
+        }
+    }.addOnFailureListener {
+        // 처리할 오류 로직 추가
+    }
+}
+
+private fun saveImageUrlToFirestore(imageUrl: String) {
+    val db = FirebaseFirestore.getInstance()
+    val imageInfo = hashMapOf("url" to imageUrl)
+
+    db.collection("images").add(imageInfo)
+        .addOnSuccessListener { documentReference ->
+            // 데이터 저장 성공 시 처리
+        }
+        .addOnFailureListener { e ->
+            // 데이터 저장 실패 시 처리
+        }
 }

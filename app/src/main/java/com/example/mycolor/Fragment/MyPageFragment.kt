@@ -37,7 +37,6 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(context, "뷰 생성 중...", Toast.LENGTH_SHORT).show()
         return inflater.inflate(R.layout.fragment_my_page, container, false)
     }
 
