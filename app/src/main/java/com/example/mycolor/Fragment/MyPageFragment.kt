@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,21 +11,27 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.mycolor.R
 import com.example.mycolor.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.util.Locale
 
 class MyPageFragment : Fragment() {
 
+    private lateinit var uid: String
+
     private lateinit var firebaseAuth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
 
-    lateinit var uid:String
+    private lateinit var baseProductTextViews: List<TextView>
+    private lateinit var lipProductTextViews: List<TextView>
+    private lateinit var eyeProductTextViews: List<TextView>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,17 +46,10 @@ class MyPageFragment : Fragment() {
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
 
-
         val nameTextView = view.findViewById<TextView>(R.id.customerName)
         // ImageView 로컬 변수에 할당
         val logoimageView = view.findViewById<ImageView>(R.id.logoimageView)
         logoimageView.setImageResource(R.drawable.logoimage)
-        val baseimageView = view.findViewById<ImageView>(R.id.baseimageView)
-        baseimageView.setImageResource(R.drawable.killcover)
-        val lipimageView = view.findViewById<ImageView>(R.id.lipimageView)
-
-
-
 
         val auth = FirebaseAuth.getInstance()
 
@@ -89,15 +87,8 @@ class MyPageFragment : Fragment() {
             }
         }
 
-
-
-        // 립 제품 이미지 뷰에 클릭 리스너를 설정
-        lipimageView.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://clubclio.co.kr/shop/goodsView/0000002419"))
-            startActivity(intent)
-        }
-        val eyeimageView = view.findViewById<ImageView>(R.id.eyeimageView)
-        eyeimageView.setImageResource(R.drawable.proeyepalette)
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         // 로그아웃 버튼에 대한 참조 및 클릭 리스너 설정
         val logoutButton = view.findViewById<Button>(R.id.button3)
@@ -112,29 +103,58 @@ class MyPageFragment : Fragment() {
         }
 
         fetchPersonalColorInfo()
+
+        baseProductTextViews = listOf(
+            view.findViewById(R.id.baseproductTextView_11),
+            view.findViewById(R.id.baseproductTextView_22),
+            view.findViewById(R.id.baseproductTextView_33)
+        )
+        lipProductTextViews = listOf(
+            view.findViewById(R.id.lipproductTextView_11),
+            view.findViewById(R.id.lipproductTextView_22),
+            view.findViewById(R.id.lipproductTextView_33)
+        )
+        eyeProductTextViews = listOf(
+            view.findViewById(R.id.eyeproductTextView_11),
+            view.findViewById(R.id.eyeproductTextView_22),
+            view.findViewById(R.id.eyeproductTextView_33)
+        )
+
+        fetchUserUid(uid) { result ->
+            if (result.startsWith("Error") || result == "No documents found") {
+                Toast.makeText(context, "Failed to load data: $result", Toast.LENGTH_LONG).show()
+            } else {
+                updateProductDetails(result)
+            }
+        }
+
+
+        fetchPersonalColorInfo()
     }
+
 
     private fun fetchPersonalColorInfo() {
         val uid = firebaseAuth.currentUser?.uid
+       // Toast.makeText(context, "개인 색상 정보 확인 중...", Toast.LENGTH_SHORT).show()
         if (uid == null) {
-            Toast.makeText(context, "로그인 상태가 아닙니다.", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(context, "로그인 상태가 아닙니다.", Toast.LENGTH_SHORT).show()
             return
         }
 
-        // Firestore에서 사용자 정보 및 최근 결과 가져오기
         firestore.collection("User").document(uid).collection("results")
             .get()
             .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {  // 여기 수정됨
+                if (!documents.isEmpty) {
                     val document = documents.documents.first()
                     val colorResult = document.getString("result") ?: "Unknown"
+                    //Toast.makeText(context, "색상 결과: $colorResult", Toast.LENGTH_LONG).show()
                     updateUI(colorResult.toLowerCase(Locale.ROOT))
                 } else {
-                    Toast.makeText(context, "결과 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(context, "결과 정보가 없습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener {
-                Toast.makeText(context, "정보를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(context, "정보를 불러오는 데 실패했습니다: ${it.localizedMessage}", Toast.LENGTH_LONG).show()
             }
     }
 
@@ -143,25 +163,16 @@ class MyPageFragment : Fragment() {
         val categories = listOf("base", "lip", "eye")
         categories.forEach { category ->
             val imageViews = getImageViewsByCategory(category)
-            val productTextViews = getProductTextViewsByCategory(category)
             loadImages(storageRef, colorResult, category, imageViews)
-            loadProductDetails(category, productTextViews)
         }
     }
 
     private fun getImageViewsByCategory(category: String): List<ImageView> {
+        //Toast.makeText(context, "$category 카테고리의 이미지 뷰 로드 중...", Toast.LENGTH_SHORT).show()
         return listOf(
             requireView().findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
             requireView().findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
             requireView().findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
-        )
-    }
-
-    private fun getProductTextViewsByCategory(category: String): List<TextView> {
-        return listOf(
-            requireView().findViewById(resources.getIdentifier("${category}productTextView_1", "id", context?.packageName)),
-            requireView().findViewById(resources.getIdentifier("${category}productTextView_2", "id", context?.packageName)),
-            requireView().findViewById(resources.getIdentifier("${category}productTextView_3", "id", context?.packageName))
         )
     }
 
@@ -171,38 +182,94 @@ class MyPageFragment : Fragment() {
             val imageRef = storageRef.child(imagePath)
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 Glide.with(this).load(uri).into(imageView)
+                //Toast.makeText(context, "이미지 로드 성공: $imagePath", Toast.LENGTH_SHORT).show()
             }.addOnFailureListener { exception ->
                 Log.e("Storage", "Error loading image: $imagePath", exception)
+                //Toast.makeText(context, "이미지 로드 실패: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    private fun loadProductDetails(category: String, productTextViews: List<TextView>) {
-        firestore.collection("ProductDetails").document(category)
+    // 추가된 함수들입니다.
+    fun fetchUserUid(uid: String, callback: (String) -> Unit) {
+        val diagnosticRef =
+            FirebaseFirestore.getInstance().collection("User").document(uid).collection("results")
+        diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
             .get()
-            .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    val products = document.get("products") as? List<Map<String, Any>> ?: listOf()
-                    updateProductInfo(products, productTextViews)
+            .addOnSuccessListener { documents ->
+                if (documents.isEmpty) {
+                    Log.d("Firestore", "No documents found")
+                    callback("No documents found")
                 } else {
-                    Toast.makeText(context, "제품 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show()
+                    var result: String? = null
+                    for (document in documents) {
+                        result = document.getString("result") ?: "No result found"
+                    }
+                    result?.let { callback(it) }
+                    //Toast.makeText(context, "사용자 UID 확인: $result", Toast.LENGTH_SHORT).show()
                 }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(context, "제품 정보를 불러오는데 실패했습니다: $exception", Toast.LENGTH_SHORT).show()
+                Log.w("Firestore", "Error getting documents: ", exception)
+                callback("Error getting documents: ${exception.message}")
+                //Toast.makeText(context, "문서 가져오기 실패: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
             }
     }
 
-    private fun updateProductInfo(products: List<Map<String, Any>>, productTextViews: List<TextView>) {
-        products.forEachIndexed { index, product ->
-            if (index < productTextViews.size) {
-                val productName = product["productName"] as? String ?: "제품명 정보 없음"
-                val productBrand = product["brand"] as? String ?: "브랜드 정보 없음"
-                val productPrice = product["price"] as? String ?: "가격 정보 없음"
-                productTextViews[index].text = "$productName\n$productBrand\n$productPrice"
+    private fun updateProductDetails(result: String) {
+        val toneRef = FirebaseFirestore.getInstance().collection("Tone").document(result)
+        Log.d("FirestoreDebug", "Attempting to fetch document with ID: $result") // 문서 ID 로그 추가
+
+        toneRef.get()
+            .addOnSuccessListener { document ->
+                if (!document.exists()) {
+                    Log.d("FirestoreDebug", "No document found with ID: $result") // 문서가 없을 때 로그
+                    Toast.makeText(context, "No data available for this product.", Toast.LENGTH_LONG).show()
+                } else {
+                    Log.d("FirestoreDebug", "Document successfully fetched with ID: $result") // 문서가 있을 때 로그
+                    val productDescriptions = document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
+                    Log.d("FirestoreDebug", "Product descriptions found: $productDescriptions") // 제품 설명 로그
+
+                    val baseMap = productDescriptions.find { it.containsKey("베이스") }?.get("베이스") as? Map<String, Any> ?: mapOf()
+                    baseMap.let { products ->
+                        baseProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "베이스제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    val lipMap = productDescriptions.find { it.containsKey("립") }?.get("립") as? Map<String, Any> ?: mapOf()
+                    lipMap.let { products ->
+                        lipProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "립제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+
+                    val eyeMap = productDescriptions.find { it.containsKey("아이") }?.get("아이") as? Map<String, Any> ?: mapOf()
+                    eyeMap.let { products ->
+                        eyeProductTextViews.forEachIndexed { index, textView ->
+                            val productKey = "아이제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+                            textView.text = "$productName\n$productBrand\n$productPrice"
+                        }
+                    }
+                }
             }
-        }
+            .addOnFailureListener { exception ->
+                Log.w("FirestoreError", "Error fetching document with ID: $result", exception) // 오류 로그
+                Toast.makeText(context, "Error loading details: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
+            }
     }
-
-
 }
