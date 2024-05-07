@@ -12,16 +12,22 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.example.mycolor.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MyPageFragment : Fragment() {
 
     private lateinit var uid: String
+
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var firestore: FirebaseFirestore
 
     private lateinit var baseProductTextViews: List<TextView>
     private lateinit var lipProductTextViews: List<TextView>
@@ -36,6 +42,10 @@ class MyPageFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
+        firebaseAuth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
 
         baseProductTextViews = listOf(
             view.findViewById(R.id.baseproductTextView_11),
@@ -92,6 +102,63 @@ class MyPageFragment : Fragment() {
                 Toast.makeText(context, "Failed to load data: $result", Toast.LENGTH_LONG).show()
             } else {
                 updateProductDetails(result)
+            }
+        }
+
+        fetchPersonalColorInfo()
+    }
+
+    private fun fetchPersonalColorInfo() {
+        val uid = firebaseAuth.currentUser?.uid
+        if (uid == null) {
+            Toast.makeText(context, "로그인 상태가 아닙니다.", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        // Firestore에서 사용자 정보 및 최근 결과 가져오기
+        firestore.collection("User").document(uid).collection("results")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {  // 여기 수정됨
+                    val document = documents.documents.first()
+                    val colorResult = document.getString("result") ?: "Unknown"
+                    updateUI(colorResult.toLowerCase(Locale.ROOT))
+                } else {
+                    Toast.makeText(context, "결과 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(context, "정보를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun updateUI(colorResult: String) {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val categories = listOf("base", "lip", "eye")
+        categories.forEach { category ->
+            val imageViews = getImageViewsByCategory(category)
+
+            loadImages(storageRef, colorResult, category, imageViews)
+
+        }
+    }
+
+    private fun getImageViewsByCategory(category: String): List<ImageView> {
+        return listOf(
+            requireView().findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
+            requireView().findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
+            requireView().findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
+        )
+    }
+
+    private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>) {
+        imageViews.forEachIndexed { index, imageView ->
+            val imagePath = "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
+            val imageRef = storageRef.child(imagePath)
+            imageRef.downloadUrl.addOnSuccessListener { uri ->
+                Glide.with(this).load(uri).into(imageView)
+            }.addOnFailureListener { exception ->
+                Log.e("Storage", "Error loading image: $imagePath", exception)
             }
         }
     }
