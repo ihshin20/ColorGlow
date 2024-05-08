@@ -46,9 +46,9 @@
             <ImageView
                 android:id="@+id/myImg"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:srcCompat="@tools:sample/avatars"
-                android:layout_marginBottom="10dp" />
+                android:layout_height="400dp"
+                android:layout_marginBottom="10dp"
+                tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/textView15"
