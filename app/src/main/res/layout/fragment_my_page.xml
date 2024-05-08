@@ -84,7 +84,6 @@
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/kcchanbit"
-                    android:text="가을 딥"
                     android:textColor="#FF07194B"
                     android:textSize="34sp" />
 
