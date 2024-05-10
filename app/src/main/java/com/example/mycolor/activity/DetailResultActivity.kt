@@ -2,7 +2,6 @@ package com.example.mycolor.activity
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.widget.ImageView
@@ -19,11 +18,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.GlideException
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
