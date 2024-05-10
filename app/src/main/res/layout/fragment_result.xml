@@ -25,9 +25,11 @@
         android:id="@+id/textView27"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="10dp"
         android:text="진단결과"
-        android:textSize="24sp"
+        android:textSize="30sp"
+        android:fontFamily="@font/kcchanbit"
+        android:textColor="#FF07194B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
