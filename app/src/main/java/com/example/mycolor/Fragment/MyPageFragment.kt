@@ -18,8 +18,10 @@ import com.example.mycolor.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 class MyPageFragment : Fragment() {
@@ -37,7 +39,6 @@ class MyPageFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Toast.makeText(context, "뷰 생성 중...", Toast.LENGTH_SHORT).show()
         return inflater.inflate(R.layout.fragment_my_page, container, false)
     }
 
@@ -48,6 +49,7 @@ class MyPageFragment : Fragment() {
         firestore = FirebaseFirestore.getInstance()
 
         val nameTextView = view.findViewById<TextView>(R.id.customerName)
+        val nameTextView2 = view.findViewById<TextView>(R.id.PersonalColorName)
         // ImageView 로컬 변수에 할당
         val logoimageView = view.findViewById<ImageView>(R.id.logoimageView)
         logoimageView.setImageResource(R.drawable.logoimage)
@@ -77,16 +79,38 @@ class MyPageFragment : Fragment() {
                     // 문서가 존재하고, name 필드에 값이 있을 경우 그 값을 가져옴
                     val name = document.getString("name") ?: "상상부기" // name 필드가 null이면 "상상부기"를 사용
                     nameTextView.text = name
+
+                    // results 컬렉션에서 최신 결과 가져오기
+                    userRef.collection("results").orderBy("date", Query.Direction.DESCENDING).limit(1)
+                        .get()
+                        .addOnSuccessListener { documents ->
+                            if (documents.isEmpty) {
+                                nameTextView2.text = "부기퍼컬" // 결과가 없는 경우 기본값을 사용
+                                Log.d("Firestore", "No documents found")
+                            } else {
+                                val resultDocument = documents.documents[0]
+                                val result = resultDocument.getString("result") ?: "부기퍼컬"
+                                val date = resultDocument.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
+
+                                nameTextView2.text = result
+
+                                Log.d("Firestore", "Personal Color: $result")
+                            }
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w("Firestore", "Error getting documents: ", exception)
+                        }
+
                     Log.d("Firestore", "Name: $name")
                 } else {
                     // 문서가 존재하지 않을 경우, 기본값을 설정
                     Log.d("Firestore", "No such document, setting default name to '상상부기'")
-                    // 필요한 경우 여기서 기본값을 문서에 설정할 수 있습니다.
                 }
             } else {
                 Log.d("Firestore", "get failed with ", task.exception)
             }
         }
+
 
         firebaseAuth = FirebaseAuth.getInstance()
         firestore = FirebaseFirestore.getInstance()
@@ -135,29 +159,25 @@ class MyPageFragment : Fragment() {
 
 
     private fun fetchPersonalColorInfo() {
-        val uid = firebaseAuth.currentUser?.uid
-        Toast.makeText(context, "개인 색상 정보 확인 중...", Toast.LENGTH_SHORT).show()
-        if (uid == null) {
-            Toast.makeText(context, "로그인 상태가 아닙니다.", Toast.LENGTH_SHORT).show()
-            return
-        }
+        val uid = firebaseAuth.currentUser?.uid ?: return
 
         firestore.collection("User").document(uid).collection("results")
-            .get()
+            .orderBy("date", Query.Direction.DESCENDING).limit(1)
+            .get(Source.SERVER)  // 캐시를 무시하고 서버에서 데이터를 직접 가져옴
             .addOnSuccessListener { documents ->
-                if (!documents.isEmpty) {
-                    val document = documents.documents.first()
-                    val colorResult = document.getString("result") ?: "Unknown"
-                    Toast.makeText(context, "색상 결과: $colorResult", Toast.LENGTH_LONG).show()
-                    updateUI(colorResult.toLowerCase(Locale.ROOT))
+                if (documents.isEmpty) {
+                    println("No recent color results found.")
                 } else {
-                    Toast.makeText(context, "결과 정보가 없습니다.", Toast.LENGTH_SHORT).show()
+                    val document = documents.documents.first()
+                    val colorResult = document.getString("result") ?: "default"
+                    updateUI(colorResult.toLowerCase())
                 }
             }
-            .addOnFailureListener {
-                Toast.makeText(context, "정보를 불러오는 데 실패했습니다: ${it.localizedMessage}", Toast.LENGTH_LONG).show()
+            .addOnFailureListener { e ->
+                println("Error fetching personal color info: ${e.message}")
             }
     }
+
 
     private fun updateUI(colorResult: String) {
         val storageRef = FirebaseStorage.getInstance().reference
