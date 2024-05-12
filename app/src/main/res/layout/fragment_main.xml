@@ -70,7 +70,7 @@
                     android:layout_marginBottom="16dp"
                     android:gravity="center"
                     android:lineSpacingExtra="7dp"
-                    android:text="퍼스널 컬러는 PCCS 색체계를 바탕으로 한\n채도, 명도, 배색을 기본 원리로 하고 있습니다.\n채도는 색상의 강도를 나타냅니다.\n그리고 명도는 색상이 얼마나 밝고 어두운지를\n나타냅니다. \n배색이란 두 가지 이상의 색을 배열하는 것을 의미합니다."
+                    android:text="퍼스널 컬러는 PCCS 색체계를 바탕으로 한\n배색을 기본 원리로 하고 있습니다. \n배색이란 두 가지 이상의 색을 배열하는 것을 의미합니다."
                     android:textColor="#FF07194B"
                     android:textSize="14sp"
                     android:fontFamily="@font/kcchanbit"/>
@@ -160,57 +160,13 @@
                     android:id="@+id/textView13"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="40dp"
+                    android:layout_marginBottom="16dp"
                     android:gravity="center"
                     android:lineSpacingExtra="7dp"
                     android:text="개인의 개성을 중시하는 지금 위해 코스메틱 시장의 활발한 성장으로 수많은 제품들이 넘쳐나는 지금,\n나에게 어울리는 제품을 선택하기 어려운 여러분들을 위해\n진단 결과를 바탕으로\n나에게 어울리는 코스메틱 제품들을 추천해드립니다."
                     android:textColor="#FF07194B"
                     android:textSize="14sp"
                     android:fontFamily="@font/kcchanbit"/>
-
-                <TextView
-                    android:id="@+id/textView61"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="7dp"
-                    android:text="우리의 ColorGlow 앱은 딥러닝 신경망을 활용하여 사용자의 이미지를 입력받고,\n학습된 CNN(합성곱 신경망)모델을 통해\n개인별 맞춤 퍼스널컬러를 분석하여 제공합니다."
-                    android:textColor="#FF07194B"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/kcchanbit"/>
-
-
-                <ImageView
-                    android:id="@+id/cnnmodelimageView"
-                    android:layout_width="297dp"
-                    android:layout_height="171dp"
-                    android:layout_marginBottom="10dp"
-                    android:src="@drawable/cnnimg" />
-
-                <TextView
-                    android:id="@+id/textView133"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:gravity="center"
-                    android:lineSpacingExtra="7dp"
-                    android:text="또한, 오픈소스 라이브러리인 텐서플로우를 사용하여\n데이터 흐름 프로그래밍 방식으로 CNN 모델을\n구현하였습니다.\n연예인의 이미지를 12가지 분류에 따라 저장한\n데이터베이스를 바탕으로 학습되었습니다."
-                    android:textColor="#FF07194B"
-                    android:textSize="14sp"
-                    android:fontFamily="@font/kcchanbit"/>
-
-                <TextView
-                    android:id="@+id/textView21"
-                    android:layout_width="242dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:fontFamily="@font/kcchanbit"
-                    android:gravity="left"
-                    android:lineSpacingExtra="7dp"
-                    android:text="* CNN모델이란? CNN(합성곱 신경망)은 이미지 인식,\n  음성 처리 등에 사용되는 딥러닝 모델로, 데이터의 계층적\n  특징을 효과적으로 학습하여 복잡한 패턴을 인식할 수\n  있는 모델"
-                    android:textColor="#3B3D43"
-                    android:textSize="10sp" />
 
                 <ImageView
                     android:id="@+id/logotextimage"
@@ -227,6 +183,7 @@
                     android:textSize="25sp"
                     android:textColor="#FF07194B"
                     android:fontFamily="@font/kcchanbit"/>
+
 
                 <ImageButton
                     android:id="@+id/Callbutton"
