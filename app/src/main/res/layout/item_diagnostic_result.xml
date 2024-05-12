@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:background="#FDE4F7"
+    android:fontFamily="@font/kcchanbit">
 
     <TextView
         android:id="@+id/dateTextView"
@@ -14,7 +16,8 @@
         android:textColor="#000"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/resultImage" />
+        app:layout_constraintTop_toTopOf="@+id/resultImage"
+        android:fontFamily="@font/kcchanbit"/>
 
     <TextView
         android:id="@+id/resultTextView"
@@ -25,14 +28,15 @@
         android:textColor="#666"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dateTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView"
+        android:fontFamily="@font/kcchanbit"/>
 
     <ImageView
         android:id="@+id/resultImage"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="163dp"
+        android:layout_height="170dp"
         android:layout_marginStart="5dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="30dp"
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -45,6 +49,7 @@
         android:background="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

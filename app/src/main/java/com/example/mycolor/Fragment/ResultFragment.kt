@@ -158,7 +158,6 @@ class ResultFragment : Fragment() {
         }
     }
 
-
     data class DiagnosticResult(
         val date: String,
         val description: String,
