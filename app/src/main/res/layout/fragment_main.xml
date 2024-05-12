@@ -168,6 +168,13 @@
                     android:textSize="14sp"
                     android:fontFamily="@font/kcchanbit"/>
 
+                <Button
+                    android:id="@+id/btnShowPersonalColorInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="More About Personal Color Info"
+                    android:layout_centerInParent="true"/>
+
                 <ImageView
                     android:id="@+id/logotextimage"
                     android:layout_width="match_parent"
@@ -201,6 +208,9 @@
                     android:textSize="17sp"
                     android:textColor="#FF07194B"
                     android:fontFamily="@font/kcchanbit"/>
+
+
+
 
             </LinearLayout>
         </ScrollView>

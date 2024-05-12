@@ -1,0 +1,101 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvIntroduction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="퍼스널 컬러 유형별 간략한 설명:"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Descriptions for each personal color tone -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bright Spring: 생기 있고 밝은 색상의 조합이며 활동적인 인상을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Bright Winter: 강렬하고 선명한 색상으로 화려하고 도시적인 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark Autumn: 따뜻하고 깊은 색상으로 안정감과 고급스러운 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Dark Winter: 강렬하고 짙은 색으로 권위적이며 신비로운 분위기를 만듭니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Light Spring: 부드럽고 밝은 색상으로 사랑스럽고 청초한 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Light Summer: 부드러운 색상의 조합으로 세련되고 차분한 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Soft Autumn: 따뜻한 중간 색상으로 편안하고 접근하기 쉬운 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Soft Summer: 차가운 중간 색상으로 부드럽고 고요한 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="True Autumn: 완전히 따뜻한 색상으로 안정감과 편안함을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="True Spring: 완전히 밝은 색상으로 활기차고 즐거운 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="True Summer: 완전히 차가운 색상으로 차분하고 신뢰감을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="True Winter: 완전히 선명한 색상으로 권위적이고 독립적인 느낌을 줍니다."
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

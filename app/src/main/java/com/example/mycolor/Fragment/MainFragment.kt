@@ -21,12 +21,14 @@ import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -82,7 +84,7 @@ data class ServerResponse(
 class MainFragment : Fragment() {
     private lateinit var navController: NavController
 
-    private lateinit var uid:String
+    private lateinit var uid: String
     private var nowFlag = 0
     private lateinit var imageBitmap: Bitmap
     private lateinit var currentPhotoPath: String
@@ -94,6 +96,7 @@ class MainFragment : Fragment() {
 
         // server IP 맞춰서 수정해야 함
         private const val BASE_URL = "http://34.22.71.204:3000/"
+
         //"http://13.125.218.109:3000/"
         private lateinit var apiService: ApiService
 
@@ -140,6 +143,10 @@ class MainFragment : Fragment() {
         val textView = view.findViewById<TextView>(R.id.textView5)
         applyColorSpanToTextView(textView, "퍼스널 컬러", R.color.Hotpink)
 
+        val personalColorInfoButton = view.findViewById<Button>(R.id.btnShowPersonalColorInfo)
+        personalColorInfoButton.setOnClickListener {
+            showPersonalColorPopup()
+        }
 
 
         val okHttpClient = OkHttpClient.Builder()
@@ -179,7 +186,11 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun applySpannableStringToTextView(textView: TextView, keyword: String, sizeMultiplier: Float) {
+    private fun applySpannableStringToTextView(
+        textView: TextView,
+        keyword: String,
+        sizeMultiplier: Float
+    ) {
         val fullText = textView.text.toString()
         val spannableString = SpannableString(fullText)
         var startIndex = fullText.indexOf(keyword)
@@ -226,14 +237,26 @@ class MainFragment : Fragment() {
 
             cameraBtn?.setOnClickListener {
                 when {
-                    ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED -> {
-                        val photoFile: File? = try { createImageFile() } catch (ex: IOException) { null }
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.CAMERA
+                    ) == PackageManager.PERMISSION_GRANTED -> {
+                        val photoFile: File? = try {
+                            createImageFile()
+                        } catch (ex: IOException) {
+                            null
+                        }
                         photoFile?.also {
-                            val photoURI = FileProvider.getUriForFile(requireContext(), "com.example.mycolor.fileprovider", it)
+                            val photoURI = FileProvider.getUriForFile(
+                                requireContext(),
+                                "com.example.mycolor.fileprovider",
+                                it
+                            )
                             currentPhotoPath = it.absolutePath
                             takePictureLauncher.launch(photoURI)
                         }
                     }
+
                     else -> {
                         requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
                     }
@@ -247,51 +270,62 @@ class MainFragment : Fragment() {
             }
 
 
-
         }
     }
 
 
-    private val requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-        if (isGranted) {
-            // 권한이 승인되었으므로 카메라를 바로 실행합니다.
-            val photoFile: File? = try { createImageFile() } catch (ex: IOException) { null }
-            photoFile?.also {
-                val photoURI = FileProvider.getUriForFile(requireContext(), "com.example.mycolor.fileprovider", it)
-                currentPhotoPath = it.absolutePath
-                takePictureLauncher.launch(photoURI)  // 카메라를 직접 실행
+    private val requestCameraPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) {
+                // 권한이 승인되었으므로 카메라를 바로 실행합니다.
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    null
+                }
+                photoFile?.also {
+                    val photoURI = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.example.mycolor.fileprovider",
+                        it
+                    )
+                    currentPhotoPath = it.absolutePath
+                    takePictureLauncher.launch(photoURI)  // 카메라를 직접 실행
+                }
+            } else {
+                Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
             }
-        } else {
-            Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
         }
-    }
 
-    private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-        if (isSuccess) {
-            // Image was captured and saved to fileUri
-            val imageFile = File(currentPhotoPath)
-            if (imageFile.exists()) {
-                imageBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
-                imageBitmap = rotateImageIfNeeded(currentPhotoPath, imageBitmap) // 회전 추가
+    private val takePictureLauncher =
+        registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                // Image was captured and saved to fileUri
+                val imageFile = File(currentPhotoPath)
+                if (imageFile.exists()) {
+                    imageBitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
+                    imageBitmap = rotateImageIfNeeded(currentPhotoPath, imageBitmap) // 회전 추가
+                    uploadImageAndText(imageBitmap, uid)
+                }
+            } else {
+                Toast.makeText(context, "Failed to take picture", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+    private val pickImageLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                val inputStream = context?.contentResolver?.openInputStream(uri)
+                imageBitmap = BitmapFactory.decodeStream(inputStream)
                 uploadImageAndText(imageBitmap, uid)
             }
-        } else {
-            Toast.makeText(context, "Failed to take picture", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            val inputStream = context?.contentResolver?.openInputStream(uri)
-            imageBitmap = BitmapFactory.decodeStream(inputStream)
-            uploadImageAndText(imageBitmap, uid)
-        }
-    }
 
 
     private fun createImageFile(): File {
         // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
@@ -311,7 +345,8 @@ class MainFragment : Fragment() {
             e.printStackTrace()
             return bitmap
         }
-        val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+        val orientation =
+            exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
 
         val matrix = Matrix()
         when (orientation) {
@@ -353,27 +388,30 @@ class MainFragment : Fragment() {
         val textPart = RequestBody.create("text/plain".toMediaTypeOrNull(), text)
 
         apiService.uploadImageAndText(part, textPart).enqueue(object : Callback<ServerResponse> {
-            override fun onResponse(call: Call<ServerResponse>, response: Response<ServerResponse>) {
+            override fun onResponse(
+                call: Call<ServerResponse>,
+                response: Response<ServerResponse>
+            ) {
                 hideLoadingDialog()
                 if (response.isSuccessful) {
                     // 서버 응답 성공 처리
                     val serverResponse = response.body()
 
 
-                    if(serverResponse?.pythonResult == "1face"){
+                    if (serverResponse?.pythonResult == "1face") {
                         Toast.makeText(
                             context,
                             "한 사람의 얼굴만 잘 나오는 사진으로 다시 진행해주세요.",
                             Toast.LENGTH_SHORT
 
                         ).show()
-                    }else if(serverResponse?.pythonResult == "error"){
+                    } else if (serverResponse?.pythonResult == "error") {
                         Toast.makeText(
                             context,
                             "네트워크 에러입니다. 나중에 다시 시도해주세요.",
                             Toast.LENGTH_SHORT
                         ).show()
-                    }else{
+                    } else {
                         Toast.makeText(
                             context,
                             "진단 완료! 상세 진단 결과 페이지로 이동합니다.",
@@ -397,9 +435,13 @@ class MainFragment : Fragment() {
                     Toast.makeText(context, serverResponse?.pythonResult, Toast.LENGTH_SHORT).show()
                     //resultText.text = serverResponse?.pythonResult
 
-                }else {
+                } else {
                     // 서버 응답 오류 처리
-                    Toast.makeText(context, "Upload failed: ${response.message()}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        context,
+                        "Upload failed: ${response.message()}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
 
@@ -459,5 +501,19 @@ class MainFragment : Fragment() {
         }
     }
 
+    private fun showPersonalColorPopup() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.apply {
+            setTitle("퍼스널 컬러에 대한 설명")
+            setView(R.layout.dialog_personal_color)  // Ensure you have a layout file named dialog_personal_color.xml
+            setPositiveButton("확인") { dialog, _ ->
+                dialog.dismiss()
+            }
+        }
+        val dialog = builder.create()
+        dialog.show()
+    }
 
 }
+
+
