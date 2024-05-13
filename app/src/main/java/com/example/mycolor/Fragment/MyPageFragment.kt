@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.mycolor.R
+import com.example.mycolor.activity.WebActivity
 import com.example.mycolor.login.LoginActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -34,6 +35,13 @@ class MyPageFragment : Fragment() {
     private lateinit var baseProductTextViews: List<TextView>
     private lateinit var lipProductTextViews: List<TextView>
     private lateinit var eyeProductTextViews: List<TextView>
+
+
+
+    private var baseUrls: MutableList<String> = mutableListOf()
+    private var lipUrls: MutableList<String> = mutableListOf()
+    private var eyeUrls: MutableList<String> = mutableListOf()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -77,7 +85,7 @@ class MyPageFragment : Fragment() {
                 val document = task.result
                 if (document != null && document.exists()) {
                     // 문서가 존재하고, name 필드에 값이 있을 경우 그 값을 가져옴
-                    val name = document.getString("name") ?: "상상부기" // name 필드가 null이면 "상상부기"를 사용
+                    val name = document.getString("name") ?: "" // name 필드가 null이면 "상상부기"를 사용
                     nameTextView.text = name
 
                     // results 컬렉션에서 최신 결과 가져오기
@@ -85,11 +93,11 @@ class MyPageFragment : Fragment() {
                         .get()
                         .addOnSuccessListener { documents ->
                             if (documents.isEmpty) {
-                                nameTextView2.text = "부기퍼컬" // 결과가 없는 경우 기본값을 사용
+                                nameTextView2.text = "" // 결과가 없는 경우 기본값을 사용
                                 Log.d("Firestore", "No documents found")
                             } else {
                                 val resultDocument = documents.documents[0]
-                                val result = resultDocument.getString("result") ?: "부기퍼컬"
+                                val result = resultDocument.getString("result") ?: ""
                                 val date = resultDocument.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
 
                                 nameTextView2.text = result
@@ -184,9 +192,16 @@ class MyPageFragment : Fragment() {
         val categories = listOf("base", "lip", "eye")
         categories.forEach { category ->
             val imageViews = getImageViewsByCategory(category)
-            loadImages(storageRef, colorResult, category, imageViews)
+            val urls = when (category) {
+                "base" -> baseUrls
+                "lip" -> lipUrls
+                "eye" -> eyeUrls
+                else -> mutableListOf<String>()  // Fallback empty list, should not be used
+            }
+            loadImages(storageRef, colorResult, category, imageViews, urls)
         }
     }
+
 
     private fun getImageViewsByCategory(category: String): List<ImageView> {
         //Toast.makeText(context, "$category 카테고리의 이미지 뷰 로드 중...", Toast.LENGTH_SHORT).show()
@@ -197,13 +212,23 @@ class MyPageFragment : Fragment() {
         )
     }
 
-    private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>) {
+    private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>, urls: List<String>) {
         imageViews.forEachIndexed { index, imageView ->
             val imagePath = "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
             val imageRef = storageRef.child(imagePath)
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 Glide.with(this).load(uri).into(imageView)
-                //Toast.makeText(context, "이미지 로드 성공: $imagePath", Toast.LENGTH_SHORT).show()
+                imageView.setOnClickListener {
+                    if (urls[index] != "none") {
+                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urls[index]))
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(context, "해당 제품 홈페이지가 없습니다.", Toast.LENGTH_SHORT).show()
+                    }
+
+
+
+                }
             }.addOnFailureListener { exception ->
                 Log.e("Storage", "Error loading image: $imagePath", exception)
                 //Toast.makeText(context, "이미지 로드 실패: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
@@ -260,6 +285,9 @@ class MyPageFragment : Fragment() {
                             val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
                             val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
                             textView.text = "$productName\n$productBrand\n$productPrice"
+
+                            val productUrl = productInfo?.get("url") as? String ?: "none"
+                            baseUrls.add(productUrl)
                         }
                     }
 
@@ -272,6 +300,10 @@ class MyPageFragment : Fragment() {
                             val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
                             val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
                             textView.text = "$productName\n$productBrand\n$productPrice"
+
+                            val productUrl = productInfo?.get("url") as? String ?: "none"
+                           lipUrls.add(productUrl)
+
                         }
                     }
 
@@ -284,6 +316,10 @@ class MyPageFragment : Fragment() {
                             val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
                             val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
                             textView.text = "$productName\n$productBrand\n$productPrice"
+
+                            val productUrl = productInfo?.get("url") as? String ?: "none"
+                            eyeUrls.add(productUrl)
+
                         }
                     }
                 }
