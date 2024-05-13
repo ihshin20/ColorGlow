@@ -34,6 +34,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.core.content.res.ResourcesCompat
 import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
@@ -503,17 +504,24 @@ class MainFragment : Fragment() {
 
     private fun showPersonalColorPopup() {
         val builder = AlertDialog.Builder(requireContext())
+        val customTitleView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_title, null)
         builder.apply {
-            setTitle("퍼스널 컬러에 대한 설명")
-            setView(R.layout.dialog_personal_color)  // Ensure you have a layout file named dialog_personal_color.xml
+            setCustomTitle(customTitleView)
+            setView(R.layout.dialog_personal_color)
             setPositiveButton("확인") { dialog, _ ->
                 dialog.dismiss()
             }
         }
         val dialog = builder.create()
+
+        // 배경에 둥근 모서리 적용
+        dialog.window?.setBackgroundDrawableResource(R.drawable.dialog_background)
+
         dialog.show()
+
+        // 버튼에 폰트 적용
+        val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+        val typeface = ResourcesCompat.getFont(requireContext(), R.font.kcchanbit) // 폰트 로드
+        positiveButton.typeface = typeface
     }
-
 }
-
-

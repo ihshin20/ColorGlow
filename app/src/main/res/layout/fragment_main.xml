@@ -171,9 +171,11 @@
                 <Button
                     android:id="@+id/btnShowPersonalColorInfo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Show Personal Color Info"
-                    android:layout_centerInParent="true"/>
+                    android:layout_height="46dp"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="30dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="퍼스널 컬러 12가지 종류" />
 
 
                 <ImageView
@@ -191,7 +193,6 @@
                     android:textSize="25sp"
                     android:textColor="#FF07194B"
                     android:fontFamily="@font/kcchanbit"/>
-
 
                 <ImageButton
                     android:id="@+id/Callbutton"
