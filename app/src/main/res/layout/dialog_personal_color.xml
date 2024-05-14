@@ -1,0 +1,166 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="0dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="30dp">
+
+                <!-- Descriptions for each personal color tone -->
+                <ImageView
+                    android:id="@+id/springimageView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="350dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/spring" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Light Spring : 봄 라이트\n부드럽고 밝은 색상으로 사랑스럽고 청초한 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#DC143C" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Bright Spring : 봄 브라이트\n생기 있고 밝은 색상의 조합이며 활동적인 인상을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#DC143C"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="True Spring : 봄 트루\n완전히 밝은 색상으로 활기차고 즐거운 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#DC143C" />
+
+                <ImageView
+                    android:id="@+id/summerimageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/summer" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Light Summer : 여름 라이트\n부드러운 색상의 조합으로 세련되고 차분한 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#225D8B" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="True Summer : 여름 트루\n완전히 차가운 색상으로 차분하고 신뢰감을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#225D8B" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Soft Summer : 여름 소프트\n차가운 중간 색상으로 부드럽고 고요한 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#225D8B" />
+
+                <ImageView
+                    android:id="@+id/autumnimageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/autumn" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Soft Autumn : 가을 소프트\n따뜻한 중간 색상으로 편안하고 접근하기 쉬운 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#8B4513" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="True Autumn : 가을 트루\n완전히 따뜻한 색상으로 안정감과 편안함을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#8B4513" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Dark Autumn : 가을 다크\n따뜻하고 깊은 색상으로 안정감과 고급스러운 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#8B4513" />
+
+                <ImageView
+                    android:id="@+id/winterimageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/winter" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="True Winter : 겨울 트루\n완전히 선명한 색상으로 권위적이고 독립적인 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#003C3C" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Bright Winter : 겨울 브라이트\n강렬하고 선명한 색상으로 화려하고 도시적인 느낌을 줍니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#003C3C" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:text="Dark Winter : 겨울 다크\n강렬하고 짙은 색으로 권위적이며 신비로운 분위기를 만듭니다."
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="#003C3C" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</RelativeLayout>

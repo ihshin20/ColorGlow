@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyColor</string>
+    <string name="app_name">Color Glow</string>
     <string name="wait" />
     <string name="light_spring" />
     <string name="spring_bright" />
@@ -19,4 +19,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="take_photo">Take photo</string>
+    <string name="home" />
+    <string name="results" />
+    <string name="my_page" />
 </resources>
