@@ -28,7 +28,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="350dp"
                     android:layout_marginBottom="20dp"
-                    tools:srcCompat="@drawable/spring" />
+                    android:src="@drawable/spring" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -63,7 +63,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_marginBottom="20dp"
-                    tools:srcCompat="@drawable/summer" />
+                    android:src="@drawable/summer" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_marginBottom="20dp"
-                    tools:srcCompat="@drawable/autumn" />
+                    android:src="@drawable/autumn" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -131,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="350dp"
                     android:layout_marginBottom="20dp"
-                    tools:srcCompat="@drawable/winter" />
+                    android:src="@drawable/winter" />
 
                 <TextView
                     android:layout_width="wrap_content"
