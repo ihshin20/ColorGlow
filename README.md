@@ -6,13 +6,13 @@
 ![js](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 ![js](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
 
-**팀 명** 
+:pushpin: **팀 명** 
 
 <img width="69" alt="turtle3" src="https://github.com/ihshin20/ColorGlow/assets/80204749/ec10147f-1a54-401c-8f75-2476866481ba">
 
 한성대학교 2024학년도 캡스톤 디자인 팀 거부기 
 
-**프로젝트 소개**
+:pushpin: **프로젝트 소개**
 
 Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
@@ -20,7 +20,7 @@ Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
   <img src="https://github.com/ihshin20/ColorGlow/assets/152589175/ea55f923-e680-4ac5-be2a-0c8a30aec2eb" alt="330257554-88e76582-0c40-49b5-a2e2-65da5dd16674">
 </div>
 
-**프로젝트 설명**
+:pushpin: **프로젝트 설명**
 
 최근 몇 년 동안 소비자들은 자신만의 개성을 중요시하며, 개인의 특성에 맞는 제품과 서비스를 선호하고 있다.
 
@@ -36,16 +36,16 @@ Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
 4. 퍼스널 컬러와 어울리는 코스메틱 제품 정보를 제공하여, 사용자가 **최적의 제품**을 쉽게 찾을 수 있도록 도와줌
 
-**개발자 소개**
+:pushpin: **개발자 소개**
 
 <div align="center">
   <img width="271" alt="깃허브셀캉" src="https://github.com/ihshin20/ColorGlow/assets/80204749/13d0b9a9-8df1-4e95-afba-14aca4c75298">
 </div>
 
-1. 신일호: Deep Learning(Server)
+:paperclip: 신일호: Deep Learning(Server)
 
-2. 송현화: Android Studio(APP)
+:paperclip: 송현화: Android Studio(APP)
 
-3. 이지예: Android Studio(APP)
+:paperclip: 이지예: Android Studio(APP)
 
-4. 정다윤: Android Studio(APP)
+:paperclip: 정다윤: Android Studio(APP)
