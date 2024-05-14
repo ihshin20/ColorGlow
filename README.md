@@ -16,9 +16,15 @@
 
 Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
-![330257554-88e76582-0c40-49b5-a2e2-65da5dd16674](https://github.com/ihshin20/ColorGlow/assets/152589175/ea55f923-e680-4ac5-be2a-0c8a30aec2eb)
+<div align="center">
+  <img src="https://github.com/ihshin20/ColorGlow/assets/152589175/ea55f923-e680-4ac5-be2a-0c8a30aec2eb" alt="330257554-88e76582-0c40-49b5-a2e2-65da5dd16674">
+</div>
 
 **개발자 소개**
+
+<div align="center">
+  <img width="271" alt="깃허브셀캉" src="https://github.com/ihshin20/ColorGlow/assets/80204749/13d0b9a9-8df1-4e95-afba-14aca4c75298">
+</div>
 
 1. 신일호: Deep Learning(Server)
 
