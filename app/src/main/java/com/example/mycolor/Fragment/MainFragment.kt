@@ -128,7 +128,6 @@ class MainFragment : Fragment() {
         val logotextimage = view.findViewById<ImageView>(R.id.logotextimage)
         logotextimage.setImageResource(R.drawable.logotextimage)
 
-
         val textView6 = view.findViewById<TextView>(R.id.textView6)
         applySpannableStringToTextView(textView6, "배색", 1.5f)
 
@@ -177,7 +176,6 @@ class MainFragment : Fragment() {
         }
 
         apiService = retrofit.create(ApiService::class.java)
-
 
         // "검사하기" 버튼 클릭 이벤트 설정
         val checkButton = view.findViewById<ImageButton>(R.id.Callbutton)
@@ -264,13 +262,10 @@ class MainFragment : Fragment() {
                 }
                 dismiss()
             }
-
             galBtn?.setOnClickListener {
                 pickImageLauncher.launch("image/*")
                 dismiss()
             }
-
-
         }
     }
 
@@ -322,7 +317,6 @@ class MainFragment : Fragment() {
             }
         }
 
-
     private fun createImageFile(): File {
         // Create an image file name
         val timeStamp: String =
@@ -337,7 +331,6 @@ class MainFragment : Fragment() {
             currentPhotoPath = it.absolutePath
         }
     }
-
 
     private fun rotateImageIfNeeded(photoPath: String, bitmap: Bitmap): Bitmap {
         val exif = try {
@@ -358,7 +351,6 @@ class MainFragment : Fragment() {
 
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
-
 
     private lateinit var loadingDialog: AlertDialog
 
@@ -417,12 +409,8 @@ class MainFragment : Fragment() {
                             context,
                             "진단 완료! 상세 진단 결과 페이지로 이동합니다.",
                             Toast.LENGTH_SHORT
-
-
                         ).show()
-
                         addResult(uid, serverResponse?.pythonResult)
-
                     }
 
 
@@ -505,6 +493,21 @@ class MainFragment : Fragment() {
     private fun showPersonalColorPopup() {
         val builder = AlertDialog.Builder(requireContext())
         val customTitleView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_title, null)
+        val inflater = LayoutInflater.from(requireContext())
+        val dialogView = inflater.inflate(R.layout.dialog_personal_color, null)
+
+        val springImageView = dialogView.findViewById<ImageView>(R.id.springimageView)
+        springImageView.setImageResource(R.drawable.spring)
+
+        val summerImageView = dialogView.findViewById<ImageView>(R.id.summerimageView)
+        summerImageView.setImageResource(R.drawable.summer)
+
+        val autumnImageView = dialogView.findViewById<ImageView>(R.id.autumnimageView)
+        autumnImageView.setImageResource(R.drawable.autumn)
+
+        val winterImageView = dialogView.findViewById<ImageView>(R.id.winterimageView)
+        winterImageView.setImageResource(R.drawable.winter)
+
         builder.apply {
             setCustomTitle(customTitleView)
             setView(R.layout.dialog_personal_color)
