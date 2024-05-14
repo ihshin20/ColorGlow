@@ -16,7 +16,7 @@
 
 Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
-![2  21조_이미지_주요 적용 기술 및 구조(300dpi)](https://github.com/ihshin20/ColorGlow/assets/80204749/88e76582-0c40-49b5-a2e2-65da5dd16674)
+![330257554-88e76582-0c40-49b5-a2e2-65da5dd16674](https://github.com/ihshin20/ColorGlow/assets/152589175/ea55f923-e680-4ac5-be2a-0c8a30aec2eb)
 
 **개발자 소개**
 
