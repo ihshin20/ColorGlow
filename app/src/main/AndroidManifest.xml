@@ -18,9 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
         <activity
-            android:name=".activity.WebActivity"
-            android:exported="false" />
-        <activity
             android:name=".activity.DetailResultActivity"
             android:exported="false" /> <!-- MainActivity with corrected intent-filter location -->
         <activity
