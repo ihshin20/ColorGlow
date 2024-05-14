@@ -1,6 +1,5 @@
 package com.example.mycolor.Fragment
 
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -15,6 +14,8 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.Spanned
@@ -64,7 +65,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import java.util.concurrent.TimeUnit
-
 
 interface ApiService {
     @Multipart
@@ -147,7 +147,6 @@ class MainFragment : Fragment() {
         personalColorInfoButton.setOnClickListener {
             showPersonalColorPopup()
         }
-
 
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(120, TimeUnit.SECONDS) // 연결 타임아웃
@@ -235,40 +234,44 @@ class MainFragment : Fragment() {
             val galBtn = findViewById<Button>(R.id.galleryBtn)
 
             cameraBtn?.setOnClickListener {
-                when {
-                    ContextCompat.checkSelfPermission(
-                        requireContext(),
-                        Manifest.permission.CAMERA
-                    ) == PackageManager.PERMISSION_GRANTED -> {
-                        val photoFile: File? = try {
-                            createImageFile()
-                        } catch (ex: IOException) {
-                            null
-                        }
-                        photoFile?.also {
-                            val photoURI = FileProvider.getUriForFile(
-                                requireContext(),
-                                "com.example.mycolor.fileprovider",
-                                it
-                            )
-                            currentPhotoPath = it.absolutePath
-                            takePictureLauncher.launch(photoURI)
-                        }
-                    }
+                showAlertDialog() // AlertDialog를 먼저 표시
 
-                    else -> {
-                        requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                Handler(Looper.getMainLooper()).postDelayed({
+                    when {
+                        ContextCompat.checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED -> {
+                            val photoFile: File? = try {
+                                createImageFile()
+                            } catch (ex: IOException) {
+                                null
+                            }
+                            photoFile?.also {
+                                val photoURI = FileProvider.getUriForFile(
+                                    requireContext(),
+                                    "com.example.mycolor.fileprovider",
+                                    it
+                                )
+                                currentPhotoPath = it.absolutePath
+                                takePictureLauncher.launch(photoURI)
+                            }
+                        }
+
+                        else -> {
+                            requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                        }
                     }
-                }
-                dismiss()
+                    dismiss()
+                }, 3000) // 3초 후에 카메라를 실행
             }
+
             galBtn?.setOnClickListener {
                 pickImageLauncher.launch("image/*")
                 dismiss()
             }
         }
     }
-
 
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
@@ -390,7 +393,6 @@ class MainFragment : Fragment() {
                     // 서버 응답 성공 처리
                     val serverResponse = response.body()
 
-
                     if (serverResponse?.pythonResult == "1face") {
                         Toast.makeText(
                             context,
@@ -409,10 +411,11 @@ class MainFragment : Fragment() {
                             context,
                             "진단 완료! 상세 진단 결과 페이지로 이동합니다.",
                             Toast.LENGTH_SHORT
+
                         ).show()
+
                         addResult(uid, serverResponse?.pythonResult)
                     }
-
 
                     // 서버 응답 출력
                     Log.d(
@@ -421,7 +424,8 @@ class MainFragment : Fragment() {
                     )
                     // 즉, serverResponse?.textData -> UID, serverResponse?.pythonResult -> 진단결과 톤(ex. Bright_Sprint)
 
-                    Toast.makeText(context, serverResponse?.pythonResult, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, serverResponse?.pythonResult, Toast.LENGTH_SHORT)
+                        .show()
                     //resultText.text = serverResponse?.pythonResult
 
                 } else {
@@ -492,22 +496,8 @@ class MainFragment : Fragment() {
 
     private fun showPersonalColorPopup() {
         val builder = AlertDialog.Builder(requireContext())
-        val customTitleView = LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_title, null)
-        val inflater = LayoutInflater.from(requireContext())
-        val dialogView = inflater.inflate(R.layout.dialog_personal_color, null)
-
-        val springImageView = dialogView.findViewById<ImageView>(R.id.springimageView)
-        springImageView.setImageResource(R.drawable.spring)
-
-        val summerImageView = dialogView.findViewById<ImageView>(R.id.summerimageView)
-        summerImageView.setImageResource(R.drawable.summer)
-
-        val autumnImageView = dialogView.findViewById<ImageView>(R.id.autumnimageView)
-        autumnImageView.setImageResource(R.drawable.autumn)
-
-        val winterImageView = dialogView.findViewById<ImageView>(R.id.winterimageView)
-        winterImageView.setImageResource(R.drawable.winter)
-
+        val customTitleView =
+            LayoutInflater.from(requireContext()).inflate(R.layout.custom_dialog_title, null)
         builder.apply {
             setCustomTitle(customTitleView)
             setView(R.layout.dialog_personal_color)
@@ -526,5 +516,18 @@ class MainFragment : Fragment() {
         val positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
         val typeface = ResourcesCompat.getFont(requireContext(), R.font.kcchanbit) // 폰트 로드
         positiveButton.typeface = typeface
+    }
+
+    private fun showAlertDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage("*알림* \n 정면을 바라봐주세요.")
+        builder.setCancelable(false)
+
+        val alertDialog = builder.create()
+        alertDialog.show()
+
+        Handler(Looper.getMainLooper()).postDelayed({
+            alertDialog.dismiss()
+        }, 3000) // 3000 milliseconds = 3 seconds
     }
 }
