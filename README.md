@@ -10,7 +10,7 @@
 
 <img width="69" alt="turtle3" src="https://github.com/ihshin20/ColorGlow/assets/80204749/ec10147f-1a54-401c-8f75-2476866481ba">
 
-한성대학교 2024학년도 캡스톤 디자인 팀 거부기 
+한성대학교 2024학년도 캡스톤 디자인 팀 거부기 :turtle:
 
 :pushpin: **프로젝트 소개**
 
