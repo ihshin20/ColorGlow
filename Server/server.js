@@ -30,7 +30,7 @@ const upload = multer({ storage: storage });
 function runPythonScript(imagePath) {
   return new Promise((resolve, reject) => {
     console.log(`Python 스크립트 실행: ${imagePath}`);
-    const process = spawn('python', ['server_detectFace_resizer.py', imagePath]);
+    const process = spawn('python', ['run_model.py', imagePath]);
 
     let scriptOutput = "";
     process.stdout.on('data', (data) => {
