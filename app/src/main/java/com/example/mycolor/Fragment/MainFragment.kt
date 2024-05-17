@@ -117,8 +117,6 @@ class MainFragment : Fragment() {
         pccsimageView.setImageResource(R.drawable.pccs)
         val twofaceimageView = view.findViewById<ImageView>(R.id.twofaceimageView)
         twofaceimageView.setImageResource(R.drawable.twofaceimage)
-        val grassimageView = view.findViewById<ImageView>(R.id.grassimageView)
-        grassimageView.setImageResource(R.drawable.grassimage)
         val shoppingimageView = view.findViewById<ImageView>(R.id.shoppingimageView)
         shoppingimageView.setImageResource(R.drawable.shoppingimage)
         val logotextimage = view.findViewById<ImageView>(R.id.logotextimage)
