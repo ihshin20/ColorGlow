@@ -92,7 +92,8 @@ class ResultFragment : Fragment() {
                                     actualDate
                                 )
                             val result = document.getString("result") ?: "No result available"
-                            DiagnosticResult(formattedDate, result, actualDate)
+                            val replacedResult = result.replace("_", " ")
+                            DiagnosticResult(formattedDate, replacedResult, actualDate)
                         } else {
                             null // Skip this entry if the date is null
                         }
