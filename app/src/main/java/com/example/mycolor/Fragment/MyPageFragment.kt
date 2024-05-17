@@ -100,7 +100,8 @@ class MyPageFragment : Fragment() {
                                 val result = resultDocument.getString("result") ?: ""
                                 val date = resultDocument.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
 
-                                nameTextView2.text = result
+                                val replacedResult = result.replace("_", " ")
+                                nameTextView2.text = replacedResult
 
                                 Log.d("Firestore", "Personal Color: $result")
                             }
