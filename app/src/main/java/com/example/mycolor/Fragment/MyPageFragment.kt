@@ -203,21 +203,36 @@ class MyPageFragment : Fragment() {
     }
 
 
+//    private fun getImageViewsByCategory(category: String): List<ImageView> {
+//        //Toast.makeText(context, "$category 카테고리의 이미지 뷰 로드 중...", Toast.LENGTH_SHORT).show()
+//        return listOf(
+//            requireView().findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
+//            requireView().findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
+//            requireView().findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
+//        )
+//    }
+
     private fun getImageViewsByCategory(category: String): List<ImageView> {
-        //Toast.makeText(context, "$category 카테고리의 이미지 뷰 로드 중...", Toast.LENGTH_SHORT).show()
+        // 현재 뷰가 null인지 확인하고, null이 아니면 진행
+        val currentView = view ?: return emptyList()  // view가 null이면 빈 리스트를 반환
+
         return listOf(
-            requireView().findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
-            requireView().findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
-            requireView().findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
+            currentView.findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
+            currentView.findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
+            currentView.findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
         )
     }
+
 
     private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>, urls: List<String>) {
         imageViews.forEachIndexed { index, imageView ->
             val imagePath = "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
             val imageRef = storageRef.child(imagePath)
             imageRef.downloadUrl.addOnSuccessListener { uri ->
-                Glide.with(this).load(uri).into(imageView)
+                if(isAdded){
+                    Glide.with(this).load(uri).into(imageView)
+                }
+
                 imageView.setOnClickListener {
                     if (urls[index] != "none") {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urls[index]))
