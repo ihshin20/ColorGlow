@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.example.mycolor" />
-                  <option name="mobileSdkAppId" value="1:9694556724:android:fd88d660f35be1eb459061" />
-                  <option name="projectId" value="colorglow-9e76e" />
-                  <option name="projectNumber" value="9694556724" />
+                  <option name="appId" value="PLACEHOLDER" />
+                  <option name="mobileSdkAppId" value="" />
+                  <option name="projectId" value="" />
+                  <option name="projectNumber" value="" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
