@@ -135,7 +135,7 @@ class MyPageFragment : Fragment() {
 
         }
 
-        fetchPersonalColorInfo()
+        //fetchPersonalColorInfo()
 
         baseProductTextViews = listOf(
             view.findViewById(R.id.baseproductTextView_11),
