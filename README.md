@@ -3,7 +3,7 @@
 :pushpin: **개발 환경**
 
   ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) ![js](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
-
+![Runpod](https://img.shields.io/badge/Runpod-3DDC84?style=for-the-badge&logo=Runpod&logoColor=black)
 
 
 :pushpin: **개발 도구**
