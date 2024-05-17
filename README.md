@@ -4,9 +4,13 @@
 
   ![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white) ![js](https://img.shields.io/badge/Google_Cloud-4285F4?style=for-the-badge&logo=google-cloud&logoColor=white)
 
+
+
 :pushpin: **개발 도구**
 
-![js](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white) [![Jupyter Notebook](https://img.shields.io/badge/%20Jupyter%20Notebook-blue?logo=jupyter&style=for-the-badge)](https://mybinder.org/v2/gh/<your-github-username>/<your-repo-name>/HEAD?labpath=<path-to-your-notebook>)
+![js](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white) [![Jupyter Notebook](https://img.shields.io/badge/%20Jupyter%20Notebook-blue?logo=jupyter&style=for-the-badge)](https://mybinder.org/v2/gh/<your-github-username>/<your-repo-name>/HEAD?labpath=<path-to-your-notebook>) [![Open in VS Code](https://img.shields.io/badge/VS%20Code-yellow?logo=visual-studio-code&style=for-the-badge)](https://vscode.dev/github/<your-github-username>/<your-repo-name>)
+
+
 
 
 :pushpin: **개발 언어**
