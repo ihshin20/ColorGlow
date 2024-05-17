@@ -1,10 +1,7 @@
 package com.example.mycolor.Fragment
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -16,20 +13,17 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.provider.MediaStore
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.PopupWindow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +43,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -89,6 +84,7 @@ class MainFragment : Fragment() {
     private var nowFlag = 0
     private lateinit var imageBitmap: Bitmap
     private lateinit var currentPhotoPath: String
+    private lateinit var loadingDialog: AlertDialog
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 100
@@ -155,7 +151,7 @@ class MainFragment : Fragment() {
             .build()
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(MainFragment.BASE_URL)
+            .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient) // OkHttpClient 설정
             .build()
@@ -166,10 +162,7 @@ class MainFragment : Fragment() {
         // 현재 로그인한 사용자 정보 가져오기
         val user = auth.currentUser
         if (user != null) {
-            // 사용자 UID 출력
             uid = user.uid
-            Log.d("FirebaseAuth", "User UID: $uid")
-            // 여기서 uid를 사용할 수 있습니다.
         } else {
             Log.d("FirebaseAuth", "No user is currently signed in.")
         }
@@ -179,7 +172,6 @@ class MainFragment : Fragment() {
         // "검사하기" 버튼 클릭 이벤트 설정
         val checkButton = view.findViewById<ImageButton>(R.id.Callbutton)
         checkButton.setOnClickListener {
-            // Bottom Sheet Dialog 보여주기
             showBottomSheetDialog()
         }
     }
@@ -234,7 +226,7 @@ class MainFragment : Fragment() {
             val galBtn = findViewById<Button>(R.id.galleryBtn)
 
             cameraBtn?.setOnClickListener {
-                showAlertDialog() // AlertDialog를 먼저 표시
+                showAlertDialog()
 
                 Handler(Looper.getMainLooper()).postDelayed({
                     when {
@@ -263,7 +255,7 @@ class MainFragment : Fragment() {
                         }
                     }
                     dismiss()
-                }, 3000) // 3초 후에 카메라를 실행
+                }, 2000) // 2초 후에 카메라를 실행
             }
 
             galBtn?.setOnClickListener {
@@ -276,7 +268,7 @@ class MainFragment : Fragment() {
     private val requestCameraPermissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if (isGranted) {
-                // 권한이 승인되었으므로 카메라를 바로 실행합니다.
+                // 권한이 승인되었으므로 카메라를 바로 실행
                 val photoFile: File? = try {
                     createImageFile()
                 } catch (ex: IOException) {
@@ -326,16 +318,16 @@ class MainFragment : Fragment() {
             SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
         val storageDir: File? = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
         ).also {
-            // Save a file: path for use with ACTION_VIEW intents
             currentPhotoPath = it.absolutePath
         }
     }
 
     private fun rotateImageIfNeeded(photoPath: String, bitmap: Bitmap): Bitmap {
+        // 카메라로 직접 사진을 찍었을 때, 사진 회전 보정
         val exif = try {
             ExifInterface(photoPath)
         } catch (e: IOException) {
@@ -355,7 +347,6 @@ class MainFragment : Fragment() {
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
-    private lateinit var loadingDialog: AlertDialog
 
     private fun showLoadingDialog() {
         val builder = AlertDialog.Builder(context)
@@ -379,11 +370,13 @@ class MainFragment : Fragment() {
 
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
-        val requestBody = RequestBody.create("image/jpeg".toMediaTypeOrNull(), baos.toByteArray())
-        val part = MultipartBody.Part.createFormData("image", "image.jpg", requestBody)
-        val textPart = RequestBody.create("text/plain".toMediaTypeOrNull(), text)
+        val imageBytes = baos.toByteArray()
+        val imageBody = imageBytes.toRequestBody("image/jpeg".toMediaTypeOrNull())
 
-        apiService.uploadImageAndText(part, textPart).enqueue(object : Callback<ServerResponse> {
+        val part = MultipartBody.Part.createFormData("image", "image.jpg", imageBody)
+        val textBody = text.toRequestBody("text/plain".toMediaTypeOrNull())
+
+        apiService.uploadImageAndText(part, textBody).enqueue(object : Callback<ServerResponse> {
             override fun onResponse(
                 call: Call<ServerResponse>,
                 response: Response<ServerResponse>
@@ -398,7 +391,6 @@ class MainFragment : Fragment() {
                             context,
                             "한 사람의 얼굴만 잘 나오는 사진으로 다시 진행해주세요.",
                             Toast.LENGTH_SHORT
-
                         ).show()
                     } else if (serverResponse?.pythonResult == "error") {
                         Toast.makeText(
@@ -413,7 +405,6 @@ class MainFragment : Fragment() {
                             Toast.LENGTH_SHORT
 
                         ).show()
-
                         addResult(uid, serverResponse?.pythonResult)
                     }
 
@@ -422,12 +413,8 @@ class MainFragment : Fragment() {
                         "ServerResponse",
                         "Text Data: ${serverResponse?.textData}, Python Result: ${serverResponse?.pythonResult}"
                     )
-                    // 즉, serverResponse?.textData -> UID, serverResponse?.pythonResult -> 진단결과 톤(ex. Bright_Sprint)
-
                     Toast.makeText(context, serverResponse?.pythonResult, Toast.LENGTH_SHORT)
                         .show()
-                    //resultText.text = serverResponse?.pythonResult
-
                 } else {
                     // 서버 응답 오류 처리
                     Toast.makeText(
@@ -440,12 +427,10 @@ class MainFragment : Fragment() {
 
             override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
                 Toast.makeText(context, "Upload failed: ${t.message}", Toast.LENGTH_SHORT).show()
-
-                Log.d("UploadError", t.message ?: "Error message is null")
-
             }
         })
     }
+
 
     fun addResult(uid: String, result: String?) {
         val db = FirebaseFirestore.getInstance()
@@ -528,6 +513,6 @@ class MainFragment : Fragment() {
 
         Handler(Looper.getMainLooper()).postDelayed({
             alertDialog.dismiss()
-        }, 3000) // 3000 milliseconds = 3 seconds
+        }, 2000)
     }
 }
