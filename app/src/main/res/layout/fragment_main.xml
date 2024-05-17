@@ -34,6 +34,51 @@
                     android:src="@drawable/logoimage" />
 
                 <TextView
+                    android:id="@+id/textView61"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="7dp"
+                    android:text="우리의 ColorGlow 앱은 딥러닝 신경망을 활용하여\n사용자의 이미지를 입력받고,\n학습된 CNN(합성곱 신경망)모델을 통해\n개인별 맞춤 퍼스널컬러를 분석하여 제공합니다."
+                    android:textColor="#FF07194B"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/kcchanbit"/>
+
+
+                <ImageView
+                    android:id="@+id/cnnmodelimageView"
+                    android:layout_width="297dp"
+                    android:layout_height="171dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/cnnimg" />
+
+                <TextView
+                    android:id="@+id/textView133"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="7dp"
+                    android:text="또한, 오픈소스 라이브러리인 텐서플로우를 사용하여\n데이터 흐름 프로그래밍 방식으로 CNN 모델을\n구현하였습니다.\n연예인의 이미지를 12가지 분류에 따라 저장한\n데이터베이스를 바탕으로 학습되었습니다."
+                    android:textColor="#FF07194B"
+                    android:textSize="14sp"
+                    android:fontFamily="@font/kcchanbit"/>
+
+                <TextView
+                    android:id="@+id/textView21"
+                    android:layout_width="242dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="@font/kcchanbit"
+                    android:gravity="left"
+                    android:lineSpacingExtra="7dp"
+                    android:text="* CNN모델이란? CNN(합성곱 신경망)은 이미지 인식,\n  음성 처리 등에 사용되는 딥러닝 모델로, 데이터의 계층적\n  특징을 효과적으로 학습하여 복잡한 패턴을 인식할 수\n  있는 모델"
+                    android:textColor="#3B3D43"
+                    android:textSize="10sp" />
+
+
+                <TextView
                     android:id="@+id/textView5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -129,13 +174,6 @@
                     android:textColor="#FF07194B"
                     android:textSize="14sp"
                     android:fontFamily="@font/kcchanbit"/>
-
-                <ImageView
-                    android:id="@+id/grassimageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_marginBottom="16dp"
-                    android:src="@drawable/grassimage" />
 
                 <TextView
                     android:id="@+id/textView10"

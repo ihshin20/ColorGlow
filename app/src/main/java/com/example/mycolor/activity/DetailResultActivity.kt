@@ -39,6 +39,9 @@ class DetailResultActivity : AppCompatActivity() {
         val resultTextView = findViewById<TextView>(R.id.detailResultTextView)
         val dateTextView = findViewById<TextView>(R.id.dateTextView)
         val infoTextView = findViewById<TextView>(R.id.infoTextView)
+        val infoTextView2 = findViewById<TextView>(R.id.infoTextView2)
+        val infoTextView3 = findViewById<TextView>(R.id.infoTextView3)
+        val infoTextView4 = findViewById<TextView>(R.id.infoTextView4)
         val similarTextView = findViewById<TextView>(R.id.similarTextView)
 
         val baseProductTextViews = listOf(
@@ -107,7 +110,8 @@ class DetailResultActivity : AppCompatActivity() {
             myImg.setImageBitmap(imageBitmap)
 
             fetchNowResult(
-                uid, result, dateTextView, resultTextView, infoTextView, similarTextView,
+                uid, result, dateTextView, resultTextView,
+                infoTextView, infoTextView2, infoTextView3, infoTextView4, similarTextView,
                 baseProductTextViews, lipProductTextViews, eyeProductTextViews, imageBitmap!!
             )
         } else {
@@ -136,19 +140,9 @@ class DetailResultActivity : AppCompatActivity() {
 
 
             if (dateFromIntent != null && result != null) {
-                fetchRecentResult(
-                    uid,
-                    receivedDate,
-                    result,
-                    myImg,
-                    dateTextView,
-                    resultTextView,
-                    infoTextView,
-                    similarTextView,
-                    baseProductTextViews,
-                    lipProductTextViews,
-                    eyeProductTextViews
-                )
+                fetchRecentResult(uid, receivedDate, result, myImg, dateTextView, resultTextView,
+                    infoTextView, infoTextView2, infoTextView3, infoTextView4, similarTextView,
+                    baseProductTextViews, lipProductTextViews, eyeProductTextViews)
             } else {
                 Log.w("IntentError", "Date information is missing in the intent")
             }
@@ -161,6 +155,9 @@ class DetailResultActivity : AppCompatActivity() {
         dateTextView: TextView,
         resultTextView: TextView,
         infoTextView: TextView,
+        infoTextView2: TextView,
+        infoTextView3: TextView,
+        infoTextView4: TextView,
         similarTextView: TextView,
         baseProductTextViews: List<TextView>,
         lipProductTextViews: List<TextView>,
@@ -224,6 +221,9 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val description = document.getString("설명") ?: "Description not available"
+                    val description2 = document.getString("설명2") ?: "Description not available"
+                    val description3 = document.getString("설명3") ?: "Description not available"
+                    val description4 = document.getString("설명4") ?: "Description not available"
                     val celebrities = document.get("비슷한 연예인") as? List<String>
                         ?: listOf("No celebrities available")
                     val productDescriptions =
@@ -243,6 +243,9 @@ class DetailResultActivity : AppCompatActivity() {
                     )
 
                     infoTextView.text = description
+                    infoTextView2.text = description2
+                    infoTextView3.text = description3
+                    infoTextView4.text = description4
                     similarTextView.text = celebrities.joinToString(", ")
                 } else {
                     Log.d("Firestore", "No Tone document found")
@@ -309,6 +312,9 @@ class DetailResultActivity : AppCompatActivity() {
         dateTextView: TextView,
         resultTextView: TextView,
         infoTextView: TextView,
+        infoTextView2: TextView,
+        infoTextView3: TextView,
+        infoTextView4: TextView,
         similarTextView: TextView,
         baseProductTextViews: List<TextView>,
         lipProductTextViews: List<TextView>,
@@ -390,6 +396,9 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnSuccessListener { document ->
                 if (document.exists()) {
                     val description = document.getString("설명") ?: "Description not available"
+                    val description2 = document.getString("설명2") ?: "Description not available"
+                    val description3 = document.getString("설명3") ?: "Description not available"
+                    val description4 = document.getString("설명4") ?: "Description not available"
                     val celebrities = document.get("비슷한 연예인") as? List<String>
                         ?: listOf("No celebrities available")
                     val productDescriptions =
@@ -409,6 +418,10 @@ class DetailResultActivity : AppCompatActivity() {
                     )
 
                     infoTextView.text = description
+                    infoTextView.text = description
+                    infoTextView2.text = description2
+                    infoTextView3.text = description3
+                    infoTextView4.text = description4
                     similarTextView.text = celebrities.joinToString(", ")
                 } else {
                     Log.d("Firestore", "No Tone document found")
