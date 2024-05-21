@@ -37,7 +37,6 @@ class MyPageFragment : Fragment() {
     private lateinit var eyeProductTextViews: List<TextView>
 
 
-
     private var baseUrls: MutableList<String> = mutableListOf()
     private var lipUrls: MutableList<String> = mutableListOf()
     private var eyeUrls: MutableList<String> = mutableListOf()
@@ -89,7 +88,8 @@ class MyPageFragment : Fragment() {
                     nameTextView.text = name
 
                     // results 컬렉션에서 최신 결과 가져오기
-                    userRef.collection("results").orderBy("date", Query.Direction.DESCENDING).limit(1)
+                    userRef.collection("results").orderBy("date", Query.Direction.DESCENDING)
+                        .limit(1)
                         .get()
                         .addOnSuccessListener { documents ->
                             if (documents.isEmpty) {
@@ -98,9 +98,11 @@ class MyPageFragment : Fragment() {
                             } else {
                                 val resultDocument = documents.documents[0]
                                 val result = resultDocument.getString("result") ?: ""
-                                val date = resultDocument.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
+                                val date =
+                                    resultDocument.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
 
-                                nameTextView2.text = result
+                                val replacedResult = result.replace("_", " ")
+                                nameTextView2.text = replacedResult
 
                                 Log.d("Firestore", "Personal Color: $result")
                             }
@@ -196,8 +198,10 @@ class MyPageFragment : Fragment() {
                 "base" -> baseUrls
                 "lip" -> lipUrls
                 "eye" -> eyeUrls
-                else -> mutableListOf<String>()  // Fallback empty list, should not be used
+                else -> mutableListOf<String>("none")  // Fallback empty list, should not be used
             }
+
+
             loadImages(storageRef, colorResult, category, imageViews, urls)
         }
     }
@@ -217,30 +221,62 @@ class MyPageFragment : Fragment() {
         val currentView = view ?: return emptyList()  // view가 null이면 빈 리스트를 반환
 
         return listOf(
-            currentView.findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
-            currentView.findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
-            currentView.findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
+            currentView.findViewById(
+                resources.getIdentifier(
+                    "${category}imageView_1",
+                    "id",
+                    context?.packageName
+                )
+            ),
+            currentView.findViewById(
+                resources.getIdentifier(
+                    "${category}imageView_2",
+                    "id",
+                    context?.packageName
+                )
+            ),
+            currentView.findViewById(
+                resources.getIdentifier(
+                    "${category}imageView_3",
+                    "id",
+                    context?.packageName
+                )
+            )
         )
     }
 
 
-    private fun loadImages(storageRef: StorageReference, categoryPrefix: String, category: String, imageViews: List<ImageView>, urls: List<String>) {
+    private fun loadImages(
+        storageRef: StorageReference,
+        categoryPrefix: String,
+        category: String,
+        imageViews: List<ImageView>,
+        urls: List<String>
+    ) {
         imageViews.forEachIndexed { index, imageView ->
-            val imagePath = "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
+            val imagePath =
+                "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
             val imageRef = storageRef.child(imagePath)
             imageRef.downloadUrl.addOnSuccessListener { uri ->
-                if(isAdded){
+                if (isAdded) {
                     Glide.with(this).load(uri).into(imageView)
                 }
 
+
+
+
+
                 imageView.setOnClickListener {
+
+                    Log.e("DDDDD", "baseUrls: $baseUrls")
+                    Log.e("DDDDD", "lipUrls: $lipUrls")
+                    Log.e("DDDDD", "eyeUrls: $eyeUrls")
                     if (urls[index] != "none") {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urls[index]))
                         startActivity(intent)
                     } else {
                         Toast.makeText(context, "해당 제품 홈페이지가 없습니다.", Toast.LENGTH_SHORT).show()
                     }
-
 
 
                 }
@@ -278,6 +314,8 @@ class MyPageFragment : Fragment() {
     }
 
     private fun updateProductDetails(result: String) {
+        val currentView = view ?: return
+
         val toneRef = FirebaseFirestore.getInstance().collection("Tone").document(result)
         Log.d("FirestoreDebug", "Attempting to fetch document with ID: $result") // 문서 ID 로그 추가
 
@@ -285,63 +323,245 @@ class MyPageFragment : Fragment() {
             .addOnSuccessListener { document ->
                 if (!document.exists()) {
                     Log.d("FirestoreDebug", "No document found with ID: $result") // 문서가 없을 때 로그
-                    Toast.makeText(context, "No data available for this product.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "No data available for this product.",
+                        Toast.LENGTH_LONG
+                    ).show()
                 } else {
-                    Log.d("FirestoreDebug", "Document successfully fetched with ID: $result") // 문서가 있을 때 로그
-                    val productDescriptions = document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
-                    Log.d("FirestoreDebug", "Product descriptions found: $productDescriptions") // 제품 설명 로그
+                    Log.d(
+                        "FirestoreDebug",
+                        "Document successfully fetched with ID: $result"
+                    ) // 문서가 있을 때 로그
+                    val productDescriptions =
+                        document.get("제품설명") as? List<Map<String, Any>> ?: listOf()
+                    Log.d(
+                        "FirestoreDebug",
+                        "Product descriptions found: $productDescriptions"
+                    ) // 제품 설명 로그
 
-                    val baseMap = productDescriptions.find { it.containsKey("베이스") }?.get("베이스") as? Map<String, Any> ?: mapOf()
+                    // Initialize TextViews for base products
+                    val baseProductNameTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_1),
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_2),
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_3)
+                    )
+
+                    val baseProductBrandTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_11),
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_22),
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_33)
+                    )
+
+                    val baseProductPriceTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_111),
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_222),
+                        currentView.findViewById<TextView>(R.id.baseproductTextView_333)
+                    )
+
+                    // Initialize TextViews for other product categories
+                    val lipProductNameTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_1),
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_2),
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_3)
+                    )
+
+                    val lipProductBrandTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_11),
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_22),
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_33)
+                    )
+
+                    val lipProductPriceTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_111),
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_222),
+                        currentView.findViewById<TextView>(R.id.lipproductTextView_333)
+                    )
+
+                    // Initialize TextViews for eye products
+                    val eyeProductNameTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_1),
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_2),
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_3)
+                    )
+
+                    val eyeProductBrandTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_11),
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_22),
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_33)
+                    )
+
+                    val eyeProductPriceTextViews = listOf(
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_111),
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_222),
+                        currentView.findViewById<TextView>(R.id.eyeproductTextView_333)
+                    )
+
+
+                    //null값 만들기
+
+
+                    val baseMap = productDescriptions.find { it.containsKey("베이스") }
+                        ?.get("베이스") as? Map<String, Any> ?: mapOf()
+                    Log.d("FirestoreDebug", "Base products found: $baseMap") // Base products 로그
+
                     baseMap.let { products ->
-                        baseProductTextViews.forEachIndexed { index, textView ->
+                        baseProductNameTextViews.forEachIndexed { index, textView ->
                             val productKey = "베이스제품${index + 1}"
                             val productInfo = products[productKey] as? Map<String, Any>
                             val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
-                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
-                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-                            textView.text = "$productName\n$productBrand\n$productPrice"
+                            textView.text = productName
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product name for $productKey: $productName"
+                            ) // 제품명 설정 로그
+                        }
 
-                            val productUrl = productInfo?.get("url") as? String ?: "none"
+                        baseProductBrandTextViews.forEachIndexed { index, textView ->
+                            val productKey = "베이스제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            textView.text = productBrand
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product brand for $productKey: $productBrand"
+                            ) // 브랜드 설정 로그
+                        }
+
+                        baseProductPriceTextViews.forEachIndexed { index, textView ->
+                            val productKey = "베이스제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
+                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
+                            textView.text = productPrice
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product price for $productKey: $productPrice"
+                            ) // 가격 설정 로그
+                        }
+
+                        products.forEach { (productKey, productInfo) ->
+                            val productUrl =
+                                (productInfo as? Map<String, Any>)?.get("url") as? String ?: "none"
                             baseUrls.add(productUrl)
+                            Log.d(
+                                "FirestoreDebug",
+                                "Added URL for $productKey: $productUrl"
+                            ) // URL 추가 로그
                         }
                     }
 
-                    val lipMap = productDescriptions.find { it.containsKey("립") }?.get("립") as? Map<String, Any> ?: mapOf()
+                    val lipMap = productDescriptions.find { it.containsKey("립") }
+                        ?.get("립") as? Map<String, Any> ?: mapOf()
+                    Log.d("FirestoreDebug", "Lip products found: $lipMap") // Lip products 로그
+
                     lipMap.let { products ->
-                        lipProductTextViews.forEachIndexed { index, textView ->
+                        lipProductNameTextViews.forEachIndexed { index, textView ->
                             val productKey = "립제품${index + 1}"
                             val productInfo = products[productKey] as? Map<String, Any>
                             val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            textView.text = productName
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product name for $productKey: $productName"
+                            ) // 제품명 설정 로그
+                        }
+
+                        lipProductBrandTextViews.forEachIndexed { index, textView ->
+                            val productKey = "립제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
                             val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            textView.text = productBrand
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product brand for $productKey: $productBrand"
+                            ) // 브랜드 설정 로그
+                        }
+
+                        lipProductPriceTextViews.forEachIndexed { index, textView ->
+                            val productKey = "립제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
                             val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-                            textView.text = "$productName\n$productBrand\n$productPrice"
+                            textView.text = productPrice
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product price for $productKey: $productPrice"
+                            ) // 가격 설정 로그
+                        }
 
-                            val productUrl = productInfo?.get("url") as? String ?: "none"
-                           lipUrls.add(productUrl)
-
+                        products.forEach { (productKey, productInfo) ->
+                            val productUrl =
+                                (productInfo as? Map<String, Any>)?.get("url") as? String ?: "none"
+                            lipUrls.add(productUrl)
+                            Log.d(
+                                "FirestoreDebug",
+                                "Added URL for $productKey: $productUrl"
+                            ) // URL 추가 로그
                         }
                     }
 
-                    val eyeMap = productDescriptions.find { it.containsKey("아이") }?.get("아이") as? Map<String, Any> ?: mapOf()
+                    val eyeMap = productDescriptions.find { it.containsKey("아이") }
+                        ?.get("아이") as? Map<String, Any> ?: mapOf()
+                    Log.d("FirestoreDebug", "Eye products found: $eyeMap") // Eye products 로그
+
                     eyeMap.let { products ->
-                        eyeProductTextViews.forEachIndexed { index, textView ->
+                        eyeProductNameTextViews.forEachIndexed { index, textView ->
                             val productKey = "아이제품${index + 1}"
                             val productInfo = products[productKey] as? Map<String, Any>
                             val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
+                            textView.text = productName
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product name for $productKey: $productName"
+                            ) // 제품명 설정 로그
+                        }
+
+                        eyeProductBrandTextViews.forEachIndexed { index, textView ->
+                            val productKey = "아이제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
                             val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
+                            textView.text = productBrand
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product brand for $productKey: $productBrand"
+                            ) // 브랜드 설정 로그
+                        }
+
+                        eyeProductPriceTextViews.forEachIndexed { index, textView ->
+                            val productKey = "아이제품${index + 1}"
+                            val productInfo = products[productKey] as? Map<String, Any>
                             val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-                            textView.text = "$productName\n$productBrand\n$productPrice"
+                            textView.text = productPrice
+                            Log.d(
+                                "FirestoreDebug",
+                                "Set product price for $productKey: $productPrice"
+                            ) // 가격 설정 로그
+                        }
 
-                            val productUrl = productInfo?.get("url") as? String ?: "none"
+                        products.forEach { (productKey, productInfo) ->
+                            val productUrl =
+                                (productInfo as? Map<String, Any>)?.get("url") as? String ?: "none"
                             eyeUrls.add(productUrl)
-
+                            Log.d(
+                                "FirestoreDebug",
+                                "Added URL for $productKey: $productUrl"
+                            ) // URL 추가 로그
                         }
                     }
                 }
             }
+
             .addOnFailureListener { exception ->
-                Log.w("FirestoreError", "Error fetching document with ID: $result", exception) // 오류 로그
-                Toast.makeText(context, "Error loading details: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
+                Log.w(
+                    "FirestoreError",
+                    "Error fetching document with ID: $result",
+                    exception
+                ) // 오류 로그
+                Toast.makeText(
+                    context,
+                    "Error loading details: ${exception.localizedMessage}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
     }
 }
+
