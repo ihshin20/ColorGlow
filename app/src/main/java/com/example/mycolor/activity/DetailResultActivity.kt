@@ -3,11 +3,16 @@ package com.example.mycolor.activity
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import android.graphics.Color
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
@@ -206,7 +211,41 @@ class DetailResultActivity : AppCompatActivity() {
                 val productPrice = productInfo["가격"] as? String ?: "가격 정보 없음"
 
                 if (index < productTextViews.size) {
-                    productTextViews[index].text = "$productName\n$productBrand\n$productPrice"
+                    val fullText = "$productName\n$productBrand\n$productPrice"
+                    val spannableString = SpannableString(fullText)
+
+                    // 제품 이름의 길이를 계산하여 제품 브랜드의 시작 인덱스 계산
+                    val productBrandStartIndex = productName.length + 1  // 제품 이름 다음 줄바꿈 문자 포함
+                    val productBrandEndIndex = productBrandStartIndex + productBrand.length
+
+                    // 제품 브랜드의 텍스트 색상을 #483D8B (어두운 보라색)으로 설정
+                    spannableString.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#483D8B")),
+                        productBrandStartIndex,
+                        productBrandEndIndex,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    // 제품 가격의 시작 인덱스 계산
+                    val productPriceStartIndex = fullText.length - productPrice.length
+
+                    // 제품 가격의 글자 크기를 0.9배로 조정
+                    spannableString.setSpan(
+                        RelativeSizeSpan(0.9f),
+                        productPriceStartIndex,
+                        fullText.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    // 제품 가격의 텍스트 색상을 #B0B0B0 (회색)으로 설정
+                    spannableString.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#B0B0B0")),
+                        productPriceStartIndex,
+                        fullText.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    productTextViews[index].text = spannableString
                 }
             }
         }
@@ -383,7 +422,41 @@ class DetailResultActivity : AppCompatActivity() {
                 val productPrice = productInfo["가격"] as? String ?: "가격 정보 없음"
 
                 if (index < productTextViews.size) {
-                    productTextViews[index].text = "$productName\n$productBrand\n$productPrice"
+                    val fullText = "$productName\n$productBrand\n$productPrice"
+                    val spannableString = SpannableString(fullText)
+
+                    // 제품 이름의 길이를 계산하여 제품 브랜드의 시작 인덱스 계산
+                    val productBrandStartIndex = productName.length + 1  // 제품 이름 다음 줄바꿈 문자 포함
+                    val productBrandEndIndex = productBrandStartIndex + productBrand.length
+
+                    // 제품 브랜드의 텍스트 색상을 #483D8B (어두운 보라색)으로 설정
+                    spannableString.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#483D8B")),
+                        productBrandStartIndex,
+                        productBrandEndIndex,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    // 제품 가격의 시작 인덱스 계산
+                    val productPriceStartIndex = fullText.length - productPrice.length
+
+                    // 제품 가격의 글자 크기를 0.9배로 조정
+                    spannableString.setSpan(
+                        RelativeSizeSpan(0.9f),
+                        productPriceStartIndex,
+                        fullText.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    // 제품 가격의 텍스트 색상을 #B0B0B0 (회색)으로 설정
+                    spannableString.setSpan(
+                        ForegroundColorSpan(Color.parseColor("#B0B0B0")),
+                        productPriceStartIndex,
+                        fullText.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+
+                    productTextViews[index].text = spannableString
                 }
             }
         }

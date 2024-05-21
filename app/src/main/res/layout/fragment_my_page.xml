@@ -136,39 +136,114 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginBottom="16dp"
-                android:gravity="center_horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/baseproductTextView_11"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                <!-- First LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/baseproductTextView_22"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    <TextView
+                        android:id="@+id/baseproductTextView_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"
+                        />
 
-                <TextView
-                    android:id="@+id/baseproductTextView_33"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    <TextView
+                        android:id="@+id/baseproductTextView_11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textColor="#483D8B"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+
+                </LinearLayout>
+
+                <!-- Second LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textColor="#483D8B"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_222"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+                <!-- Third LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_33"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="left"
+                        android:textColor="#483D8B"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/baseproductTextView_333"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
 
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/recommendLip"
@@ -205,40 +280,142 @@
                     android:layout_weight="1" />
             </LinearLayout>
 
+
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:layout_marginBottom="16dp"
                 android:gravity="center_horizontal">
 
-                <TextView
-                    android:id="@+id/lipproductTextView_11"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                <!-- First LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/lipproductTextView_22"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    <TextView
+                        android:id="@+id/lipproductTextView_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
 
-                <TextView
-                    android:id="@+id/lipproductTextView_33"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    <TextView
+                        android:id="@+id/lipproductTextView_11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="left"
+                        android:textColor="#483D8B"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+                <!-- Second LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textColor="#483D8B"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_222"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+                <!-- Third LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_33"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textColor="#483D8B"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/lipproductTextView_333"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+
             </LinearLayout>
-
             <TextView
                 android:id="@+id/recommendEye"
                 android:layout_width="wrap_content"
@@ -281,31 +458,130 @@
                 android:layout_marginBottom="16dp"
                 android:gravity="center_horizontal">
 
-                <TextView
-                    android:id="@+id/eyeproductTextView_11"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    android:orientation="vertical"
+                    android:gravity="center">
 
-                <TextView
-                    android:id="@+id/eyeproductTextView_22"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    <TextView
+                        android:id="@+id/eyeproductTextView_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
 
-                <TextView
-                    android:id="@+id/eyeproductTextView_33"
-                    android:layout_width="130dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    <TextView
+                        android:id="@+id/eyeproductTextView_11"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="left"
+                        android:textColor="#483D8B"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_111"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+                <!-- Second LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:fontFamily="@font/kcchanbit" />
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_22"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textColor="#483D8B"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_222"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
+                <!-- Third LinearLayout -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_33"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textColor="#483D8B"
+                        android:gravity="left"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:id="@+id/eyeproductTextView_333"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
+                        android:fontFamily="@font/kcchanbit"
+                        android:textSize="10dp"
+                        android:textColor="#B0B0B0"
+                        android:gravity="left"/>
+                </LinearLayout>
+
             </LinearLayout>
 
             <Button
