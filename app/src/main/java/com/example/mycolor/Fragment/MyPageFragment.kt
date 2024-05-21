@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.mycolor.R
@@ -60,6 +61,8 @@ class MyPageFragment : Fragment() {
         // ImageView 로컬 변수에 할당
         val logoimageView = view.findViewById<ImageView>(R.id.logoimageView)
         logoimageView.setImageResource(R.drawable.logoimage)
+
+        showLoadingDialog()
 
         val auth = FirebaseAuth.getInstance()
 
@@ -137,8 +140,6 @@ class MyPageFragment : Fragment() {
 
         }
 
-        //fetchPersonalColorInfo()
-
         baseProductTextViews = listOf(
             view.findViewById(R.id.baseproductTextView_11),
             view.findViewById(R.id.baseproductTextView_22),
@@ -162,7 +163,6 @@ class MyPageFragment : Fragment() {
                 updateProductDetails(result)
             }
         }
-
 
         fetchPersonalColorInfo()
     }
@@ -202,19 +202,12 @@ class MyPageFragment : Fragment() {
             }
 
 
-            loadImages(storageRef, colorResult, category, imageViews, urls)
+            loadImages(storageRef, colorResult, category, imageViews, urls){
+                hideLoadingDialog()
+            }
         }
     }
 
-
-//    private fun getImageViewsByCategory(category: String): List<ImageView> {
-//        //Toast.makeText(context, "$category 카테고리의 이미지 뷰 로드 중...", Toast.LENGTH_SHORT).show()
-//        return listOf(
-//            requireView().findViewById(resources.getIdentifier("${category}imageView_1", "id", context?.packageName)),
-//            requireView().findViewById(resources.getIdentifier("${category}imageView_2", "id", context?.packageName)),
-//            requireView().findViewById(resources.getIdentifier("${category}imageView_3", "id", context?.packageName))
-//        )
-//    }
 
     private fun getImageViewsByCategory(category: String): List<ImageView> {
         // 현재 뷰가 null인지 확인하고, null이 아니면 진행
@@ -246,13 +239,18 @@ class MyPageFragment : Fragment() {
     }
 
 
+
     private fun loadImages(
         storageRef: StorageReference,
         categoryPrefix: String,
         category: String,
         imageViews: List<ImageView>,
-        urls: List<String>
+        urls: List<String>,
+        onComplete: () -> Unit // 콜백 추가
     ) {
+        val totalImages = imageViews.size
+        var loadedImages = 0
+
         imageViews.forEachIndexed { index, imageView ->
             val imagePath =
                 "products/$categoryPrefix/${categoryPrefix}_${category}_${index + 1}.jpg"
@@ -262,30 +260,30 @@ class MyPageFragment : Fragment() {
                     Glide.with(this).load(uri).into(imageView)
                 }
 
-
-
-
-
                 imageView.setOnClickListener {
-
-                    Log.e("DDDDD", "baseUrls: $baseUrls")
-                    Log.e("DDDDD", "lipUrls: $lipUrls")
-                    Log.e("DDDDD", "eyeUrls: $eyeUrls")
                     if (urls[index] != "none") {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urls[index]))
                         startActivity(intent)
                     } else {
                         Toast.makeText(context, "해당 제품 홈페이지가 없습니다.", Toast.LENGTH_SHORT).show()
                     }
+                }
 
-
+                loadedImages++
+                if (loadedImages == totalImages) {
+                    onComplete()
                 }
             }.addOnFailureListener { exception ->
                 Log.e("Storage", "Error loading image: $imagePath", exception)
-                //Toast.makeText(context, "이미지 로드 실패: ${exception.localizedMessage}", Toast.LENGTH_LONG).show()
+
+                loadedImages++
+                if (loadedImages == totalImages) {
+                    onComplete()
+                }
             }
         }
     }
+
 
     // 추가된 함수들입니다.
     fun fetchUserUid(uid: String, callback: (String) -> Unit) {
@@ -393,8 +391,6 @@ class MyPageFragment : Fragment() {
                         currentView.findViewById<TextView>(R.id.eyeproductTextView_333)
                     )
 
-
-                    //null값 만들기
 
 
                     val baseMap = productDescriptions.find { it.containsKey("베이스") }
@@ -559,5 +555,32 @@ class MyPageFragment : Fragment() {
                 ).show()
             }
     }
+
+    private lateinit var loadingDialog: AlertDialog
+
+    private fun showLoadingDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = LayoutInflater.from(requireContext())
+
+        val view = inflater.inflate(R.layout.loading_dialog, null)
+
+        // TextView의 텍스트를 변경합니다
+        val textView = view.findViewById<TextView>(R.id.loadingProgressTextView)
+        textView.text = "잠시만 기다려주세요."
+
+        builder.setView(view)
+        builder.setCancelable(false)
+
+        loadingDialog = builder.create()
+        loadingDialog.show()
+    }
+
+    private fun hideLoadingDialog() {
+        if (::loadingDialog.isInitialized && loadingDialog.isShowing) {
+            loadingDialog.dismiss()
+        }
+    }
+
+
 }
 
