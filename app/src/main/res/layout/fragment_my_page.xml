@@ -338,6 +338,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:layout_gravity="left"
                     android:gravity="left"
                     android:orientation="vertical">
 
@@ -345,7 +346,6 @@
                         android:id="@+id/lipproductTextView_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/kcchanbit"
@@ -355,7 +355,6 @@
                         android:id="@+id/lipproductTextView_22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/kcchanbit"
@@ -367,7 +366,7 @@
                         android:id="@+id/lipproductTextView_222"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="start"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/kcchanbit"
@@ -390,7 +389,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/kcchanbit"
-                        android:gravity="center"/>
+                        android:gravity="left"/>
 
                     <TextView
                         android:id="@+id/lipproductTextView_33"
@@ -511,17 +510,17 @@
                         android:id="@+id/eyeproductTextView_2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="left"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/kcchanbit"
-                        android:gravity="left"/>
+                        android:gravity="left" />
 
                     <TextView
                         android:id="@+id/eyeproductTextView_22"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
+                        android:layout_gravity="start"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:fontFamily="@font/kcchanbit"
