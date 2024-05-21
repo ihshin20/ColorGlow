@@ -1,0 +1,46 @@
+{
+	"folders": [
+		{
+			"path": "../unityPR/Chap6"
+		},
+		{
+			"path": "../web"
+		},
+		{
+			"path": "../Wagu"
+		},
+		{
+			"path": "../unityPR"
+		},
+		{
+			"path": "../vsCodePr"
+		},
+		{
+			"path": "../NodeJsPr"
+		},
+		{
+			"path": "../GPT_PR"
+		},
+		{
+			"path": "../WebPR"
+		},
+		{
+			"path": "../bsPR"
+		},
+		{
+			"path": "../Crawling"
+		},
+		{
+			"path": "../djangoPR"
+		},
+		{
+			"path": "../nodejsAndroid"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"dotnet.preferCSharpExtension": true
+	}
+}
