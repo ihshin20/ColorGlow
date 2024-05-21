@@ -88,12 +88,10 @@ class LoginActivity : AppCompatActivity() {
                         Toast.makeText(this, "로그인 성공", Toast.LENGTH_SHORT).show()
                         val intent = Intent(this, NaviActivity::class.java)
                         startActivity(intent)
-
                         finish()
-                        // 로그인 성공시 수행할 작업, 예를 들면 메인 화면으로 이동
                     } else {
                         // 로그인 실패
-                        Toast.makeText(this, "로그인 실패", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "아이디와 비밀번호를 확인해주세요.", Toast.LENGTH_SHORT).show()
                     }
                 }
         }
