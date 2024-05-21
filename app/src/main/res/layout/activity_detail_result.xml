@@ -81,10 +81,49 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="10dp"
                 android:text="설명들어오는텍스트뷰"
                 android:gravity="center_horizontal"
                 android:fontFamily="@font/kcchanbit"
+                android:textColor="#FF07194B"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/infoTextView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/kcchanbit"
+                android:gravity="center_horizontal"
+                android:text="설명들어오는텍스트뷰2"
+                android:textColor="#FF07194B"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/infoTextView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="@font/kcchanbit"
+                android:gravity="center_horizontal"
+                android:text="설명들어오는텍스트뷰3"
+                android:textColor="#FF07194B"
+                android:textSize="16dp" />
+
+            <TextView
+                android:id="@+id/infoTextView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="50dp"
+                android:fontFamily="@font/kcchanbit"
+                android:gravity="center_horizontal"
+                android:text="설명들어오는텍스트뷰4"
                 android:textColor="#FF07194B"
                 android:textSize="16dp" />
 
