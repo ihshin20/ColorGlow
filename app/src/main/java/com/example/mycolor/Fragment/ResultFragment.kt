@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.mycolor.R
 import com.example.mycolor.activity.DetailResultActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -47,8 +48,8 @@ class ResultFragment : Fragment() {
         fetchAllDiagnosticResults()
     }
 
+
     private fun setupRecyclerView() {
-        //resultsAdapter = ResultsAdapter()
         resultsAdapter = ResultsAdapter(object : OnItemClickListener {
             override fun onItemClick(result: DiagnosticResult) {
                 val intent = Intent(context, DetailResultActivity::class.java).apply {
@@ -60,6 +61,7 @@ class ResultFragment : Fragment() {
                 startActivity(intent)
             }
         })
+        resultsRecyclerView.setHasFixedSize(true) // 고정된 크기를 가지도록 설정
         resultsRecyclerView.layoutManager = LinearLayoutManager(context)
         resultsRecyclerView.adapter = resultsAdapter
     }
@@ -134,10 +136,13 @@ class ResultFragment : Fragment() {
 
         override fun getItemCount(): Int = resultsList.size
 
+
+
         inner class ResultViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-            private val dateTextView: TextView = itemView.findViewById(R.id.dateTextView) ?: throw IllegalStateException("Date TextView must not be null")
-            private val resultTextView: TextView = itemView.findViewById(R.id.resultTextView) ?: throw IllegalStateException("Result TextView must not be null")
+            private val dateTextView: TextView = itemView.findViewById(R.id.dateTextView)
+            private val resultTextView: TextView = itemView.findViewById(R.id.resultTextView)
             private val resultImage: ImageView = itemView.findViewById(R.id.resultImage)
+
             init {
                 itemView.setOnClickListener {
                     val position = adapterPosition
@@ -147,15 +152,18 @@ class ResultFragment : Fragment() {
                 }
             }
 
-
             fun bind(result: DiagnosticResult) {
                 dateTextView.text = result.date
                 resultTextView.text = result.description
 
-                loadImage(result.timestamp, resultImage, itemView.context)
+                // 기존 이미지 초기화
+                resultImage.setImageResource(R.drawable.placeholder_image)
 
+                // 이미지 로드
+                loadImage(result.timestamp, resultImage, itemView.context)
             }
         }
+
     }
 
     data class DiagnosticResult(
@@ -165,22 +173,30 @@ class ResultFragment : Fragment() {
     )
 
     fun loadImage(date: Date, imageView: ImageView, context: Context) {
-
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
         val imagePath = "UserImages/$userId/$date.jpg"
+
+        Log.e("imagePath", "$imagePath")
+
         val storageRef = FirebaseStorage.getInstance().reference.child(imagePath)
 
         // Glide를 사용하여 ImageView에 이미지 로드
         storageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(context)
                 .load(uri)
+                .thumbnail(0.1f) // 프리패칭 비율 설정
+                .placeholder(R.drawable.placeholder_image) // 로딩 중에 표시할 이미지
+                .error(R.drawable.error_image) // 에러 시 표시할 이미지
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // 디스크 캐싱 전략
                 .into(imageView)
         }.addOnFailureListener { exception ->
             // 이미지 로드 실패 처리
             Log.e("FirebaseStorage", "Error loading image", exception)
-            //imageView.setImageResource(R.drawable.joy_redvelvet) // 예를 들어 default_image
+            imageView.setImageResource(R.drawable.error_image) // 에러 시 표시할 기본 이미지
         }
     }
+
 
 }
 

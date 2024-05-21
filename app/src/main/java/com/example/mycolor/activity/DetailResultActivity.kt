@@ -4,9 +4,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,6 +24,7 @@ import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.StorageReference
 import java.io.ByteArrayOutputStream
+
 
 class DetailResultActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +91,8 @@ class DetailResultActivity : AppCompatActivity() {
         val bestImageRef = storageRef.child(bestImagePath)
         val worstImageRef = storageRef.child(worstImagePath)
 
+        showLoadingDialog()
+
         //베스트 팔레트,워스트 팔레트 이미지 불러오기
         bestImageRef.downloadUrl.addOnSuccessListener { uri ->
             Glide.with(this)
@@ -149,6 +155,8 @@ class DetailResultActivity : AppCompatActivity() {
         }
     }
 
+
+
     fun fetchNowResult(
         uid: String?,
         result: String?,
@@ -173,7 +181,7 @@ class DetailResultActivity : AppCompatActivity() {
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
 
-        // 최근 결과 가져오기
+//         최근 결과 가져오기
         diagnosticRef.orderBy("date", Query.Direction.DESCENDING).limit(1)
             .get()
             .addOnSuccessListener { documents ->
@@ -283,6 +291,7 @@ class DetailResultActivity : AppCompatActivity() {
         loadImages(storageRef, resultLower, "base", baseImageViews)
         loadImages(storageRef, resultLower, "lip", lipImageViews)
         loadImages(storageRef, resultLower, "eye", eyeImageViews)
+
     }
 
     // 카테고리별 이미지 불러오기
@@ -330,6 +339,7 @@ class DetailResultActivity : AppCompatActivity() {
         val diagnosticRef = db.collection("User").document(uid).collection("results")
         val toneRef = db.collection("Tone").document(result)
 
+        //기존
         diagnosticRef.whereEqualTo("date", date)
             .get()
             .addOnSuccessListener { documents ->
@@ -374,6 +384,8 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 println("Error getting documents: $exception")
             }
+
+
 
         fun updateProductInfo(productsMap: Map<String, Any>, productTextViews: List<TextView>) {
             productsMap.entries.forEachIndexed { index, entry ->
@@ -423,6 +435,8 @@ class DetailResultActivity : AppCompatActivity() {
                     infoTextView3.text = description3
                     infoTextView4.text = description4
                     similarTextView.text = celebrities.joinToString(", ")
+
+                    hideLoadingDialog()
                 } else {
                     Log.d("Firestore", "No Tone document found")
                 }
@@ -430,6 +444,33 @@ class DetailResultActivity : AppCompatActivity() {
             .addOnFailureListener { exception ->
                 Log.w("Firestore", "Error getting Tone document: ", exception)
             }
+
+
+    }
+
+
+    private lateinit var loadingDialog: AlertDialog
+    private fun showLoadingDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = LayoutInflater.from(this)
+
+        val view = inflater.inflate(R.layout.loading_dialog, null)
+
+        // TextView의 텍스트를 변경합니다
+        val textView = view.findViewById<TextView>(R.id.loadingProgressTextView)
+        textView.text = "잠시만 기다려주세요."
+
+        builder.setView(view)
+        builder.setCancelable(false)
+
+        loadingDialog = builder.create()
+        loadingDialog.show()
+    }
+
+    private fun hideLoadingDialog() {
+        if (::loadingDialog.isInitialized && loadingDialog.isShowing) {
+            loadingDialog.dismiss()
+        }
     }
 
     private fun uploadImageToFirestore(imageBitmap: Bitmap, uDate: String, uid: String) {
@@ -442,22 +483,15 @@ class DetailResultActivity : AppCompatActivity() {
         val uploadTask = storageRef.putBytes(data)
         uploadTask.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener { uri ->
-                saveImageUrlToFirestore(uri.toString())
+                hideLoadingDialog()
             }
         }.addOnFailureListener {
+            hideLoadingDialog()
             Log.e("FirestoreUpload", "Failed to upload image", it)  // 오류 로깅 추가
+            Toast.makeText(this, "네트워크 에러", Toast.LENGTH_SHORT).show()
         }
     }
-    private fun saveImageUrlToFirestore(imageUrl: String) {
-        val db = FirebaseFirestore.getInstance()
-        val imageInfo = hashMapOf("url" to imageUrl)
 
-        db.collection("images").add(imageInfo)
-            .addOnSuccessListener { documentReference ->
-                // 데이터 저장 성공 시 처리
-            }
-            .addOnFailureListener { e ->
-                // 데이터 저장 실패 시 처리
-            }
-    }
+
+
 }
