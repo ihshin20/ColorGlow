@@ -71,7 +71,7 @@ class ResultFragment : Fragment() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
             context?.let {
-                Toast.makeText(it, "User not logged in.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(it, "회원정보를 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
             }
             return
         }
@@ -83,7 +83,7 @@ class ResultFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
-                    Toast.makeText(context, "No diagnostic results found.", Toast.LENGTH_SHORT)
+                    Toast.makeText(context, "진단 이력이 없습니다.", Toast.LENGTH_SHORT)
                         .show()
                 } else {
                     val results = documents.mapNotNull { document ->
@@ -102,7 +102,7 @@ class ResultFragment : Fragment() {
                     if (results.isNotEmpty()) {
                         resultsAdapter.updateResults(results)
                     } else {
-                        Toast.makeText(context, "No valid entries found.", Toast.LENGTH_SHORT)
+                        Toast.makeText(context, "진단 이력이 없습니다.", Toast.LENGTH_SHORT)
                             .show()
                     }
                 }
@@ -110,7 +110,7 @@ class ResultFragment : Fragment() {
             .addOnFailureListener { exception ->
                 Toast.makeText(
                     context,
-                    "Error loading results: ${exception.localizedMessage}",
+                    "네트워크 에러입니다.",
                     Toast.LENGTH_LONG
                 ).show()
             }

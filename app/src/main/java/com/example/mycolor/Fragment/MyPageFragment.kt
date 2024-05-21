@@ -129,7 +129,7 @@ class MyPageFragment : Fragment() {
         val logoutButton = view.findViewById<Button>(R.id.button3)
         logoutButton.setOnClickListener {
             auth.signOut()
-            Toast.makeText(activity, "로그아웃", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "로그아웃합니다.", Toast.LENGTH_SHORT).show()
 
             val intent = Intent(context, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -157,7 +157,7 @@ class MyPageFragment : Fragment() {
 
         fetchUserUid(uid) { result ->
             if (result.startsWith("Error") || result == "No documents found") {
-                Toast.makeText(context, "Failed to load data: $result", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "네트워크 에러입니다.", Toast.LENGTH_LONG).show()
             } else {
                 updateProductDetails(result)
             }
@@ -323,11 +323,7 @@ class MyPageFragment : Fragment() {
             .addOnSuccessListener { document ->
                 if (!document.exists()) {
                     Log.d("FirestoreDebug", "No document found with ID: $result") // 문서가 없을 때 로그
-                    Toast.makeText(
-                        context,
-                        "No data available for this product.",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    Toast.makeText(context,"네트워크 에러입니다.",Toast.LENGTH_LONG).show()
                 } else {
                     Log.d(
                         "FirestoreDebug",
@@ -558,7 +554,7 @@ class MyPageFragment : Fragment() {
                 ) // 오류 로그
                 Toast.makeText(
                     context,
-                    "Error loading details: ${exception.localizedMessage}",
+                    "네트워크 에러입니다.",
                     Toast.LENGTH_LONG
                 ).show()
             }

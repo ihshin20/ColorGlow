@@ -292,7 +292,7 @@ class MainFragment : Fragment() {
                     takePictureLauncher.launch(photoURI)  // 카메라를 직접 실행
                 }
             } else {
-                Toast.makeText(context, "Camera permission is required", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "카메라 권한 승인이 필요합니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -307,7 +307,7 @@ class MainFragment : Fragment() {
                     uploadImageAndText(imageBitmap, uid)
                 }
             } else {
-                Toast.makeText(context, "Failed to take picture", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "사진 촬영이 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -424,22 +424,17 @@ class MainFragment : Fragment() {
                     )
                     // 즉, serverResponse?.textData -> UID, serverResponse?.pythonResult -> 진단결과 톤(ex. Bright_Sprint)
 
-                    Toast.makeText(context, serverResponse?.pythonResult, Toast.LENGTH_SHORT)
-                        .show()
+                    //Toast.makeText(context, serverResponse?.pythonResult, Toast.LENGTH_SHORT).show()
                     //resultText.text = serverResponse?.pythonResult
 
                 } else {
                     // 서버 응답 오류 처리
-                    Toast.makeText(
-                        context,
-                        "Upload failed: ${response.message()}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(context,"네트워크 에러입니다.",Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<ServerResponse>, t: Throwable) {
-                Toast.makeText(context, "Upload failed: ${t.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "네트워크 에러입니다.", Toast.LENGTH_SHORT).show()
 
                 Log.d("UploadError", t.message ?: "Error message is null")
 
