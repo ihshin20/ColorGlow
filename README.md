@@ -30,7 +30,7 @@
 Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
 <div align="center">
-  <img src="https://github.com/ihshin20/ColorGlow/assets/152589175/ea55f923-e680-4ac5-be2a-0c8a30aec2eb" alt="330257554-88e76582-0c40-49b5-a2e2-65da5dd16674">
+  <img width="363" alt="구조동" src="https://github.com/ihshin20/ColorGlow/assets/80204749/793ae83d-7e35-4258-80d1-617a2d44f38d">
 </div>
 
 :pushpin: **프로젝트 설명**
