@@ -42,6 +42,12 @@ class MyPageFragment : Fragment() {
     private var lipUrls: MutableList<String> = mutableListOf()
     private var eyeUrls: MutableList<String> = mutableListOf()
 
+    private lateinit var defaultText1: TextView
+    private lateinit var defaultText2: TextView
+    private lateinit var defaultText3: TextView
+    private lateinit var defaultText4: TextView
+    private lateinit var defaultText5: TextView
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +67,14 @@ class MyPageFragment : Fragment() {
         // ImageView 로컬 변수에 할당
         val logoimageView = view.findViewById<ImageView>(R.id.logoimageView)
         logoimageView.setImageResource(R.drawable.logoimage)
+
+        defaultText1 = view.findViewById(R.id.yourcoloris)
+        defaultText2 = view.findViewById(R.id.itis)
+        defaultText3 = view.findViewById(R.id.recommendBase)
+        defaultText4 = view.findViewById(R.id.recommendLip)
+        defaultText5 = view.findViewById(R.id.recommendEye)
+
+
 
         showLoadingDialog()
 
@@ -99,11 +113,13 @@ class MyPageFragment : Fragment() {
                                 nameTextView2.text = "" // 결과가 없는 경우 기본값을 사용
                                 Log.d("Firestore", "No documents found")
                             } else {
+                                defaultText1.text = "님의 퍼스널 컬러는"
+                                defaultText2.text = "입니다."
+                                defaultText3.text = "추천 베이스"
+                                defaultText4.text = "추천 립"
+                                defaultText5.text = "추천 아이"
                                 val resultDocument = documents.documents[0]
                                 val result = resultDocument.getString("result") ?: ""
-                                val date =
-                                    resultDocument.getDate("date")  // Firestore의 Timestamp를 Date 객체로 변환
-
                                 val replacedResult = result.replace("_", " ")
                                 nameTextView2.text = replacedResult
 
@@ -158,7 +174,7 @@ class MyPageFragment : Fragment() {
 
         fetchUserUid(uid) { result ->
             if (result.startsWith("Error") || result == "No documents found") {
-                Toast.makeText(context, "네트워크 에러입니다.", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "진단 이력이 없습니다.", Toast.LENGTH_LONG).show()
             } else {
                 updateProductDetails(result)
             }
@@ -294,6 +310,10 @@ class MyPageFragment : Fragment() {
             .addOnSuccessListener { documents ->
                 if (documents.isEmpty) {
                     Log.d("Firestore", "No documents found")
+
+                    defaultText1.text = "님은 아직 진단 이력이 없습니다."
+                    hideLoadingDialog()
+
                     callback("No documents found")
                 } else {
                     var result: String? = null
