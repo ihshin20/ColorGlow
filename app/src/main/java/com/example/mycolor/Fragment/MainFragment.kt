@@ -43,6 +43,7 @@ import androidx.navigation.Navigation
 import com.example.mycolor.R
 import com.example.mycolor.activity.DetailResultActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -513,6 +514,7 @@ class MainFragment : Fragment() {
         positiveButton.typeface = typeface
     }
 
+
     private fun showAlertDialog() {
         val builder = AlertDialog.Builder(requireContext())
         builder.setMessage("*알림* \n 정면을 바라봐주세요.")
@@ -525,4 +527,5 @@ class MainFragment : Fragment() {
             alertDialog.dismiss()
         }, 3000) // 3000 milliseconds = 3 seconds
     }
+
 }

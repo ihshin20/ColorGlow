@@ -203,7 +203,7 @@ class DetailResultActivity : AppCompatActivity() {
 
                         // TextView 업데이트
                         dateTextView.text = formattedDate
-                        resultTextView.text = result
+                        resultTextView.text = result.replace("_", " ")
                     }
                 }
             }
@@ -387,7 +387,7 @@ class DetailResultActivity : AppCompatActivity() {
                 } else {
                     for (document in documents) {
                         val result = document.getString("result") ?: "No result available"
-                        resultTextView.text = result
+                        resultTextView.text = result.replace("_", " ")
                         val formattedDate = date.let {
                             SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(it)
                         } ?: "No date available"
