@@ -65,7 +65,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/kcchanbit"
-                    android:text="님의 퍼스널 컬러는"
                     android:textColor="#FF07194B"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -93,7 +92,6 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:fontFamily="@font/kcchanbit"
-                    android:text="입니다."
                     android:textColor="#FF07194B"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -105,7 +103,6 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/kcchanbit"
-                android:text="추천 베이스"
                 android:textColor="#FF07194B"
                 android:textSize="16sp" />
 
@@ -254,7 +251,6 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/kcchanbit"
-                android:text="추천 립"
                 android:textColor="#FF07194B"
                 android:textSize="16sp" />
 
@@ -419,6 +415,7 @@
 
 
             </LinearLayout>
+
             <TextView
                 android:id="@+id/recommendEye"
                 android:layout_width="wrap_content"
@@ -426,7 +423,6 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
                 android:fontFamily="@font/kcchanbit"
-                android:text="추천 아이"
                 android:textColor="#FF07194B"
                 android:textSize="16sp" />
 
