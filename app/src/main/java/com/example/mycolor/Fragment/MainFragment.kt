@@ -129,6 +129,9 @@ class MainFragment : Fragment() {
         val logotextimage = view.findViewById<ImageView>(R.id.logotextimage)
         logotextimage.setImageResource(R.drawable.logotextimage)
 
+        val textView61 = view.findViewById<TextView>(R.id.textView61)
+        applyColorSpanToTextView(textView61, "딥러닝 신경망", R.color.Hotpink)
+
         val textView6 = view.findViewById<TextView>(R.id.textView6)
         applySpannableStringToTextView(textView6, "배색", 1.5f)
 
