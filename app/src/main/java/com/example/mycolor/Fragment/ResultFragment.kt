@@ -154,7 +154,8 @@ class ResultFragment : Fragment() {
 
             fun bind(result: DiagnosticResult) {
                 dateTextView.text = result.date
-                resultTextView.text = result.description
+
+                resultTextView.text = result.description.replace("_", " ")
 
                 // 기존 이미지 초기화
                 resultImage.setImageResource(R.drawable.placeholder_image)
