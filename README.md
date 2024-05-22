@@ -51,6 +51,10 @@ Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
 4. 퍼스널 컬러와 어울리는 코스메틱 제품 정보를 제공하여, 사용자가 **최적의 제품**을 쉽게 찾을 수 있도록 도와줌
 
+:pushpin: **시연영상**
+
+https://www.youtube.com/watch?v=CTxTGYR9yM8
+
 :pushpin: **개발자 소개**
 
 <div align="center">
