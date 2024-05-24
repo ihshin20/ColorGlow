@@ -53,7 +53,7 @@ Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
 :pushpin: **시연영상**
 
-https://www.youtube.com/watch?v=CTxTGYR9yM8
+https://www.youtube.com/watch?v=FPUpqjJs-Yk
 
 :pushpin: **개발자 소개**
 
