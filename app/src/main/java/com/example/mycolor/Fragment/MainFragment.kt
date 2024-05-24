@@ -528,9 +528,8 @@ class MainFragment : Fragment() {
         val alertDialog = builder.create()
         alertDialog.show()
 
-        // 3초 후 다이얼로그 닫기
         Handler(Looper.getMainLooper()).postDelayed({
             alertDialog.dismiss()
-        }, 2000) // 3000 milliseconds = 3 seconds
+        }, 3000)
     }
 }
