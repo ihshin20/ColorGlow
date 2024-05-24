@@ -516,16 +516,21 @@ class MainFragment : Fragment() {
 
 
     private fun showAlertDialog() {
-        val builder = AlertDialog.Builder(requireContext())
-        builder.setMessage("*알림* \n 정면을 바라봐주세요.")
+        // 다이얼로그 레이아웃 인플레이트
+        val inflater = LayoutInflater.from(context)
+        val dialogView = inflater.inflate(R.layout.alert_frontal, null)
+
+        // AlertDialog 생성
+        val builder = AlertDialog.Builder(context)
+        builder.setView(dialogView)
         builder.setCancelable(false)
 
         val alertDialog = builder.create()
         alertDialog.show()
 
+        // 3초 후 다이얼로그 닫기
         Handler(Looper.getMainLooper()).postDelayed({
             alertDialog.dismiss()
-        }, 3000) // 3000 milliseconds = 3 seconds
+        }, 2000) // 3000 milliseconds = 3 seconds
     }
-
 }
