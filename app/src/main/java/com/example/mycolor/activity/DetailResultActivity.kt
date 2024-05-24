@@ -208,7 +208,9 @@ class DetailResultActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
-                Log.w("Firestore", "Error getting documents: ", exception)
+                hideLoadingDialog()
+                Toast.makeText(this, "네트워크 에러, 다시 진단해주세요.", Toast.LENGTH_SHORT).show()
+                finish()
             }
 
         fun updateProductInfo(productsMap: Map<String, Any>, productTextViews: List<TextView>) {
@@ -346,6 +348,7 @@ class DetailResultActivity : AppCompatActivity() {
             val imageRef = storageRef.child(imagePath)
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 Glide.with(this).load(uri).into(imageView)
+                imageView.setBackgroundColor(Color.WHITE)
             }.addOnFailureListener { exception ->
                 Log.e("Storage", "Error loading image: $imagePath", exception)
             }
@@ -421,7 +424,9 @@ class DetailResultActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
-                println("Error getting documents: $exception")
+                hideLoadingDialog()
+                Toast.makeText(this, "네트워크 에러, 다시 진단해주세요.", Toast.LENGTH_SHORT).show()
+                finish()
             }
 
 
@@ -515,6 +520,7 @@ class DetailResultActivity : AppCompatActivity() {
                 }
             }
             .addOnFailureListener { exception ->
+                hideLoadingDialog()
                 Log.w("Firestore", "Error getting Tone document: ", exception)
             }
 

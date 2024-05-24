@@ -188,8 +188,8 @@ class ResultFragment : Fragment() {
                 .load(uri)
                 .thumbnail(0.1f) // 프리패칭 비율 설정
                 .placeholder(R.drawable.placeholder_image) // 로딩 중에 표시할 이미지
-                .error(R.drawable.error_image) // 에러 시 표시할 이미지
                 .diskCacheStrategy(DiskCacheStrategy.ALL) // 디스크 캐싱 전략
+                .override(100, 100)
                 .into(imageView)
         }.addOnFailureListener { exception ->
             // 이미지 로드 실패 처리

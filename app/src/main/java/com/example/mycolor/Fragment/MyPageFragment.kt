@@ -23,6 +23,8 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.Source
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import android.graphics.Color
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -273,9 +275,15 @@ class MyPageFragment : Fragment() {
             val imageRef = storageRef.child(imagePath)
             imageRef.downloadUrl.addOnSuccessListener { uri ->
                 if (isAdded) {
-                    Glide.with(this).load(uri).into(imageView)
+                    Glide.with(this)
+                        .load(uri)
+                        .thumbnail(0.1f) // 프리패칭 비율 설정
+                        .placeholder(R.drawable.placeholder_image) // 로딩 중에 표시할 이미지
+                        .diskCacheStrategy(DiskCacheStrategy.ALL) // 디스크 캐싱 전략
+                        .into(imageView)
                 }
 
+                imageView.setBackgroundColor(Color.WHITE)
                 imageView.setOnClickListener {
                     if (urls[index] != "none") {
                         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(urls[index]))
