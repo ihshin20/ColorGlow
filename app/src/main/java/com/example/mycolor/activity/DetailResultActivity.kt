@@ -269,10 +269,10 @@ class DetailResultActivity : AppCompatActivity() {
         toneRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val description = document.getString("설명") ?: "Description not available"
-                    val description2 = document.getString("설명2") ?: "Description not available"
-                    val description3 = document.getString("설명3") ?: "Description not available"
-                    val description4 = document.getString("설명4") ?: "Description not available"
+                    val description = document.getString("설명")?.replace(".", ".\n") ?: "Description not available.\n"
+                    val description2 = document.getString("설명2")?.replace(".", ".\n") ?: "Description not available.\n"
+                    val description3 = document.getString("설명3")?.replace(".", ".\n") ?: "Description not available.\n"
+                    val description4 = document.getString("설명4")?.replace(".", ".\n") ?: "Description not available.\n"
                     val celebrities = document.get("비슷한 연예인") as? List<String>
                         ?: listOf("No celebrities available")
                     val productDescriptions =
@@ -485,10 +485,10 @@ class DetailResultActivity : AppCompatActivity() {
         toneRef.get()
             .addOnSuccessListener { document ->
                 if (document.exists()) {
-                    val description = document.getString("설명") ?: "Description not available"
-                    val description2 = document.getString("설명2") ?: "Description not available"
-                    val description3 = document.getString("설명3") ?: "Description not available"
-                    val description4 = document.getString("설명4") ?: "Description not available"
+                    val description = document.getString("설명")?.replace(".", ".\n") ?: "Description not available.\n"
+                    val description2 = document.getString("설명2")?.replace(".", ".\n") ?: "Description not available.\n"
+                    val description3 = document.getString("설명3")?.replace(".", ".\n") ?: "Description not available.\n"
+                    val description4 = document.getString("설명4")?.replace(".", ".\n") ?: "Description not available.\n"
                     val celebrities = document.get("비슷한 연예인") as? List<String>
                         ?: listOf("No celebrities available")
                     val productDescriptions =
