@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.ProgressDialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -45,7 +46,10 @@ import com.example.mycolor.activity.DetailResultActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
@@ -430,7 +434,7 @@ class MainFragment : Fragment() {
 
                 } else {
                     // 서버 응답 오류 처리
-                    Toast.makeText(context,"네트워크 에러입니다.",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "네트워크 에러입니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -533,3 +537,7 @@ class MainFragment : Fragment() {
         }, 3000)
     }
 }
+
+
+
+

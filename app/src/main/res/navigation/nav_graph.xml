@@ -27,5 +27,12 @@
         <action
             android:id="@+id/action_myPageFragment2_to_mainFragment"
             app:destination="@id/mainFragment" />
+        <action
+            android:id="@+id/action_myPageFragment2_to_communityFragment"
+            app:destination="@id/communityFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/communityFragment"
+        android:name="com.example.mycolor.CommunityFragment"
+        android:label="CommunityFragment" />
 </navigation>

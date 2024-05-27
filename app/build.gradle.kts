@@ -90,6 +90,7 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.inappmessaging)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.media3.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
