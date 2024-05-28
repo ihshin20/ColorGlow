@@ -3,19 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".CommunityFragment">
+    tools:context=".CommunityFragment"
+    android:background="#FDE4F7">
 
     <EditText
         android:id="@+id/postEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Write a post" />
+        android:hint="게시물을 올리세요"
+        android:fontFamily="@font/kcchanbit"/>
 
     <Button
         android:id="@+id/postButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Post" />
+        android:text="게시"
+        android:fontFamily="@font/kcchanbit"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/postsRecyclerView"

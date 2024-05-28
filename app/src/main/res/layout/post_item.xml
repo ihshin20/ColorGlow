@@ -1,31 +1,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="#FDE4F7">
 
     <TextView
         android:id="@+id/postTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Post content"
+        android:text="게시글"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:fontFamily="@font/kcchanbit"
+        />
 
     <EditText
         android:id="@+id/commentEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Write a comment" />
+        android:hint="댓글을 입력하세요"
+        android:fontFamily="@font/kcchanbit"/>
 
     <Button
         android:id="@+id/commentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Comment" />
+        android:text="댓글 달기"
+        android:fontFamily="@font/kcchanbit"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/commentsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false" />
+        android:nestedScrollingEnabled="false"
+        android:background="#FDE4F7"/>
 </LinearLayout>
