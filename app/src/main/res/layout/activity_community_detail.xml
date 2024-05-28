@@ -121,6 +121,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/textView20"
+            android:fontFamily="@font/kcchanbit"
             app:layout_constraintTop_toBottomOf="@+id/detailCommunityImageView" />
 
         <Button
@@ -131,6 +132,7 @@
             android:layout_marginEnd="10dp"
             android:text="좋아요"
             app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/kcchanbit"
             app:layout_constraintTop_toBottomOf="@+id/detailLikeTextView" />
 
         <TextView
@@ -162,6 +164,7 @@
             android:layout_marginEnd="10dp"
             android:text="댓글 쓰기"
             app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/kcchanbit"
             app:layout_constraintTop_toBottomOf="@+id/detailBodyTextView" />
 
         <TextView
@@ -170,6 +173,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:text="0"
+            android:fontFamily="@font/kcchanbit"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView14" />
 

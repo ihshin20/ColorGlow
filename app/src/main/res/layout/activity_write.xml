@@ -5,13 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FDE4F7"
-    tools:context=".WriteActivity">
+    tools:context=".WriteActivity"
+    android:fontFamily="@font/kcchanbit">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/detailCommunityLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FDE4F7">
+        android:background="#FDE4F7"
+        android:fontFamily="@font/kcchanbit">
 
         <Spinner
             android:id="@+id/seasonSpinner"
@@ -76,7 +78,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/textView28"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/textView28" />
+            app:layout_constraintStart_toEndOf="@+id/textView28"
+            android:fontFamily="@font/kcchanbit"/>
 
         <EditText
             android:id="@+id/writeBodyTextView"
@@ -112,7 +115,8 @@
             android:layout_marginTop="50dp"
             android:text="이미지 첨부"
             app:layout_constraintStart_toStartOf="@+id/textView29"
-            app:layout_constraintTop_toBottomOf="@+id/writeBodyTextView" />
+            app:layout_constraintTop_toBottomOf="@+id/writeBodyTextView"
+            android:fontFamily="@font/kcchanbit"/>
 
         <ImageView
             android:id="@+id/imageViewPreview"
@@ -136,7 +140,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPreview" />
+            app:layout_constraintTop_toBottomOf="@+id/imageViewPreview"
+            android:fontFamily="@font/kcchanbit"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

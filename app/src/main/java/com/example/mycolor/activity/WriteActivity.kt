@@ -7,7 +7,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
@@ -23,11 +22,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mycolor.R
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.Timestamp
 import java.util.*
+
 
 class WriteActivity : AppCompatActivity() {
 
@@ -42,7 +42,7 @@ class WriteActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_write)
+        setContentView(com.example.mycolor.R.layout.activity_write)
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
@@ -56,15 +56,23 @@ class WriteActivity : AppCompatActivity() {
         val writeBodyTextView = findViewById<EditText>(R.id.writeBodyTextView)
         val saveBtn = findViewById<Button>(R.id.saveBtn)
         attachImageButton = findViewById(R.id.attachImageButton)
-        imageViewPreview = findViewById(R.id.imageViewPreview)
+        imageViewPreview = findViewById(com.example.mycolor.R.id.imageViewPreview)
 
         val content = intent.getStringExtra("postContent")
 
         // 계절 데이터 설정
+//        val seasons = arrayOf("Spring", "Summer", "Autumn", "Winter")
+//        val seasonAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, seasons)
+//        seasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+//        seasonSpinner.adapter = seasonAdapter
+
+
+        // 계절 데이터 설정
         val seasons = arrayOf("Spring", "Summer", "Autumn", "Winter")
-        val seasonAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, seasons)
-        seasonAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val seasonAdapter = ArrayAdapter<String>(this, com.example.mycolor.R.layout.spinner_item, seasons)
+        seasonAdapter.setDropDownViewResource(com.example.mycolor.R.layout.spinner_item) // 커스텀 레이아웃 사용
         seasonSpinner.adapter = seasonAdapter
+
 
         // 계절별 세부 톤 매핑
         val toneMap = mapOf(
