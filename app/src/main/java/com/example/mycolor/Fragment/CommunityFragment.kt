@@ -21,14 +21,16 @@ data class Post(
     val author: String = "",
     val content: String = "",
     val timestamp: Long = System.currentTimeMillis(),
-    val comments: MutableList<Comment> = mutableListOf()
+    val comments: MutableList<Comment> = mutableListOf(),
+    var likes: Int = 0  // 추가된 필드
 )
 
 data class Comment(
     val uid: String = "",
     val author: String = "",
     val content: String = "",
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    var likes: Int = 0  // 추가된 필드
 )
 
 class CommunityFragment : Fragment() {
@@ -113,9 +115,16 @@ class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<P
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val postTextView: TextView = view.findViewById(R.id.postTextView)
+        val likeButton: Button = view.findViewById(R.id.likeButton)
+        val likeCountTextView: TextView = view.findViewById(R.id.likeCountTextView)
         val commentEditText: EditText = view.findViewById(R.id.commentEditText)
         val commentButton: Button = view.findViewById(R.id.commentButton)
         val commentsRecyclerView: RecyclerView = view.findViewById(R.id.commentsRecyclerView)
+
+        init {
+            // RecyclerView의 레이아웃 매니저를 여기서 설정합니다.
+            commentsRecyclerView.layoutManager = LinearLayoutManager(view.context)
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -126,14 +135,15 @@ class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<P
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         holder.postTextView.text = post.content
+        holder.likeCountTextView.text = "${post.likes} Likes"
 
         val commentsAdapter = CommentAdapter(post.comments)
-        holder.commentsRecyclerView.layoutManager = LinearLayoutManager(holder.commentsRecyclerView.context)
         holder.commentsRecyclerView.adapter = commentsAdapter
 
-        holder.postTextView.setOnClickListener {
-            // Handle the content TextView click event
-            Toast.makeText(holder.postTextView.context, "Content clicked: ${post.content}", Toast.LENGTH_SHORT).show()
+        holder.likeButton.setOnClickListener {
+            post.likes++
+            updateLikes(post)
+            holder.likeCountTextView.text = "${post.likes} Likes"
         }
 
         holder.commentButton.setOnClickListener {
@@ -151,6 +161,16 @@ class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<P
     }
 
     override fun getItemCount(): Int = posts.size
+
+    private fun updateLikes(post: Post) {
+        val postRef = FirebaseFirestore.getInstance().collection("Posts").document(post.uid)
+        postRef.update("likes", post.likes)
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    // Handle error
+                }
+            }
+    }
 
     private fun addCommentToPost(post: Post, comment: Comment) {
         val postRef = FirebaseFirestore.getInstance().collection("Posts").document(post.uid)
@@ -170,6 +190,8 @@ class CommentAdapter(private val comments: MutableList<Comment>) : RecyclerView.
 
     class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val commentTextView: TextView = view.findViewById(R.id.commentTextView)
+        val commentLikeButton: Button = view.findViewById(R.id.commentLikeButton)
+        val commentLikeCountTextView: TextView = view.findViewById(R.id.commentLikeCountTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -178,8 +200,24 @@ class CommentAdapter(private val comments: MutableList<Comment>) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.commentTextView.text = comments[position].content
+        val comment = comments[position]
+        holder.commentTextView.text = comment.content
+        holder.commentLikeCountTextView.text = "${comment.likes} Likes"
+
+        holder.commentLikeButton.setOnClickListener {
+            comment.likes++
+            updateCommentLikes(comment)
+            holder.commentLikeCountTextView.text = "${comment.likes} Likes"
+        }
     }
 
     override fun getItemCount(): Int = comments.size
+
+    private fun updateCommentLikes(comment: Comment) {
+        val postRef = FirebaseFirestore.getInstance().collection("Posts")
+        // assuming you have a way to get the parent post id or reference
+        // you can add additional code here to properly reference and update the likes of the comment
+    }
 }
+
+
