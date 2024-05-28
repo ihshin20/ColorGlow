@@ -41,7 +41,9 @@ Deep Learning을 이용한 퍼스널컬러 자동 진단 어플리케이션
 
 이 어플리케이션은 다양한 연령층과 배경의 사용자가 자신의 퍼스널 컬러를 정확히 파악하고, **개인 맞춤형 뷰티 솔루션**을 경험할 수 있다.
 
-<img width="840" alt="깃허브시연사진" src="https://github.com/ihshin20/ColorGlow/assets/80204749/d0eb21c8-bb1c-412b-9605-09a29fff7d33">
+<div align="center">
+<img width="520" alt="리드미수정" src="https://github.com/ihshin20/ColorGlow/assets/80204749/1879ee55-afef-4fc3-8e38-389fe98c476f">
+</div>
 
 1. 사용자는 퍼스널 컬러 진단을 위해 전문가를 직접 찾아가는 번거로움과 **시간 절약** 가능
 
