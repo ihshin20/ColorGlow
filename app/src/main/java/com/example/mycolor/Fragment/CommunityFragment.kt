@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import android.content.Intent
 
 data class Post(
     val uid: String = "",
@@ -22,7 +23,7 @@ data class Post(
     val content: String = "",
     val timestamp: Long = System.currentTimeMillis(),
     val comments: MutableList<Comment> = mutableListOf(),
-    var likes: Int = 0  // 추가된 필드
+    var likes: Int = 0  // 좋아요 필드 추가
 )
 
 data class Comment(
@@ -30,7 +31,7 @@ data class Comment(
     val author: String = "",
     val content: String = "",
     val timestamp: Long = System.currentTimeMillis(),
-    var likes: Int = 0  // 추가된 필드
+    var likes: Int = 0  // 좋아요 필드 추가
 )
 
 class CommunityFragment : Fragment() {
@@ -86,6 +87,10 @@ class CommunityFragment : Fragment() {
                 if (task.isSuccessful) {
                     Toast.makeText(context, "Post uploaded successfully", Toast.LENGTH_SHORT).show()
                     postEditText.setText("")  // Clear the input box after posting
+
+                    // 업로드가 완료되면 CommunityActivity로 이동
+                    val intent = Intent(activity, CommunityActivity::class.java)
+                    startActivity(intent)
                 } else {
                     Toast.makeText(context, "Failed to upload post", Toast.LENGTH_SHORT).show()
                 }
@@ -115,16 +120,9 @@ class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<P
 
     class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val postTextView: TextView = view.findViewById(R.id.postTextView)
-        val likeButton: Button = view.findViewById(R.id.likeButton)
-        val likeCountTextView: TextView = view.findViewById(R.id.likeCountTextView)
         val commentEditText: EditText = view.findViewById(R.id.commentEditText)
         val commentButton: Button = view.findViewById(R.id.commentButton)
         val commentsRecyclerView: RecyclerView = view.findViewById(R.id.commentsRecyclerView)
-
-        init {
-            // RecyclerView의 레이아웃 매니저를 여기서 설정합니다.
-            commentsRecyclerView.layoutManager = LinearLayoutManager(view.context)
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
@@ -135,15 +133,14 @@ class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<P
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
         val post = posts[position]
         holder.postTextView.text = post.content
-        holder.likeCountTextView.text = "${post.likes} Likes"
 
         val commentsAdapter = CommentAdapter(post.comments)
+        holder.commentsRecyclerView.layoutManager = LinearLayoutManager(holder.commentsRecyclerView.context)
         holder.commentsRecyclerView.adapter = commentsAdapter
 
-        holder.likeButton.setOnClickListener {
-            post.likes++
-            updateLikes(post)
-            holder.likeCountTextView.text = "${post.likes} Likes"
+        holder.postTextView.setOnClickListener {
+            // Handle the content TextView click event
+            Toast.makeText(holder.postTextView.context, "Content clicked: ${post.content}", Toast.LENGTH_SHORT).show()
         }
 
         holder.commentButton.setOnClickListener {
@@ -161,16 +158,6 @@ class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<P
     }
 
     override fun getItemCount(): Int = posts.size
-
-    private fun updateLikes(post: Post) {
-        val postRef = FirebaseFirestore.getInstance().collection("Posts").document(post.uid)
-        postRef.update("likes", post.likes)
-            .addOnCompleteListener { task ->
-                if (!task.isSuccessful) {
-                    // Handle error
-                }
-            }
-    }
 
     private fun addCommentToPost(post: Post, comment: Comment) {
         val postRef = FirebaseFirestore.getInstance().collection("Posts").document(post.uid)
@@ -190,8 +177,6 @@ class CommentAdapter(private val comments: MutableList<Comment>) : RecyclerView.
 
     class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val commentTextView: TextView = view.findViewById(R.id.commentTextView)
-        val commentLikeButton: Button = view.findViewById(R.id.commentLikeButton)
-        val commentLikeCountTextView: TextView = view.findViewById(R.id.commentLikeCountTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
@@ -200,24 +185,8 @@ class CommentAdapter(private val comments: MutableList<Comment>) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        val comment = comments[position]
-        holder.commentTextView.text = comment.content
-        holder.commentLikeCountTextView.text = "${comment.likes} Likes"
-
-        holder.commentLikeButton.setOnClickListener {
-            comment.likes++
-            updateCommentLikes(comment)
-            holder.commentLikeCountTextView.text = "${comment.likes} Likes"
-        }
+        holder.commentTextView.text = comments[position].content
     }
 
     override fun getItemCount(): Int = comments.size
-
-    private fun updateCommentLikes(comment: Comment) {
-        val postRef = FirebaseFirestore.getInstance().collection("Posts")
-        // assuming you have a way to get the parent post id or reference
-        // you can add additional code here to properly reference and update the likes of the comment
-    }
 }
-
-
