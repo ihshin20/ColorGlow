@@ -137,7 +137,7 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         val view = inflater.inflate(R.layout.loading_dialog, null)
 
-        // TextView의 텍스트를 변경합니다
+        // TextView의 텍스트를 변경
         val textView = view.findViewById<TextView>(R.id.loadingProgressTextView)
         textView.text = "잠시만 기다려주세요."
 
