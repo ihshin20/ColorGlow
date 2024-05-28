@@ -1,5 +1,6 @@
 package com.example.mycolor
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,17 +11,18 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mycolor.activity.WriteActivity
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 data class Post(
-    val Body: String = "바디",
+    val Body: String = "",
     val Date: Timestamp = Timestamp.now(),
-    val Like: Int = -1,
-    val Title: String = "타이틀",
-    val Tone: String = "톤",
-    val UID: String = "uid"
+    val Like: Int = 0,
+    val Title: String = "",
+    val Tone: String = "",
+    val UID: String = ""
 )
 
 class CommunityFragment : Fragment() {
@@ -45,10 +47,16 @@ class CommunityFragment : Fragment() {
 
         val writeBtn = view.findViewById<Button>(R.id.writeBtn)
         writeBtn.setOnClickListener {
-            // 인텐트 글쓰기 액티비티
+            val intent = Intent(context, WriteActivity::class.java)
+            startActivity(intent)
         }
 
         fetchPosts()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        fetchPosts() // 프래그먼트가 화면에 보일 때마다 데이터를 다시 불러옴
     }
 
     private fun fetchPosts() {
@@ -57,6 +65,7 @@ class CommunityFragment : Fragment() {
             .orderBy("Date", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { documents ->
+                postsList.clear() // 기존 데이터를 지우고 새 데이터를 추가
                 for (document in documents) {
                     val post = document.toObject(Post::class.java)
                     postsList.add(post)

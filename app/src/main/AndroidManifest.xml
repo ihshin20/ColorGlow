@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
         <activity
+            android:name=".activity.WriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.DetailResultActivity"
             android:exported="false" /> <!-- MainActivity with corrected intent-filter location -->
         <activity
@@ -38,9 +41,7 @@
         <activity
             android:name=".signup.SignUpActivity"
             android:exported="true" />
-
-        <activity android:name=".CommunityActivity"></activity>
-
+        <activity android:name=".CommunityActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -49,7 +50,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 
