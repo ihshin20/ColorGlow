@@ -40,7 +40,11 @@ class CommunityFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
     private var uid: String? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_community, container, false)
     }
 
@@ -79,107 +83,130 @@ class CommunityFragment : Fragment() {
     }
 
     private fun uploadPost(post: Post) {
-        FirebaseFirestore.getInstance().collection("Posts").add(post)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(context, "Post uploaded successfully", Toast.LENGTH_SHORT).show()
-                    postEditText.setText("")  // Clear the input box after posting
-                } else {
-                    Toast.makeText(context, "Failed to upload post", Toast.LENGTH_SHORT).show()
+        val db = FirebaseFirestore.getInstance()
+        val uid = post.uid
+        if (uid.isNotEmpty()) {
+            db.collection("Posts").document(uid)
+                .collection("userPosts")
+                .add(post)
+                .addOnSuccessListener { documentReference ->
+                    Log.d("Firestore", "DocumentSnapshot added with ID: ${documentReference.id}")
+                    postEditText.text.clear()
+                    postsList.add(post)
+                    adapter.notifyItemInserted(postsList.size - 1)
                 }
-            }
+                .addOnFailureListener { e ->
+                    Log.w("Firestore", "Error adding document", e)
+                }
+        } else {
+            Log.w("Firestore", "User UID is empty, cannot upload post.")
+        }
     }
 
     private fun loadPosts() {
-        FirebaseFirestore.getInstance().collection("Posts").orderBy("timestamp", Query.Direction.DESCENDING)
-            .addSnapshotListener { snapshots, error ->
-                if (error != null) {
-                    Toast.makeText(context, "Failed to load posts", Toast.LENGTH_SHORT).show()
-                    return@addSnapshotListener
-                }
-
-                postsList.clear()
-                snapshots?.documents?.forEach { document ->
-                    document.toObject(Post::class.java)?.let { post ->
+        val db = FirebaseFirestore.getInstance()
+        val user = auth.currentUser
+        if (user != null) {
+            uid = user.uid
+            db.collection("Posts").document(uid!!)
+                .collection("userPosts")
+                .get()
+                .addOnSuccessListener { result ->
+                    for (document in result) {
+                        val post = document.toObject(Post::class.java)
                         postsList.add(post)
                     }
+                    adapter.notifyDataSetChanged()
                 }
-                adapter.notifyDataSetChanged()
-            }
-    }
-}
-
-class PostAdapter(private val posts: MutableList<Post>) : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
-
-    class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val postTextView: TextView = view.findViewById(R.id.postTextView)
-        val commentEditText: EditText = view.findViewById(R.id.commentEditText)
-        val commentButton: Button = view.findViewById(R.id.commentButton)
-        val commentsRecyclerView: RecyclerView = view.findViewById(R.id.commentsRecyclerView)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.post_item, parent, false)
-        return PostViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val post = posts[position]
-        holder.postTextView.text = post.content
-
-        val commentsAdapter = CommentAdapter(post.comments)
-        holder.commentsRecyclerView.layoutManager = LinearLayoutManager(holder.commentsRecyclerView.context)
-        holder.commentsRecyclerView.adapter = commentsAdapter
-
-        holder.postTextView.setOnClickListener {
-            // Handle the content TextView click event
-            Toast.makeText(holder.postTextView.context, "Content clicked: ${post.content}", Toast.LENGTH_SHORT).show()
-        }
-
-        holder.commentButton.setOnClickListener {
-            val commentContent = holder.commentEditText.text.toString()
-            if (commentContent.isNotEmpty()) {
-                val newComment = Comment(
-                    uid = FirebaseAuth.getInstance().currentUser?.uid ?: "",
-                    author = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anonymous",
-                    content = commentContent
-                )
-                addCommentToPost(post, newComment)
-                holder.commentEditText.setText("")  // Clear the input box after posting
-            }
+                .addOnFailureListener { exception ->
+                    Log.w("Firestore", "Error getting documents.", exception)
+                }
         }
     }
+}
 
-    override fun getItemCount(): Int = posts.size
 
-    private fun addCommentToPost(post: Post, comment: Comment) {
-        val postRef = FirebaseFirestore.getInstance().collection("Posts").document(post.uid)
-        post.comments.add(comment)
-        postRef.update("comments", post.comments)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    notifyDataSetChanged()
-                } else {
-                    // Handle error
+    class PostAdapter(private val posts: MutableList<Post>) :
+        RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+
+        class PostViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val postTextView: TextView = view.findViewById(R.id.postTextView)
+            val commentEditText: EditText = view.findViewById(R.id.commentEditText)
+            val commentButton: Button = view.findViewById(R.id.commentButton)
+            val commentsRecyclerView: RecyclerView = view.findViewById(R.id.commentsRecyclerView)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
+            val view =
+                LayoutInflater.from(parent.context).inflate(R.layout.post_item, parent, false)
+            return PostViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+            val post = posts[position]
+            holder.postTextView.text = post.content
+
+            val commentsAdapter = CommentAdapter(post.comments)
+            holder.commentsRecyclerView.layoutManager =
+                LinearLayoutManager(holder.commentsRecyclerView.context)
+            holder.commentsRecyclerView.adapter = commentsAdapter
+
+            holder.postTextView.setOnClickListener {
+                // Handle the content TextView click event
+                Toast.makeText(
+                    holder.postTextView.context,
+                    "Content clicked: ${post.content}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            holder.commentButton.setOnClickListener {
+                val commentContent = holder.commentEditText.text.toString()
+                if (commentContent.isNotEmpty()) {
+                    val newComment = Comment(
+                        uid = FirebaseAuth.getInstance().currentUser?.uid ?: "",
+                        author = FirebaseAuth.getInstance().currentUser?.displayName ?: "Anonymous",
+                        content = commentContent
+                    )
+                    addCommentToPost(post, newComment)
+                    holder.commentEditText.setText("")  // Clear the input box after posting
                 }
             }
+        }
+
+        override fun getItemCount(): Int = posts.size
+
+        private fun addCommentToPost(post: Post, comment: Comment) {
+            val postRef = FirebaseFirestore.getInstance().collection("Posts").document(post.uid)
+            post.comments.add(comment)
+            postRef.update("comments", post.comments)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        notifyDataSetChanged()
+                    } else {
+                        // Handle error
+                    }
+                }
+        }
     }
-}
 
-class CommentAdapter(private val comments: MutableList<Comment>) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
-    class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val commentTextView: TextView = view.findViewById(R.id.commentTextView)
+    class CommentAdapter(private val comments: MutableList<Comment>) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
+
+        class CommentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val commentTextView: TextView = view.findViewById(R.id.commentTextView)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
+            val view = LayoutInflater.from(parent.context).inflate(R.layout.comment_item, parent, false)
+            return CommentViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
+            holder.commentTextView.text = comments[position].content
+        }
+
+        override fun getItemCount(): Int = comments.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.comment_item, parent, false)
-        return CommentViewHolder(view)
-    }
 
-    override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-        holder.commentTextView.text = comments[position].content
-    }
-
-    override fun getItemCount(): Int = comments.size
-}
