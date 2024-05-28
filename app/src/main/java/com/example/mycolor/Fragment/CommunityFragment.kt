@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 data class Post(
     val Body: String = "바디",
@@ -29,8 +31,7 @@ class CommunityFragment : Fragment() {
     private val postsList = mutableListOf<Post>()
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_community, container, false)
@@ -60,7 +61,6 @@ class CommunityFragment : Fragment() {
                 for (document in documents) {
                     val post = document.toObject(Post::class.java)
                     postsList.add(post)
-
                     Log.d("CommunityFragment", "Post fetched: $post")
                 }
                 adapter.notifyDataSetChanged()
@@ -89,7 +89,9 @@ class CommunityFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
             val post = posts[position]
-            holder.uploadedDateTextView.text = post.Date.toDate().toString()
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+            holder.uploadedDateTextView.text = dateFormat.format(post.Date.toDate())
+            holder.uploadedDateTextView.textSize = 18f
             holder.titleTextView.text = post.Title
             holder.uploaderToneTextView.text = post.Tone
             holder.likeTextView.text = post.Like.toString()
