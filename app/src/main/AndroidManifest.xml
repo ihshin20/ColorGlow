@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Material3.DayNight.NoActionBar">
         <activity
+            android:name=".activity.CommunityDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.WriteActivity"
             android:exported="false" />
         <activity

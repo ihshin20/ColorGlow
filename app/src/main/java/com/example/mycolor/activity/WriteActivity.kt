@@ -1,23 +1,40 @@
 package com.example.mycolor.activity
 
+import android.app.Activity
+import android.app.Dialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mycolor.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.Timestamp
+import java.util.*
 
 class WriteActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var db: FirebaseFirestore
+    private lateinit var storage: FirebaseStorage
+    private var selectedImageUri: Uri? = null
+    private lateinit var loadingDialog: Dialog
+
+    private lateinit var attachImageButton: Button
+    private lateinit var imageViewPreview: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,12 +42,17 @@ class WriteActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
         db = FirebaseFirestore.getInstance()
+        storage = FirebaseStorage.getInstance()
+
+        setupLoadingDialog()
 
         val seasonSpinner = findViewById<Spinner>(R.id.seasonSpinner)
         val toneRadioGroup = findViewById<RadioGroup>(R.id.toneRadioGroup)
         val writeTitleTextView = findViewById<EditText>(R.id.writeTitleTextView)
         val writeBodyTextView = findViewById<EditText>(R.id.writeBodyTextView)
         val saveBtn = findViewById<Button>(R.id.saveBtn)
+        attachImageButton = findViewById(R.id.attachImageButton)
+        imageViewPreview = findViewById(R.id.imageViewPreview)
 
         val content = intent.getStringExtra("postContent")
 
@@ -64,6 +86,12 @@ class WriteActivity : AppCompatActivity() {
             }
         }
 
+        attachImageButton.setOnClickListener {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            startForResult.launch(intent)
+        }
+
         saveBtn.setOnClickListener {
             val title = writeTitleTextView.text.toString().trim()
             val body = writeBodyTextView.text.toString().trim()
@@ -84,16 +112,85 @@ class WriteActivity : AppCompatActivity() {
                     "UID" to uid
                 )
 
+                showLoadingDialog()
+
                 db.collection("Posts")
                     .add(post)
-                    .addOnSuccessListener {
-                        Toast.makeText(this, "게시글이 저장되었습니다.", Toast.LENGTH_SHORT).show()
-                        finish()  // 액티비티 종료
+                    .addOnSuccessListener { documentReference ->
+                        val postId = documentReference.id
+                        if (selectedImageUri != null) {
+                            uploadImageToStorage(postId, selectedImageUri!!) { imageUrl ->
+                                db.collection("Posts").document(postId)
+                                    .update("ImageUrl", imageUrl)
+                                    .addOnSuccessListener {
+                                        hideLoadingDialog()
+                                        Toast.makeText(this, "게시글이 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                                        finish()  // 액티비티 종료
+                                    }
+                                    .addOnFailureListener { e ->
+                                        hideLoadingDialog()
+                                        Toast.makeText(this, "이미지 URL 업데이트에 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                        } else {
+                            hideLoadingDialog()
+                            Toast.makeText(this, "게시글이 저장되었습니다.", Toast.LENGTH_SHORT).show()
+                            finish()  // 액티비티 종료
+                        }
                     }
                     .addOnFailureListener { e ->
+                        hideLoadingDialog()
                         Toast.makeText(this, "저장에 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
             }
         }
+    }
+
+    private fun setupLoadingDialog() {
+        loadingDialog = Dialog(this)
+        loadingDialog.setContentView(R.layout.loading_dialog)
+        loadingDialog.setCancelable(false)
+    }
+
+    private fun showLoadingDialog() {
+        val builder = AlertDialog.Builder(this)
+        val inflater = LayoutInflater.from(this)
+
+        val view = inflater.inflate(R.layout.loading_dialog, null)
+        val textView = view.findViewById<TextView>(R.id.loadingProgressTextView)
+        textView.text = "잠시만 기다려주세요."
+
+        builder.setView(view)
+        builder.setCancelable(false)
+
+        loadingDialog = builder.create()
+        loadingDialog.show()
+    }
+
+    private fun hideLoadingDialog() {
+        loadingDialog.dismiss()
+    }
+
+    private val startForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            selectedImageUri = data?.data
+            imageViewPreview.setImageURI(selectedImageUri)
+            imageViewPreview.visibility = android.view.View.VISIBLE
+        }
+    }
+
+    private fun uploadImageToStorage(postId: String, imageUri: Uri, onSuccess: (String) -> Unit) {
+        val storageRef = storage.reference.child("PostImages/$postId.jpg")
+        storageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener { uri ->
+                    onSuccess(uri.toString())
+                }
+            }
+            .addOnFailureListener { e ->
+                hideLoadingDialog()
+                Toast.makeText(this, "이미지 업로드에 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 }

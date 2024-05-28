@@ -3,15 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:background="@drawable/rounded_corners">
 
     <TextView
         android:id="@+id/uploadedDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginEnd="10dp"
+        android:text="Uploaded Date"
+        android:fontFamily="@font/kcchanbit"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -19,9 +23,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
+        android:text="Uploader"
+        android:fontFamily="@font/kcchanbit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploadedDateTextView" />
+        app:layout_constraintTop_toTopOf="@id/uploadedDateTextView" />
 
     <TextView
         android:id="@+id/titleTextView"
@@ -30,13 +35,17 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:text="Title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/kcchanbit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/uploaderTextView" />
+        app:layout_constraintTop_toBottomOf="@id/uploaderToneTextView" />
 
     <View
         android:id="@+id/divider"
-        android:layout_width="391dp"
+        android:layout_width="0dp"
         android:layout_height="3dp"
         android:background="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,10 +56,14 @@
         android:id="@+id/uploaderToneTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="3dp"
-        app:layout_constraintStart_toEndOf="@+id/uploaderTextView"
-        app:layout_constraintTop_toTopOf="@+id/uploaderTextView" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:text="Uploader Tone"
+        android:fontFamily="@font/kcchanbit"
+        app:layout_constraintBottom_toTopOf="@id/titleTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/uploaderTextView" />
 
     <TextView
         android:id="@+id/likeTextView"
@@ -58,7 +71,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
-        android:text="0"
+        android:text="0 likes"
+        android:fontFamily="@font/kcchanbit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
