@@ -1,10 +1,13 @@
 package com.example.mycolor.activity
 
+import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
@@ -105,7 +108,7 @@ class CommunityDetailActivity : AppCompatActivity() {
                     }
                 } else {
                     Log.d("CommunityDetailActivity", "No such document")
-
+                    hideLoadingDialog()
                 }
             }
             .addOnFailureListener { exception ->
@@ -176,7 +179,6 @@ class CommunityDetailActivity : AppCompatActivity() {
                         }
                     }
                     commentsAdapter.notifyDataSetChanged()
-
                 }
             }
     }
@@ -197,7 +199,6 @@ class CommunityDetailActivity : AppCompatActivity() {
             hideLoadingDialog()
         }
     }
-
 
     private fun handleLikeButtonClick(documentId: String) {
         val uid = auth.currentUser?.uid ?: return
@@ -258,11 +259,17 @@ class CommunityDetailActivity : AppCompatActivity() {
         val dialogBuilder = AlertDialog.Builder(this)
         val dialogView = layoutInflater.inflate(R.layout.dialog_comment, null)
         dialogBuilder.setView(dialogView)
+        dialogBuilder.setCancelable(false)
 
         val commentEditText = dialogView.findViewById<EditText>(R.id.commentEditText)
         val submitButton = dialogView.findViewById<Button>(R.id.submitCommentButton)
-
+        val cancelBtn = dialogView.findViewById<Button>(R.id.cancelBtn)
         val alertDialog = dialogBuilder.create()
+
+        cancelBtn.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
         submitButton.setOnClickListener {
             val commentText = commentEditText.text.toString().trim()
             if (commentText.isNotEmpty()) {
@@ -287,4 +294,5 @@ class CommunityDetailActivity : AppCompatActivity() {
 
         alertDialog.show()
     }
+
 }

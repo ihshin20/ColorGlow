@@ -2,10 +2,14 @@ package com.example.mycolor.activity
 
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -144,6 +148,12 @@ class WriteActivity : AppCompatActivity() {
                     }
             }
         }
+
+        // 루트 레이아웃을 터치하면 키보드를 숨기도록 설정
+        findViewById<View>(R.id.detailCommunityLayout).setOnTouchListener { _, _ ->
+            hideKeyboard()
+            false
+        }
     }
 
     private fun setupLoadingDialog() {
@@ -192,5 +202,10 @@ class WriteActivity : AppCompatActivity() {
                 hideLoadingDialog()
                 Toast.makeText(this, "이미지 업로드에 실패했습니다: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(window.decorView.windowToken, 0)
     }
 }
