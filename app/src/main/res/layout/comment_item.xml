@@ -69,6 +69,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:fontFamily="@font/kcchanbit"
         app:layout_constraintStart_toEndOf="@+id/commentDate"
         app:layout_constraintTop_toTopOf="@+id/commentDate" />
 
@@ -77,6 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
+        android:fontFamily="@font/kcchanbit"
         app:layout_constraintStart_toEndOf="@+id/commentName"
         app:layout_constraintTop_toTopOf="@+id/commentName" />
 

@@ -13,7 +13,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="카메라" />
+        android:text="카메라"
+        android:fontFamily="@font/kcchanbit"/>
 
     <!-- 가운데 마진을 위한 Space 뷰 -->
     <Space
@@ -27,6 +28,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="갤러리" />
+        android:text="갤러리"
+        android:fontFamily="@font/kcchanbit"/>
 
 </LinearLayout>
