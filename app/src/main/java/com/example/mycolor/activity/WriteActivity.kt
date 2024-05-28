@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
@@ -21,6 +22,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.res.ResourcesCompat
 import com.example.mycolor.R
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -83,20 +85,41 @@ class WriteActivity : AppCompatActivity() {
         )
 
         // 스피너 선택 변경 이벤트 처리
+//        seasonSpinner.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View, position: Int, id: Long) {
+//                toneRadioGroup.removeAllViews()  // 라디오 그룹 초기화
+//                toneMap[seasons[position]]?.forEach { tone ->
+//                    val radioButton = RadioButton(this@WriteActivity)
+//                    radioButton.text = tone
+//                    toneRadioGroup.addView(radioButton)
+//                }
+//            }
+//
+//            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
+//                toneRadioGroup.removeAllViews()  // 선택 해제 시 라디오 버튼 제거
+//            }
+//        }
+
+        // 스피너 선택 변경 이벤트 처리
         seasonSpinner.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>, view: android.view.View, position: Int, id: Long) {
-                toneRadioGroup.removeAllViews()  // 라디오 그룹 초기화
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                toneRadioGroup.removeAllViews() // 라디오 그룹 초기화
+                val typeface = ResourcesCompat.getFont(this@WriteActivity, R.font.kcchanbit) // 폰트 가져오기
+
                 toneMap[seasons[position]]?.forEach { tone ->
-                    val radioButton = RadioButton(this@WriteActivity)
-                    radioButton.text = tone
+                    val radioButton = RadioButton(this@WriteActivity).apply {
+                        text = tone
+                        setTypeface(typeface) // 폰트 적용
+                    }
                     toneRadioGroup.addView(radioButton)
                 }
             }
 
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>) {
-                toneRadioGroup.removeAllViews()  // 선택 해제 시 라디오 버튼 제거
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                toneRadioGroup.removeAllViews() // 선택 해제 시 라디오 버튼 제거
             }
         }
+
 
         attachImageButton.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
