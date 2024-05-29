@@ -127,16 +127,19 @@
             android:fontFamily="@font/kcchanbit"
             app:layout_constraintTop_toBottomOf="@+id/detailCommunityImageView" />
 
-        <Button
+        <ImageButton
             android:id="@+id/likeBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:text="좋아요"
+            android:src="@drawable/good"
+            android:scaleType="centerInside"
             app:layout_constraintEnd_toEndOf="parent"
-            android:fontFamily="@font/kcchanbit"
-            app:layout_constraintTop_toBottomOf="@+id/detailLikeTextView" />
+            android:background="?attr/selectableItemBackground"
+            app:layout_constraintTop_toBottomOf="@+id/detailLikeTextView"
+            android:contentDescription="좋아요 버튼"/>
+
 
         <TextView
             android:id="@+id/textView21"
@@ -175,11 +178,15 @@
             android:id="@+id/detailLikeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:text="0"
+            android:layout_marginEnd="27dp"
             android:fontFamily="@font/kcchanbit"
+            android:text="0"
+            android:textStyle="bold"
+            android:textColor="#FF69B4"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/textView14" />
+
 
         <ImageView
             android:id="@+id/detailCommunityImageView"
