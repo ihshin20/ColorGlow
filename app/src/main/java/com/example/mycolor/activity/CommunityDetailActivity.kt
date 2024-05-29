@@ -10,6 +10,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -63,7 +64,7 @@ class CommunityDetailActivity : AppCompatActivity() {
         val detailBodyTextView = findViewById<TextView>(R.id.detailBodyTextView)
         val detailToneTextView = findViewById<TextView>(R.id.detailToneTextView)
         detailLikeTextView = findViewById(R.id.detailLikeTextView)
-        val likeBtn = findViewById<Button>(R.id.likeBtn)
+        val likeBtn = findViewById<ImageButton>(R.id.likeBtn)
         val commentBtn = findViewById<Button>(R.id.CommentBtn)
         commentsRecyclerView = findViewById(R.id.commentsRecyclerView)
         val imgView = findViewById<ImageView>(R.id.detailCommunityImageView)

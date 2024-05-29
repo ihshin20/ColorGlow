@@ -134,14 +134,28 @@
             android:id="@+id/saveBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
             android:layout_marginBottom="20dp"
+            android:fontFamily="@font/kcchanbit"
             android:text="작성 완료"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewPreview"
-            android:fontFamily="@font/kcchanbit"/>
+            app:layout_constraintTop_toBottomOf="@+id/imageViewPreview" />
+
+        <ImageView
+            android:id="@+id/logoimageView1"
+            android:layout_width="411dp"
+            android:layout_height="150dp"
+            android:layout_margin="10dp"
+            android:layout_marginBottom="50dp"
+            android:contentDescription="로고 이미지"
+            android:src="@drawable/logoimage"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/saveBtn" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
