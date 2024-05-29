@@ -16,6 +16,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import android.graphics.Color
+import android.graphics.Outline
+import android.view.View
+import android.view.ViewOutlineProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.mycolor.R
@@ -138,6 +141,13 @@ class DetailResultActivity : AppCompatActivity() {
                 Glide.with(this)
                     .load(uri)
                     .into(myImg)
+                myImg.outlineProvider = object : ViewOutlineProvider() {
+                    override fun getOutline(view: View, outline: Outline) {
+                        outline.setRoundRect(0, 0, view.width, view.height, 16 * resources.displayMetrics.density)
+                    }
+                }
+
+                myImg.clipToOutline = true
 
                 Log.d("FirebaseStorage", "Download URL: $uri")
 

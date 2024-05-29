@@ -128,7 +128,9 @@
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/attachImageButton"
-            app:layout_constraintTop_toTopOf="@+id/attachImageButton" />
+            app:layout_constraintTop_toTopOf="@+id/attachImageButton"
+            android:background="@drawable/rounded_corners"
+            android:clipToOutline="true"/>
 
         <Button
             android:id="@+id/saveBtn"

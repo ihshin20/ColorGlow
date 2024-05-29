@@ -12,6 +12,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -27,6 +28,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -124,12 +126,26 @@ class MainFragment : Fragment() {
         logoimageView1.setImageResource(R.drawable.logoimage)
         val pccsimageView = view.findViewById<ImageView>(R.id.pccsimageView)
         pccsimageView.setImageResource(R.drawable.pccs)
+        pccsimageView.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 16 * resources.displayMetrics.density)
+            }
+        }
+        pccsimageView.clipToOutline = true
+
         val twofaceimageView = view.findViewById<ImageView>(R.id.twofaceimageView)
         twofaceimageView.setImageResource(R.drawable.twofaceimage)
 
 
         val shoppingimageView = view.findViewById<ImageView>(R.id.shoppingimageView)
         shoppingimageView.setImageResource(R.drawable.shoppingimage)
+        shoppingimageView.outlineProvider = object : ViewOutlineProvider() {
+            override fun getOutline(view: View, outline: Outline) {
+                outline.setRoundRect(0, 0, view.width, view.height, 16 * resources.displayMetrics.density)
+            }
+        }
+        shoppingimageView.clipToOutline = true
+
         val logotextimage = view.findViewById<ImageView>(R.id.logotextimage)
         logotextimage.setImageResource(R.drawable.logotextimage)
 

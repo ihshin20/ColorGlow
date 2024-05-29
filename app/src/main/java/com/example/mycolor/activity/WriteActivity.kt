@@ -4,10 +4,12 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.graphics.Outline
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -218,6 +220,13 @@ class WriteActivity : AppCompatActivity() {
             selectedImageUri = data?.data
             imageViewPreview.setImageURI(selectedImageUri)
             imageViewPreview.visibility = android.view.View.VISIBLE
+            imageViewPreview.outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    outline.setRoundRect(0, 0, view.width, view.height, 16 * resources.displayMetrics.density)
+                }
+            }
+
+            imageViewPreview.clipToOutline = true
         }
     }
 

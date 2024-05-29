@@ -2,11 +2,13 @@ package com.example.mycolor.activity
 
 import android.app.Activity
 import android.app.Dialog
+import android.graphics.Outline
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.ViewOutlineProvider
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
@@ -194,6 +196,13 @@ class CommunityDetailActivity : AppCompatActivity() {
                 .fitCenter() // 원본 비율을 유지하면서 이미지가 뷰에 맞게 조정
                 .into(imageView)
             imageView.visibility = View.VISIBLE // 이미지 로드 성공 시 visibility 변경
+            imageView.outlineProvider = object : ViewOutlineProvider() {
+                override fun getOutline(view: View, outline: Outline) {
+                    outline.setRoundRect(0, 0, view.width, view.height, 16 * resources.displayMetrics.density)
+                }
+            }
+
+            imageView.clipToOutline = true
             hideLoadingDialog() // 이미지 로드 후 로딩 다이얼로그 숨김
         }.addOnFailureListener { exception ->
             Log.w("CommunityDetailActivity", "Error getting image: ", exception)

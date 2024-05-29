@@ -81,7 +81,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="325dp"
                 android:layout_marginBottom="16dp"
-                tools:src="@drawable/pccs" />
+                tools:src="@drawable/pccs"
+                android:background="@drawable/rounded_corners"
+                android:clipToOutline="true"/>
 
             <TextView
                 android:id="@+id/textView6"
@@ -124,7 +126,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="250dp"
                 android:layout_marginBottom="16dp"
-                tools:src="@drawable/twofaceimage" />
+                tools:src="@drawable/twofaceimage"
+                android:background="@drawable/rounded_corners"/>
 
             <TextView
                 android:id="@+id/textView7"
@@ -167,7 +170,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_marginBottom="16dp"
-                android:src="@drawable/shoppingimage" />
+                android:src="@drawable/shoppingimage"
+                android:background="@drawable/rounded_corners"
+                android:clipToOutline="true"/>
 
             <TextView
                 android:id="@+id/textView13"
