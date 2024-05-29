@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".Fragment.MainFragment">
+    tools:context=".Fragment.MainFragment"
+    android:background="@drawable/rounded_corners">
 
 
     <ProgressBar

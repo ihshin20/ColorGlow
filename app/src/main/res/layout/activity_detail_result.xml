@@ -146,14 +146,6 @@
                 android:textColor="#FF07194B"
                 android:textSize="20dp"/>
 
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Best Color"
-                android:fontFamily="@font/kcchanbit"
-                android:textColor="#FF07194B"/>
-
             <ImageView
                 android:id="@+id/imageViewBest"
                 android:layout_width="wrap_content"
@@ -161,14 +153,6 @@
                 android:layout_marginBottom="50dp"
                 android:contentDescription="@+string/best_image"
                 android:scaleType="fitCenter" />
-
-            <TextView
-                android:id="@+id/textViewW"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Worst Color"
-                android:fontFamily="@font/kcchanbit"
-                android:textColor="#FF07194B"/>
 
             <ImageView
                 android:id="@+id/imageViewWorst"
