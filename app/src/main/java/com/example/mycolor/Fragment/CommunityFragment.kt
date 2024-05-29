@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,6 +45,7 @@ class CommunityFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         recyclerView = view.findViewById(R.id.postsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(context)
         adapter = PostAdapter(postsList) { documentId ->
@@ -59,7 +61,8 @@ class CommunityFragment : Fragment() {
             startActivity(intent)
         }
 
-        fetchPosts()
+        showLoadingDialog()  // Show loading dialog when view is created
+        fetchPosts()  // Load the posts
     }
 
     override fun onResume() {
@@ -82,9 +85,11 @@ class CommunityFragment : Fragment() {
                     Log.d("CommunityFragment", "Post fetched: $post")
                 }
                 adapter.notifyDataSetChanged()
+                hideLoadingDialog()
             }
             .addOnFailureListener { exception ->
                 Log.w("CommunityFragment", "Error getting documents: ", exception)
+                hideLoadingDialog()
             }
     }
 
@@ -136,5 +141,28 @@ class CommunityFragment : Fragment() {
         }
 
         override fun getItemCount(): Int = posts.size
+    }
+    private lateinit var loadingDialog: AlertDialog
+    private fun showLoadingDialog() {
+        val builder = AlertDialog.Builder(requireContext())
+        val inflater = LayoutInflater.from(requireContext())
+
+        val view = inflater.inflate(R.layout.loading_dialog, null)
+
+        // TextView의 텍스트를 변경합니다
+        val textView = view.findViewById<TextView>(R.id.loadingProgressTextView)
+        textView.text = "잠시만 기다려주세요."
+
+        builder.setView(view)
+        builder.setCancelable(false)
+
+        loadingDialog = builder.create()
+        loadingDialog.show()
+    }
+
+    private fun hideLoadingDialog() {
+        if (::loadingDialog.isInitialized && loadingDialog.isShowing) {
+            loadingDialog.dismiss()
+        }
     }
 }

@@ -201,7 +201,16 @@ class CommunityDetailActivity : AppCompatActivity() {
         }
     }
 
+    private var lastClickTime: Long = 0
     private fun handleLikeButtonClick(documentId: String) {
+
+        val currentTime = System.currentTimeMillis()
+        if (currentTime - lastClickTime < 1000) {
+            // 이전 클릭으로부터 1초가 지나지 않았다면 이번 클릭 무시
+            return
+        }
+        lastClickTime = currentTime  // 마지막 클릭 시간 갱신
+
         val uid = auth.currentUser?.uid ?: return
 
         // "Likes" 서브 컬렉션에서 현재 사용자의 UID가 있는지 확인
