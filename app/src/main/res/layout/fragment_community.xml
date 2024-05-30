@@ -16,7 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
     <Button
         android:id="@+id/writeBtn"
@@ -41,4 +41,47 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14"
+        tools:ignore="MissingConstraints">
+
+        <RadioButton
+            android:id="@+id/radioAll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="All"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/radioSpring"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="봄" />
+
+        <RadioButton
+            android:id="@+id/radioSummer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="여름" />
+
+        <RadioButton
+            android:id="@+id/radioAutumn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가을" />
+
+        <RadioButton
+            android:id="@+id/radioWinter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="겨울" />
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

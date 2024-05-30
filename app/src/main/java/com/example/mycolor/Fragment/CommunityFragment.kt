@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.RadioGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
@@ -34,6 +35,9 @@ class CommunityFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: PostAdapter
     private val postsList = mutableListOf<Post>()
+    private lateinit var radioGroup: RadioGroup
+    private lateinit var loadingDialog: AlertDialog
+    private var selectedToneFilter: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,16 +65,29 @@ class CommunityFragment : Fragment() {
             startActivity(intent)
         }
 
+        radioGroup = view.findViewById(R.id.radioGroup)
+        radioGroup.setOnCheckedChangeListener { _, checkedId ->
+            selectedToneFilter = when (checkedId) {
+                R.id.radioAll -> null
+                R.id.radioSpring -> "Spring"
+                R.id.radioSummer -> "Summer"
+                R.id.radioAutumn -> "Autumn"
+                R.id.radioWinter -> "Winter"
+                else -> null
+            }
+            fetchPosts(selectedToneFilter)
+        }
+
         showLoadingDialog()  // Show loading dialog when view is created
-        fetchPosts()  // Load the posts
+        fetchPosts(selectedToneFilter)  // Load the posts
     }
 
     override fun onResume() {
         super.onResume()
-        fetchPosts()
+        fetchPosts(selectedToneFilter)
     }
 
-    private fun fetchPosts() {
+    private fun fetchPosts(toneFilter: String?) {
         val db = FirebaseFirestore.getInstance()
         db.collection("Posts")
             .orderBy("Date", Query.Direction.DESCENDING)
@@ -81,8 +98,10 @@ class CommunityFragment : Fragment() {
                     val post = document.toObject(Post::class.java).apply {
                         documentId = document.id // 문서 ID 저장
                     }
-                    postsList.add(post)
-                    Log.d("CommunityFragment", "Post fetched: $post")
+                    if (toneFilter == null || post.Tone.contains(toneFilter, ignoreCase = true)) {
+                        postsList.add(post)
+                        Log.d("CommunityFragment", "Post fetched: $post")
+                    }
                 }
                 adapter.notifyDataSetChanged()
                 hideLoadingDialog()
@@ -142,20 +161,15 @@ class CommunityFragment : Fragment() {
 
         override fun getItemCount(): Int = posts.size
     }
-    private lateinit var loadingDialog: AlertDialog
+
     private fun showLoadingDialog() {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = LayoutInflater.from(requireContext())
-
         val view = inflater.inflate(R.layout.loading_dialog, null)
-
-        // TextView의 텍스트를 변경합니다
         val textView = view.findViewById<TextView>(R.id.loadingProgressTextView)
         textView.text = "잠시만 기다려주세요."
-
         builder.setView(view)
         builder.setCancelable(false)
-
         loadingDialog = builder.create()
         loadingDialog.show()
     }
