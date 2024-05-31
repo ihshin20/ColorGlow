@@ -458,58 +458,6 @@ class MyPageFragment : Fragment() {
                     }
 
 
-//                    val baseMap = productDescriptions.find { it.containsKey("베이스") }
-//                        ?.get("베이스") as? Map<String, Any> ?: mapOf()
-//                    Log.d("FirestoreDebug", "Base products found: $baseMap") // Base products 로그
-//
-//
-//
-//                    baseMap.let { products ->
-//                                    baseProductNameTextViews.forEachIndexed { index, textView ->
-//                                        val productKey = "베이스제품${index + 1}"
-//                                        val productInfo = products[productKey] as? Map<String, Any>
-//                                        val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
-//                                        textView.text = productName
-//                                        Log.d(
-//                                            "FirestoreDebug",
-//                                "Set product name for $productKey: $productName"
-//                            ) // 제품명 설정 로그
-//                        }
-//
-//                        baseProductBrandTextViews.forEachIndexed { index, textView ->
-//                            val productKey = "베이스제품${index + 1}"
-//                            val productInfo = products[productKey] as? Map<String, Any>
-//                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
-//                            textView.text = productBrand
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Set product brand for $productKey: $productBrand"
-//                            ) // 브랜드 설정 로그
-//                        }
-//
-//                        baseProductPriceTextViews.forEachIndexed { index, textView ->
-//                            val productKey = "베이스제품${index + 1}"
-//                            val productInfo = products[productKey] as? Map<String, Any>
-//                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-//                            textView.text = productPrice
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Set product price for $productKey: $productPrice"
-//                            ) // 가격 설정 로그
-//                        }
-//
-//                        products.forEach { (productKey, productInfo) ->
-//                            val productUrl =
-//                                (productInfo as? Map<String, Any>)?.get("url") as? String ?: "none"
-//                            baseUrls.add(productUrl)
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Added URL for $productKey: $productUrl"
-//                            ) // URL 추가 로그
-//                        }
-//                    }
-
-
                     val lipMap = productDescriptions.find { it.containsKey("립") }
                         ?.get("립") as? Map<String, Any> ?: mapOf()
                     Log.d("FirestoreDebug", "Lip products found: $lipMap") // Lip products 로그
@@ -547,54 +495,6 @@ class MyPageFragment : Fragment() {
                         }
                     }
 
-//                    val lipMap = productDescriptions.find { it.containsKey("립") }
-//                        ?.get("립") as? Map<String, Any> ?: mapOf()
-//                    Log.d("FirestoreDebug", "Lip products found: $lipMap") // Lip products 로그
-//
-//                    lipMap.let { products ->
-//                        lipProductNameTextViews.forEachIndexed { index, textView ->
-//                            val productKey = "립제품${index + 1}"
-//                            val productInfo = products[productKey] as? Map<String, Any>
-//                            val productName = productInfo?.get("제품이름") as? String ?: "제품명 정보 없음"
-//                            textView.text = productName
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Set product name for $productKey: $productName"
-//                            ) // 제품명 설정 로그
-//                        }
-//
-//                        lipProductBrandTextViews.forEachIndexed { index, textView ->
-//                            val productKey = "립제품${index + 1}"
-//                            val productInfo = products[productKey] as? Map<String, Any>
-//                            val productBrand = productInfo?.get("브랜드") as? String ?: "브랜드 정보 없음"
-//                            textView.text = productBrand
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Set product brand for $productKey: $productBrand"
-//                            ) // 브랜드 설정 로그
-//                        }
-//
-//                        lipProductPriceTextViews.forEachIndexed { index, textView ->
-//                            val productKey = "립제품${index + 1}"
-//                            val productInfo = products[productKey] as? Map<String, Any>
-//                            val productPrice = productInfo?.get("가격") as? String ?: "가격 정보 없음"
-//                            textView.text = productPrice
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Set product price for $productKey: $productPrice"
-//                            ) // 가격 설정 로그
-//                        }
-//
-//                        products.forEach { (productKey, productInfo) ->
-//                            val productUrl =
-//                                (productInfo as? Map<String, Any>)?.get("url") as? String ?: "none"
-//                            lipUrls.add(productUrl)
-//                            Log.d(
-//                                "FirestoreDebug",
-//                                "Added URL for $productKey: $productUrl"
-//                            ) // URL 추가 로그
-//                        }
-//                    }
 
                     val eyeMap = productDescriptions.find { it.containsKey("아이") }
                         ?.get("아이") as? Map<String, Any> ?: mapOf()
