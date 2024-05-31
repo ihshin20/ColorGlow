@@ -224,8 +224,13 @@ class DetailResultActivity : AppCompatActivity() {
             }
 
         fun updateProductInfo(productsMap: Map<String, Any>, productTextViews: List<TextView>) {
+
+
             productsMap.entries.forEachIndexed { index, entry ->
+
+
                 val productInfo = entry.value as? Map<String, Any> ?: mapOf()
+                //val productInfo = (entry.value as? Map<String, Any>)?.toSortedMap() ?: mapOf()
                 val productName = productInfo["제품이름"] as? String ?: "제품명 정보 없음"
                 val productBrand = productInfo["브랜드"] as? String ?: "브랜드 정보 없음"
                 val productPrice = productInfo["가격"] as? String ?: "가격 정보 없음"
@@ -442,7 +447,10 @@ class DetailResultActivity : AppCompatActivity() {
 
 
         fun updateProductInfo(productsMap: Map<String, Any>, productTextViews: List<TextView>) {
-            productsMap.entries.forEachIndexed { index, entry ->
+//            productsMap.entries.forEachIndexed { index, entry ->
+            val sortedProducts = productsMap.entries.sortedBy { it.key }
+
+            sortedProducts.forEachIndexed { index, entry ->
                 val productInfo = entry.value as? Map<String, Any> ?: mapOf()
                 val productName = productInfo["제품이름"] as? String ?: "제품명 정보 없음"
                 val productBrand = productInfo["브랜드"] as? String ?: "브랜드 정보 없음"
